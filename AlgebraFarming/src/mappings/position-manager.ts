@@ -17,10 +17,21 @@ export function handleIncreaseLiquidity(event: IncreaseLiquidity): void {
     entity = new Deposit(event.params.tokenId.toString());
     entity.owner = event.transaction.from;
     entity.pool = event.params.pool;
-    entity.onFarmingCenter = false
+    entity.onFarmingCenter = false;
+    entity.liquidity = BigInt.fromString("0")
   }
+  entity.liquidity = entity.liquidity.plus(event.params.liquidity);
   entity.save();
 
+}
+
+export function handleDecreaseLiquidity(event: DecreaseLiquidity): void{
+
+  let deposit = Deposit.load(event.params.tokenId.toString());
+  if (deposit){
+    deposit.liquidity = deposit.liquidity.minus(event.params.liquidity)
+    deposit.save()
+  }
 }
 
 

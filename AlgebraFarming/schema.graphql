@@ -29,6 +29,7 @@ type EternalFarming @entity {
 type Deposit @entity {
   id: ID!
   L2tokenId: BigInt!
+  liquidity: BigInt!
   owner: Bytes!
   onFarmingCenter: Boolean!
   pool: Bytes!
