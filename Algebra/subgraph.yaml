@@ -7,7 +7,7 @@ dataSources:
     name: Factory
     network: pulse
     source:
-      address: '0x8C1EB1e5325049B412B7E71337116BEF88a29b3A'
+      address: '0x9B05452f4edA703744F2750258714377EF765F7b'
       abi: Factory
       startBlock: 15072948  
     mapping:
@@ -36,7 +36,7 @@ dataSources:
     name: NonfungiblePositionManager
     network: pulse
     source:
-      address: '0x21F5F8b46621cFa77D4f296A901cDB7AfDBB6A18'
+      address: '0xcb8c37b241c62eE3B043608667Db102A91F22Ae9'
       abi: NonfungiblePositionManager
       startBlock: 15072948  
     mapping:

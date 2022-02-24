@@ -6,7 +6,7 @@ schema:
 dataSources:
   - kind: ethereum/contract
     name: Staker
-    network: matic
+    network: pulse
     source:
       address: "0x32CFF674763b06B983C0D55Ef2e41B84D16855bb"
       abi: Staker
