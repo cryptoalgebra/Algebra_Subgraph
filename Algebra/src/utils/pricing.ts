@@ -5,14 +5,14 @@ import { BigDecimal, BigInt } from '@graphprotocol/graph-ts'
 import { exponentToBigDecimal, safeDiv } from '../utils/index'
 import { log } from '@graphprotocol/graph-ts'
 
-const WMatic_ADDRESS = '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270'
+const WMatic_ADDRESS = '0xD2Aaa00700000000000000000000000000000000'
 const USDC_WMatic_03_POOL = '0xc3c4074fbc2d504fb8ccd28e3ae46914a1ecc5ed'
 
 // token where amounts should contribute to tracked volume and liquidity
 // usually tokens that many tokens are paired with s
 export let WHITELIST_TOKENS: string[] = [
-  '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270', // WMATIC
-  '0x2791bca1f2de4661ed88a30c99a7a9449aa84174', // USDC
+  '0xD2Aaa00700000000000000000000000000000000', // WMATIC
+  '0xd7262430DdBc486AA9C1C06C9C24E776587ffd62', // USDC
   '0xc2132d05d31c914a87c6611c10748aeb04b58e8f' // USDT 
 ]
 
