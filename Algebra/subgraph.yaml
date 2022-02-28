@@ -7,9 +7,9 @@ dataSources:
     name: Factory
     network: skale 
     source:
-      address: '0x54c3bf3C95499aD234a1b06B23337f665E8c16A5'
+      address: '0x191E35fc74c28d5fCb776dADD829E16748fC46B1'
       abi: Factory
-      startBlock: 1681138
+      startBlock: 1766627
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -36,9 +36,9 @@ dataSources:
     name: NonfungiblePositionManager
     network: skale
     source:
-      address: '0x714D745168132b886DD57348B89E72670eAA26bA'
+      address: '0x4c63EeD2CA48613b7195d64224688d7FC0f0015C'
       abi: NonfungiblePositionManager
-      startBlock: 1681138 
+      startBlock: 1766627 
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5

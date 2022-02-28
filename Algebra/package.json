@@ -7,6 +7,8 @@
   "scripts": {
     "codegen": "graph codegen --output-dir src/types/",
     "build": "graph build",
+    "create-skale": "graph create cryptoalgebra/algebra --node http://3.16.122.80:8020",
+    "deploy-skale": "graph deploy cryptoalgebra/algebra --debug --ipfs http://3.16.122.80:5001 --node http://3.16.122.80:8020",
     "create-local": "graph create cryptoalgebra/algebra --node http://127.0.0.1:8020",
     "deploy-local": "graph deploy cryptoalgebra/algebra --debug --ipfs http://localhost:5001 --node http://127.0.0.1:8020",
     "deploy": "graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ --access-token a3f47169869d4585a475d0d1d10a4062 iliaazhel/karasb subgraph.yaml",
