@@ -7,9 +7,9 @@ dataSources:
   name: NonfungiblePositionManager
   network: skale
   source:
-      address: '0x4c63EeD2CA48613b7195d64224688d7FC0f0015C'
+      address: '0xe835442813D3b474520b994B71E3B8Fc08F6B2fC'
       abi: NonfungiblePositionManager
-      startBlock: 1766627
+      startBlock: 1792818
   mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -33,9 +33,9 @@ dataSources:
   name: EternalFarming
   network: skale
   source:
-      address: '0x78faBEbB9cAD25F3bb5F97FA0AC9033E200a15f1'
+      address: '0xa22144F5CEcB4C848D9d9358Baac056063b9bcF7'
       abi: EternalFarming
-      startBlock: 1766627 
+      startBlock: 1792818 
   mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -79,9 +79,9 @@ dataSources:
   name: FarmingCenter
   network: skale
   source:
-      address: '0x57476838914e5c158e3cAE3774bdb45f67E2C6ca'
+      address: '0x23AfF4E5Fc75cF47D180C564100276b61787Ba01'
       abi: FarmingCenter
-      startBlock: 1766627 
+      startBlock: 1792818 
   mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -105,9 +105,9 @@ dataSources:
   name: IncentiveFarming
   network: skale
   source:
-      address: '0xaDd96511105f3E5993c08848808441A8208E15B8'
+      address: '0xCC1343CdaDe203bE679E34afe3b7DcAafCe4D94C'
       abi: IncentiveFarming
-      startBlock: 1766627 
+      startBlock: 1792818 
   mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
