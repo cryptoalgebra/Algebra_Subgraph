@@ -22,6 +22,7 @@ export function handleIncreaseLiquidity(event: IncreaseLiquidity): void {
   }
   entity.liquidity = entity.liquidity.plus(event.params.liquidity);
   entity.save();
+  log.warning("",[])
 
 }
 
