@@ -6,11 +6,11 @@ schema:
 dataSources:
   - kind: ethereum/contract
     name: Staker
-    network: matic
+    network: oasis
     source:
       address: "0x32CFF674763b06B983C0D55Ef2e41B84D16855bb"
       abi: Staker
-      startBlock: 23099995 
+      startBlock: 457846 
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -30,11 +30,11 @@ dataSources:
       file: ./src/mappings/staker.ts
   - kind: ethereum/contract
     name: AlgbToken
-    network: matic
+    network: oasis
     source:
       address: "0x0169ec1f8f639b32eec6d923e24c2a2ff45b9dd6"
       abi: AlgbToken
-      startBlock: 20705270
+      startBlock: 457846
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5

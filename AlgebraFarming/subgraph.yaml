@@ -5,11 +5,11 @@ schema:
 dataSources:
 - kind: ethereum/contract
   name: NonfungiblePositionManager
-  network: matic
+  network: oasis
   source:
-      address: '0x21F5F8b46621cFa77D4f296A901cDB7AfDBB6A18'
+      address: '0xDC952684B7bABb02599De2d7f386504d1920d857'
       abi: NonfungiblePositionManager
-      startBlock: 22519016
+      startBlock: 457846
   mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -31,11 +31,11 @@ dataSources:
           handler: handleDecreaseLiquidity
 - kind: ethereum/contract
   name: EternalFarming
-  network: matic
+  network: oasis
   source:
-      address: '0xB60E8375b2f235Ff47c2aBedEeb56774b8D0e73F'
+      address: '0x1Be9b7985A7CDDED703abaf1d992cb75adddA1Dc'
       abi: EternalFarming
-      startBlock: 24387577 
+      startBlock: 457846 
   mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -77,11 +77,11 @@ dataSources:
           handler: handleCollect
 - kind: ethereum/contract
   name: FarmingCenter
-  network: matic
+  network: oasis
   source:
-      address: '0xb9bb1D4202383A25C90115aE9ec2543fA229DFAa'
+      address: '0x9ced021721093aA5235DAECBFFF6D2276c88A372'
       abi: FarmingCenter
-      startBlock: 24387577 
+      startBlock: 457846 
   mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -103,11 +103,11 @@ dataSources:
           handler: handleTransfer
 - kind: ethereum/contract
   name: IncentiveFarming
-  network: matic
+  network: oasis
   source:
-      address: '0xe8A889328Ed8535ee7eaAc59A09c209A6FBd191e'
+      address: '0xe43f8fE72C9641553480f5662F6D0c24f89d4958'
       abi: IncentiveFarming
-      startBlock: 24387577 
+      startBlock: 457846 
   mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
