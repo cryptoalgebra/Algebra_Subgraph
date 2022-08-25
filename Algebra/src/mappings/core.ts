@@ -67,7 +67,7 @@ export function handleMint(event: MintEvent): void {
 
     amount0 = convertTokenToDecimal(event.params.amount1, token0.decimals)
     amount1 = convertTokenToDecimal(event.params.amount0, token1.decimals)
-  
+
   }
 
   let amountUSD = amount0

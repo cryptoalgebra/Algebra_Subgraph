@@ -7,9 +7,9 @@ dataSources:
   name: NonfungiblePositionManager
   network: dogechain
   source:
-      address: '0xBF4B86A53E4f0Bf2EEEe083820f0f1c2363DF157'
+      address: '0x0b012055F770AE7BB7a8303968A7Fb6088A2296e'
       abi: NonfungiblePositionManager
-      startBlock: 100000
+      startBlock: 850000
   mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -38,9 +38,9 @@ dataSources:
   name: EternalFarming
   network: dogechain
   source:
-      address: '0xA8dca28065cDA20d92a8fD6F560da6F72640fCac'
+      address: '0xC712F63E4D57ED1684FB4b428a1DFF10e3338F25'
       abi: EternalFarming
-      startBlock: 100000
+      startBlock: 850000
   mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -83,9 +83,9 @@ dataSources:
   name: FarmingCenter
   network: dogechain
   source:
-      address: '0x3A1017b5C8e5bb5B768A7f39548C0D528a9bE115'
+      address: '0x82831E9565cb574375596eFc090da465283E22A4'
       abi: FarmingCenter
-      startBlock: 100000
+      startBlock: 850000
   mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -110,9 +110,9 @@ dataSources:
   name: LimitFarming
   network: dogechain
   source:
-      address: '0xdA323D105970Fe5bCD0E480a27D4bbD04Ae8dCa9'
+      address: '0x481FcFa00Ee6b2384FF0B3c3b5b29aD911c1AAA7'
       abi: LimitFarming
-      startBlock: 100000 
+      startBlock: 850000 
   mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
