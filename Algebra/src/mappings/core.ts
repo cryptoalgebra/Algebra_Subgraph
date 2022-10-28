@@ -308,7 +308,7 @@ export function handleSwap(event: SwapEvent): void {
 
   
   }
-
+ log.warning("check",[])
  // need absolute amounts for volume
  let amount0Abs = amount0
  if (amount0.lt(ZERO_BD)) {
@@ -456,11 +456,16 @@ export function handleSwap(event: SwapEvent): void {
 
   // update fee growth
   let poolContract = PoolABI.bind(event.address)
-  let feeGrowthGlobal0X128 = poolContract.totalFeeGrowth0Token()
-  let feeGrowthGlobal1X128 = poolContract.totalFeeGrowth1Token()
-  pool.feeGrowthGlobal0X128 = feeGrowthGlobal0X128 as BigInt
-  pool.feeGrowthGlobal1X128 = feeGrowthGlobal1X128 as BigInt
-
+  let feeGrowthGlobal0X128 = poolContract.try_totalFeeGrowth0Token()
+  if (!feeGrowthGlobal0X128.reverted){ 
+    let feeGrowthGlobal0X128res = poolContract.totalFeeGrowth0Token()
+    pool.feeGrowthGlobal0X128 = feeGrowthGlobal0X128res as BigInt
+  }
+  let feeGrowthGlobal1X128 = poolContract.try_totalFeeGrowth1Token()
+  if (!feeGrowthGlobal1X128.reverted){ 
+    let feeGrowthGlobal1X128res = poolContract.totalFeeGrowth1Token()
+    pool.feeGrowthGlobal1X128 = feeGrowthGlobal1X128res as BigInt
+  }
   // interval data
   let algebraDayData = updateAlgebraDayData(event)
   let poolDayData = updatePoolDayData(event)
@@ -648,10 +653,18 @@ function updateTickFeeVarsAndSave(tick: Tick, event: ethereum.Event): void {
   // not all ticks are initialized so obtaining null is expected behavior
   let poolContract = PoolABI.bind(poolAddress)
 
-  let tickResult = poolContract.ticks(tick.tickIdx.toI32())
-  tick.feeGrowthOutside0X128 = tickResult.value2
-  tick.feeGrowthOutside1X128 = tickResult.value3
-  tick.save()
+
+  let tickResult = poolContract.try_ticks(tick.tickIdx.toI32())
+  if (!tickResult.reverted){
+    let tickRevert = poolContract.ticks(tick.tickIdx.toI32())
+    tick.feeGrowthOutside0X128 = tickRevert.value2
+    tick.feeGrowthOutside1X128 = tickRevert.value3
+    tick.save()
+  }
+  else{
+    log.warning("revert ticks {} {}",[poolAddress.toHexString(), tick.tickIdx.toString()])
+  }
+  
   updateTickDayData(tick, event)
 }
 
