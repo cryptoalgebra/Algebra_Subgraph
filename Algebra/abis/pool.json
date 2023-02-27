@@ -95,15 +95,15 @@
     "inputs": [
       {
         "indexed": false,
-        "internalType": "uint8",
+        "internalType": "uint16",
         "name": "communityFee0New",
-        "type": "uint8"
+        "type": "uint16"
       },
       {
         "indexed": false,
-        "internalType": "uint8",
+        "internalType": "uint16",
         "name": "communityFee1New",
-        "type": "uint8"
+        "type": "uint16"
       }
     ],
     "name": "CommunityFee",
@@ -547,18 +547,13 @@
       },
       {
         "internalType": "uint16",
-        "name": "timepointIndexSwap",
+        "name": "communityFeeToken0",
         "type": "uint16"
       },
       {
-        "internalType": "uint8",
-        "name": "communityFeeToken0",
-        "type": "uint8"
-      },
-      {
-        "internalType": "uint8",
+        "internalType": "uint16",
         "name": "communityFeeToken1",
-        "type": "uint8"
+        "type": "uint16"
       },
       {
         "internalType": "bool",
@@ -722,14 +717,14 @@
   {
     "inputs": [
       {
-        "internalType": "uint8",
+        "internalType": "uint16",
         "name": "communityFee0",
-        "type": "uint8"
+        "type": "uint16"
       },
       {
-        "internalType": "uint8",
+        "internalType": "uint16",
         "name": "communityFee1",
-        "type": "uint8"
+        "type": "uint16"
       }
     ],
     "name": "setCommunityFee",
