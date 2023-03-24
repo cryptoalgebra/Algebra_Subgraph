@@ -5,11 +5,6 @@
         "internalType": "address",
         "name": "_poolDeployer",
         "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_vaultAddress",
-        "type": "address"
       }
     ],
     "stateMutability": "nonpayable",
@@ -32,6 +27,56 @@
     "anonymous": false,
     "inputs": [
       {
+        "components": [
+          {
+            "internalType": "uint16",
+            "name": "alpha1",
+            "type": "uint16"
+          },
+          {
+            "internalType": "uint16",
+            "name": "alpha2",
+            "type": "uint16"
+          },
+          {
+            "internalType": "uint32",
+            "name": "beta1",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint32",
+            "name": "beta2",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint16",
+            "name": "gamma1",
+            "type": "uint16"
+          },
+          {
+            "internalType": "uint16",
+            "name": "gamma2",
+            "type": "uint16"
+          },
+          {
+            "internalType": "uint16",
+            "name": "baseFee",
+            "type": "uint16"
+          }
+        ],
+        "indexed": false,
+        "internalType": "struct IAlgebraFeeConfiguration.Configuration",
+        "name": "newConfig",
+        "type": "tuple"
+      }
+    ],
+    "name": "DefaultFeeConfiguration",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
         "indexed": true,
         "internalType": "address",
         "name": "newFarmingAddress",
@@ -45,49 +90,19 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
-        "internalType": "uint16",
-        "name": "alpha1",
-        "type": "uint16"
+        "indexed": true,
+        "internalType": "address",
+        "name": "previousOwner",
+        "type": "address"
       },
       {
-        "indexed": false,
-        "internalType": "uint16",
-        "name": "alpha2",
-        "type": "uint16"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint32",
-        "name": "beta1",
-        "type": "uint32"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint32",
-        "name": "beta2",
-        "type": "uint32"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint16",
-        "name": "gamma1",
-        "type": "uint16"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint16",
-        "name": "gamma2",
-        "type": "uint16"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint16",
-        "name": "baseFee",
-        "type": "uint16"
+        "indexed": true,
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
       }
     ],
-    "name": "FeeConfiguration",
+    "name": "OwnershipTransferStarted",
     "type": "event"
   },
   {
@@ -96,11 +111,17 @@
       {
         "indexed": true,
         "internalType": "address",
+        "name": "previousOwner",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
         "name": "newOwner",
         "type": "address"
       }
     ],
-    "name": "Owner",
+    "name": "OwnershipTransferred",
     "type": "event"
   },
   {
@@ -132,14 +153,147 @@
     "anonymous": false,
     "inputs": [
       {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "timestamp",
+        "type": "uint256"
+      }
+    ],
+    "name": "RenounceOwnershipFinish",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "timestamp",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "finishTimestamp",
+        "type": "uint256"
+      }
+    ],
+    "name": "RenounceOwnershipStart",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "timestamp",
+        "type": "uint256"
+      }
+    ],
+    "name": "RenounceOwnershipStop",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "previousAdminRole",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "newAdminRole",
+        "type": "bytes32"
+      }
+    ],
+    "name": "RoleAdminChanged",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      },
+      {
         "indexed": true,
         "internalType": "address",
-        "name": "newVaultAddress",
+        "name": "account",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "sender",
         "type": "address"
       }
     ],
-    "name": "VaultAddress",
+    "name": "RoleGranted",
     "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "sender",
+        "type": "address"
+      }
+    ],
+    "name": "RoleRevoked",
+    "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "DEFAULT_ADMIN_ROLE",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "POOLS_ADMINISTRATOR_ROLE",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
   },
   {
     "inputs": [],
@@ -150,42 +304,12 @@
   },
   {
     "inputs": [],
-    "name": "baseFeeConfiguration",
+    "name": "communityVault",
     "outputs": [
       {
-        "internalType": "uint16",
-        "name": "alpha1",
-        "type": "uint16"
-      },
-      {
-        "internalType": "uint16",
-        "name": "alpha2",
-        "type": "uint16"
-      },
-      {
-        "internalType": "uint32",
-        "name": "beta1",
-        "type": "uint32"
-      },
-      {
-        "internalType": "uint32",
-        "name": "beta2",
-        "type": "uint32"
-      },
-      {
-        "internalType": "uint16",
-        "name": "gamma1",
-        "type": "uint16"
-      },
-      {
-        "internalType": "uint16",
-        "name": "gamma2",
-        "type": "uint16"
-      },
-      {
-        "internalType": "uint16",
-        "name": "baseFee",
-        "type": "uint16"
+        "internalType": "address",
+        "name": "",
+        "type": "address"
       }
     ],
     "stateMutability": "view",
@@ -230,6 +354,49 @@
   },
   {
     "inputs": [],
+    "name": "defaultFeeConfiguration",
+    "outputs": [
+      {
+        "internalType": "uint16",
+        "name": "alpha1",
+        "type": "uint16"
+      },
+      {
+        "internalType": "uint16",
+        "name": "alpha2",
+        "type": "uint16"
+      },
+      {
+        "internalType": "uint32",
+        "name": "beta1",
+        "type": "uint32"
+      },
+      {
+        "internalType": "uint32",
+        "name": "beta2",
+        "type": "uint32"
+      },
+      {
+        "internalType": "uint16",
+        "name": "gamma1",
+        "type": "uint16"
+      },
+      {
+        "internalType": "uint16",
+        "name": "gamma2",
+        "type": "uint16"
+      },
+      {
+        "internalType": "uint16",
+        "name": "baseFee",
+        "type": "uint16"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "farmingAddress",
     "outputs": [
       {
@@ -242,8 +409,149 @@
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      }
+    ],
+    "name": "getRoleAdmin",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "uint256",
+        "name": "index",
+        "type": "uint256"
+      }
+    ],
+    "name": "getRoleMember",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      }
+    ],
+    "name": "getRoleMemberCount",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "grantRole",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "hasRole",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "hasRoleOrOwner",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "owner",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "pendingOwner",
     "outputs": [
       {
         "internalType": "address",
@@ -299,44 +607,50 @@
     "type": "function"
   },
   {
-    "inputs": [
+    "inputs": [],
+    "name": "renounceOwnershipStartTimestamp",
+    "outputs": [
       {
-        "internalType": "uint16",
-        "name": "alpha1",
-        "type": "uint16"
-      },
-      {
-        "internalType": "uint16",
-        "name": "alpha2",
-        "type": "uint16"
-      },
-      {
-        "internalType": "uint32",
-        "name": "beta1",
-        "type": "uint32"
-      },
-      {
-        "internalType": "uint32",
-        "name": "beta2",
-        "type": "uint32"
-      },
-      {
-        "internalType": "uint16",
-        "name": "gamma1",
-        "type": "uint16"
-      },
-      {
-        "internalType": "uint16",
-        "name": "gamma2",
-        "type": "uint16"
-      },
-      {
-        "internalType": "uint16",
-        "name": "baseFee",
-        "type": "uint16"
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
       }
     ],
-    "name": "setBaseFeeConfiguration",
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "renounceRole",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "revokeRole",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -357,8 +671,58 @@
   {
     "inputs": [
       {
+        "components": [
+          {
+            "internalType": "uint16",
+            "name": "alpha1",
+            "type": "uint16"
+          },
+          {
+            "internalType": "uint16",
+            "name": "alpha2",
+            "type": "uint16"
+          },
+          {
+            "internalType": "uint32",
+            "name": "beta1",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint32",
+            "name": "beta2",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint16",
+            "name": "gamma1",
+            "type": "uint16"
+          },
+          {
+            "internalType": "uint16",
+            "name": "gamma2",
+            "type": "uint16"
+          },
+          {
+            "internalType": "uint16",
+            "name": "baseFee",
+            "type": "uint16"
+          }
+        ],
+        "internalType": "struct IAlgebraFeeConfiguration.Configuration",
+        "name": "newConfig",
+        "type": "tuple"
+      }
+    ],
+    "name": "setDefaultFeeConfiguration",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "address",
-        "name": "_farmingAddress",
+        "name": "newFarmingAddress",
         "type": "address"
       }
     ],
@@ -368,42 +732,49 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_owner",
-        "type": "address"
-      }
-    ],
-    "name": "setOwner",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_vaultAddress",
-        "type": "address"
-      }
-    ],
-    "name": "setVaultAddress",
+    "inputs": [],
+    "name": "startRenounceOwnership",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
     "inputs": [],
-    "name": "vaultAddress",
+    "name": "stopRenounceOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes4",
+        "name": "interfaceId",
+        "type": "bytes4"
+      }
+    ],
+    "name": "supportsInterface",
     "outputs": [
       {
-        "internalType": "address",
+        "internalType": "bool",
         "name": "",
-        "type": "address"
+        "type": "bool"
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "transferOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   }
 ]

@@ -26,6 +26,11 @@
     "type": "constructor"
   },
   {
+    "inputs": [],
+    "name": "tickOutOfRange",
+    "type": "error"
+  },
+  {
     "anonymous": false,
     "inputs": [
       {

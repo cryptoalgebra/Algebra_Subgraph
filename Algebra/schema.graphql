@@ -87,7 +87,8 @@ type Pool @entity {
   # tick spacing
   tickSpacing: BigInt!
   # fee amount
-  fee: BigInt!
+  feeZtO: BigInt!
+  feeOtZ: BigInt!
   communityFee: BigInt!
   # in range liquidity
   liquidity: BigInt!
@@ -523,8 +524,8 @@ type PoolFeeData @entity{
 
   timestamp: BigInt!
 
-  fee: BigInt!
-
+  feeZtO: BigInt!
+  feeOtZ: BigInt!
 }
 
 # hourly stats tracker for pool
@@ -691,7 +692,8 @@ type FeeHourData @entity {
   #
   pool: String!
   #
-  fee: BigInt!
+  feeOtZ: BigInt!
+  feeZtO: BigInt!
   #
   changesCount: BigInt!
   #

@@ -1,8 +1,133 @@
 [
   {
     "inputs": [],
-    "stateMutability": "nonpayable",
-    "type": "constructor"
+    "name": "alreadyInitialized",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "bottomTickLowerThanMIN",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "flashInsufficientPaid0",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "flashInsufficientPaid1",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "insufficientAmountReceivedAtMint",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "insufficientInputAmount",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "invalidLimitSqrtPrice",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "invalidNewCommunityFee",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "invalidNewTickSpacing",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "liquidityAdd",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "liquidityOverflow",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "liquiditySub",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "locked",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "notAllowed",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "onlyFarming",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "priceOutOfRange",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "tickInvalidLinks",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "tickIsNotInitialized",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "tickIsNotSpaced",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "tickOutOfRange",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "topTickAboveMAX",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "topTickLowerThanBottomTick",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "transferFailed",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "zeroAmountRequired",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "zeroLiquidityActual",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "zeroLiquidityDesired",
+    "type": "error"
   },
   {
     "anonymous": false,
@@ -105,11 +230,23 @@
   },
   {
     "anonymous": false,
+    "inputs": [],
+    "name": "DataStorageFailure",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
     "inputs": [
       {
         "indexed": false,
         "internalType": "uint16",
-        "name": "fee",
+        "name": "feeZtO",
+        "type": "uint16"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint16",
+        "name": "feeOtZ",
         "type": "uint16"
       }
     ],
@@ -165,7 +302,7 @@
       {
         "indexed": true,
         "internalType": "address",
-        "name": "virtualPoolAddress",
+        "name": "newIncentiveAddress",
         "type": "address"
       }
     ],
@@ -297,6 +434,12 @@
         "internalType": "int24",
         "name": "newTickSpacing",
         "type": "int24"
+      },
+      {
+        "indexed": false,
+        "internalType": "int24",
+        "name": "newTickSpacingLimitOrders",
+        "type": "int24"
       }
     ],
     "name": "TickSpacing",
@@ -395,6 +538,32 @@
   },
   {
     "inputs": [],
+    "name": "communityFeeLastTimestamp",
+    "outputs": [
+      {
+        "internalType": "uint32",
+        "name": "",
+        "type": "uint32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "communityVault",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "dataStorageOperator",
     "outputs": [
       {
@@ -448,6 +617,24 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "getCommunityFeePending",
+    "outputs": [
+      {
+        "internalType": "uint128",
+        "name": "",
+        "type": "uint128"
+      },
+      {
+        "internalType": "uint128",
+        "name": "",
+        "type": "uint128"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "int24",
@@ -478,6 +665,24 @@
   },
   {
     "inputs": [],
+    "name": "getReserves",
+    "outputs": [
+      {
+        "internalType": "uint128",
+        "name": "",
+        "type": "uint128"
+      },
+      {
+        "internalType": "uint128",
+        "name": "",
+        "type": "uint128"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "globalState",
     "outputs": [
       {
@@ -491,13 +696,13 @@
         "type": "int24"
       },
       {
-        "internalType": "int24",
-        "name": "prevInitializedTick",
-        "type": "int24"
+        "internalType": "uint16",
+        "name": "feeZtO",
+        "type": "uint16"
       },
       {
         "internalType": "uint16",
-        "name": "fee",
+        "name": "feeOtZ",
         "type": "uint16"
       },
       {
@@ -530,6 +735,40 @@
     "name": "initialize",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "int24",
+        "name": "",
+        "type": "int24"
+      }
+    ],
+    "name": "limitOrders",
+    "outputs": [
+      {
+        "internalType": "uint128",
+        "name": "amountToSell",
+        "type": "uint128"
+      },
+      {
+        "internalType": "uint128",
+        "name": "soldAmount",
+        "type": "uint128"
+      },
+      {
+        "internalType": "uint256",
+        "name": "boughtAmount0Cumulative",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "boughtAmount1Cumulative",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -623,9 +862,9 @@
     "name": "positions",
     "outputs": [
       {
-        "internalType": "uint128",
+        "internalType": "uint256",
         "name": "liquidity",
-        "type": "uint128"
+        "type": "uint256"
       },
       {
         "internalType": "uint256",
@@ -653,12 +892,12 @@
   },
   {
     "inputs": [],
-    "name": "reserve0",
+    "name": "prevInitializedTick",
     "outputs": [
       {
-        "internalType": "uint256",
+        "internalType": "int24",
         "name": "",
-        "type": "uint256"
+        "type": "int24"
       }
     ],
     "stateMutability": "view",
@@ -666,12 +905,12 @@
   },
   {
     "inputs": [],
-    "name": "reserve1",
+    "name": "secondsPerLiquidityCumulative",
     "outputs": [
       {
-        "internalType": "uint256",
+        "internalType": "uint160",
         "name": "",
-        "type": "uint256"
+        "type": "uint160"
       }
     ],
     "stateMutability": "view",
@@ -681,7 +920,7 @@
     "inputs": [
       {
         "internalType": "uint8",
-        "name": "communityFee",
+        "name": "newCommunityFee",
         "type": "uint8"
       }
     ],
@@ -694,7 +933,7 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "virtualPoolAddress",
+        "name": "newIncentiveAddress",
         "type": "address"
       }
     ],
@@ -708,6 +947,11 @@
       {
         "internalType": "int24",
         "name": "newTickSpacing",
+        "type": "int24"
+      },
+      {
+        "internalType": "int24",
+        "name": "newTickspacingLimitOrders",
         "type": "int24"
       }
     ],
@@ -823,6 +1067,19 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "tickSpacingLimitOrders",
+    "outputs": [
+      {
+        "internalType": "int24",
+        "name": "",
+        "type": "int24"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "int16",
@@ -893,7 +1150,7 @@
       },
       {
         "internalType": "bool",
-        "name": "initialized",
+        "name": "hasLimitOrders",
         "type": "bool"
       }
     ],
