@@ -23,6 +23,7 @@ type Factory @entity {
   totalValueLockedUSDUntracked: BigDecimal!
   # TVL derived in Matic untracked
   totalValueLockedMaticUntracked: BigDecimal!
+  defaultCommunityFee: BigInt!
   # current owner of the factory
   owner: ID!
 }
@@ -83,7 +84,8 @@ type Pool @entity {
   # token1
   token1: Token!
   # fee amount
-  fee: BigInt!
+  feeZtO: BigInt!
+  feeOtZ: BigInt!
   communityFee0: BigInt!
   communityFee1: BigInt!
   # in range liquidity
@@ -520,8 +522,8 @@ type PoolFeeData @entity{
 
   timestamp: BigInt!
 
-  fee: BigInt!
-
+  feeZtO: BigInt!
+  feeOtZ: BigInt!
 }
 
 # hourly stats tracker for pool
@@ -688,7 +690,8 @@ type FeeHourData @entity {
   #
   pool: String!
   #
-  fee: BigInt!
+  feeOtZ: BigInt!
+  feeZtO: BigInt!
   #
   changesCount: BigInt!
   #

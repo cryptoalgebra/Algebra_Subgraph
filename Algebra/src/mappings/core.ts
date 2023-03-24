@@ -291,7 +291,7 @@ export function handleSwap(event: SwapEvent): void {
   let pool = Pool.load(event.address.toHexString())!
 
   let oldTick = pool.tick
-  let flag = false 
+  let fee = ZERO_BI;
 
 
   let token0 = Token.load(pool.token0)!
@@ -315,7 +315,8 @@ export function handleSwap(event: SwapEvent): void {
    amount0Abs = amount0.times(BigDecimal.fromString('-1'))
  }
  else { 
-   let communityFeeAmount = amount0.times(BigDecimal.fromString((pool.fee.times(pool.communityFee0).toString())).div(BigDecimal.fromString('1000000000')))
+   fee = pool.feeZtO
+   let communityFeeAmount = amount0.times(BigDecimal.fromString((pool.feeZtO.times(pool.communityFee0).toString())).div(BigDecimal.fromString('1000000000')))
    communityFeeAmount = communityFeeAmount.times(BigDecimal.fromString("1")) 
    amount0 = amount0.minus(communityFeeAmount)
    amount0Abs = amount0
@@ -326,7 +327,8 @@ export function handleSwap(event: SwapEvent): void {
    amount1Abs = amount1.times(BigDecimal.fromString('-1'))
  }
  else{
-   let communityFeeAmount = amount1.times(BigDecimal.fromString((pool.fee.times(pool.communityFee1).toString())).div(BigDecimal.fromString('1000000000')))
+   fee = pool.feeOtZ
+   let communityFeeAmount = amount1.times(BigDecimal.fromString((pool.feeOtZ.times(pool.communityFee1).toString())).div(BigDecimal.fromString('1000000000')))
    communityFeeAmount = communityFeeAmount.times(BigDecimal.fromString("1"))  
    amount1 = amount1.minus(communityFeeAmount)
    amount1Abs = amount1
@@ -348,9 +350,9 @@ export function handleSwap(event: SwapEvent): void {
   let amountTotalMaticTracked = safeDiv(amountTotalUSDTracked, bundle.maticPriceUSD)
   let amountTotalUSDUntracked = amount0USD.plus(amount1USD).div(BigDecimal.fromString('2'))
 
-  let feesMatic = amountTotalMaticTracked.times(pool.fee.toBigDecimal()).div(BigDecimal.fromString('1000000'))
-  let feesUSD = amountTotalUSDTracked.times(pool.fee.toBigDecimal()).div(BigDecimal.fromString('1000000'))
-  let untrackedFees = amountTotalUSDUntracked.times(pool.fee.toBigDecimal()).div(BigDecimal.fromString('1000000'))
+  let feesMatic = amountTotalMaticTracked.times(fee.toBigDecimal()).div(BigDecimal.fromString('1000000'))
+  let feesUSD = amountTotalUSDTracked.times(fee.toBigDecimal()).div(BigDecimal.fromString('1000000'))
+  let untrackedFees = amountTotalUSDUntracked.times(fee.toBigDecimal()).div(BigDecimal.fromString('1000000'))
 
 
   // global updates
@@ -471,13 +473,13 @@ export function handleSwap(event: SwapEvent): void {
   let token1HourData = updateTokenHourData(token1 as Token, event)
 
   if(amount0.lt(ZERO_BD)){
-    pool.feesToken1 = pool.feesToken1.plus(amount1.times(pool.fee.toBigDecimal()).div(BigDecimal.fromString('1000000')))
-    poolDayData.feesToken1 = poolDayData.feesToken1.plus(amount1.times(pool.fee.toBigDecimal()).div(BigDecimal.fromString('1000000')))
+    pool.feesToken1 = pool.feesToken1.plus(amount1.times(pool.feeOtZ.toBigDecimal()).div(BigDecimal.fromString('1000000')))
+    poolDayData.feesToken1 = poolDayData.feesToken1.plus(amount1.times(pool.feeOtZ.toBigDecimal()).div(BigDecimal.fromString('1000000')))
   }
 
   if(amount1.lt(ZERO_BD) ){
-    pool.feesToken0 = pool.feesToken0.plus(amount0.times(pool.fee.toBigDecimal()).div(BigDecimal.fromString('1000000')))
-    poolDayData.feesToken0 = poolDayData.feesToken0.plus(amount0.times(pool.fee.toBigDecimal()).div(BigDecimal.fromString('1000000')))
+    pool.feesToken0 = pool.feesToken0.plus(amount0.times(pool.feeZtO.toBigDecimal()).div(BigDecimal.fromString('1000000')))
+    poolDayData.feesToken0 = poolDayData.feesToken0.plus(amount0.times(pool.feeZtO.toBigDecimal()).div(BigDecimal.fromString('1000000')))
   }
 
   // update volume metrics
@@ -658,20 +660,23 @@ function updateTickFeeVarsAndSave(tick: Tick, event: ethereum.Event): void {
 export function handleChangeFee(event: ChangeFee): void {
 
   let pool = Pool.load(event.address.toHexString())!
-  pool.fee = BigInt.fromI32(event.params.fee as i32)
+  pool.feeZtO = BigInt.fromI32(event.params.feeZto as i32)
+  pool.feeOtZ = BigInt.fromI32(event.params.feeOtz as i32)
   pool.save()
 
   let fee = PoolFeeData.load(event.address.toHexString() + event.block.timestamp.toString())
   if (fee == null){
     fee = new PoolFeeData(event.block.timestamp.toString() + event.address.toHexString())
     fee.pool = event.address.toHexString()
-    fee.fee = BigInt.fromI32(event.params.fee)
+    fee.feeZtO = BigInt.fromI32(event.params.feeZto)
+    fee.feeOtZ = BigInt.fromI32(event.params.feeOtz)
     fee.timestamp = event.block.timestamp
   }
   else{
-    fee.fee = BigInt.fromI32(event.params.fee)  
+    fee.feeZtO = BigInt.fromI32(event.params.feeZto)  
+    fee.feeOtZ = BigInt.fromI32(event.params.feeOtz)
   }
-  updateFeeHourData(event, BigInt.fromI32(event.params.fee))
+  updateFeeHourData(event, BigInt.fromI32(event.params.feeZto),BigInt.fromI32(event.params.feeZto))
   fee.save()
 }
 

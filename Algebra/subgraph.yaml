@@ -32,6 +32,8 @@ dataSources:
       eventHandlers:
         - event: Pool(indexed address,indexed address,address)
           handler: handlePoolCreated
+        - event: DefaultCommunityFee(uint8)
+          handler: handleDefaultCommFeeChange
   - kind: ethereum/contract
     name: NonfungiblePositionManager
     network: arbitrum-one
@@ -96,9 +98,11 @@ templates:
           handler: handleMint
         - event: Burn(indexed address,indexed int24,indexed int24,uint128,uint256,uint256)
           handler: handleBurn
-        - event: Fee(uint16)
+        - event: Fee(uint16,uint16)
           handler: handleChangeFee
         - event: Collect(indexed address,address,indexed int24,indexed int24,uint128,uint128)
           handler: handleCollect
         - event: CommunityFee(uint8,uint8)
           handler: handleSetCommunityFee
+        - event: TickSpacing(int24)
+          handler: handleSetTickSpacing
