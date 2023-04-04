@@ -105,6 +105,7 @@ export function updateFeeHourData(event: ethereum.Event, feeZtO: BigInt, feeOtZ:
   if(FeeHourDataEntity){
     FeeHourDataEntity.timestamp = BigInt.fromI32(hourStartUnix)
     FeeHourDataEntity.feeZtO += feeZtO
+    FeeHourDataEntity.feeOtZ += feeOtZ
     FeeHourDataEntity.changesCount += ONE_BI
     if(FeeHourDataEntity.maxFee < feeZtO) FeeHourDataEntity.maxFee = feeZtO
     if(FeeHourDataEntity.minFee > feeZtO) FeeHourDataEntity.minFee = feeZtO  

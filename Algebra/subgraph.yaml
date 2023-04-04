@@ -7,7 +7,7 @@ dataSources:
     name: Factory
     network: arbitrum-one
     source:
-      address: '0x1F054ce3254f9E3EDd987D897223E0184646d8EC'
+      address: '0xd490F2F6990C0291597fd1247651b4E0dCF684Dd'
       abi: Factory
       startBlock: 73140000 
     mapping:
@@ -38,7 +38,7 @@ dataSources:
     name: NonfungiblePositionManager
     network: arbitrum-one
     source:
-      address: '0x259BA0c58bb231c6fE5B71Dd928b9d297685ea3c'
+      address: '0xAcDcC3C6A2339D08E0AC9f694E4DE7c52F890Db3'
       abi: NonfungiblePositionManager
       startBlock: 73140000 
     mapping:
