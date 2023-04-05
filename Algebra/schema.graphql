@@ -194,6 +194,15 @@ type Tick @entity {
   feeGrowthOutside1X128: BigInt!
 }
 
+type PoolPosition @entity {
+  id: ID!
+  pool: Pool!
+  lowerTick: Tick!
+  upperTick: Tick!
+  owner: Bytes!
+  liquidity: BigInt!
+}
+
 type Position @entity {
   # Positions created through NonfungiblePositionManager
   # NFT token id
