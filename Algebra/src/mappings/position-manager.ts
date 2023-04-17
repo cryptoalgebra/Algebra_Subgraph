@@ -33,15 +33,15 @@ function getPosition(event: ethereum.Event, tokenId: BigInt): Position | null {
       position.owner = Address.fromString(ADDRESS_ZERO)
       position.pool = poolAddress.toHexString()
       if(pools_list.includes(position.pool)){
-        position.token0 = positionResult.value4.toHexString()
-        position.token1 = positionResult.value3.toHexString()
+        position.token0 = positionResult.value3.toHexString()
+        position.token1 = positionResult.value2.toHexString()
       }
       else{
-        position.token0 = positionResult.value3.toHexString()
-        position.token1 = positionResult.value4.toHexString()
+        position.token0 = positionResult.value2.toHexString()
+        position.token1 = positionResult.value3.toHexString()
       } 
-      position.tickLower = position.pool.concat('#').concat(positionResult.value5.toString())
-      position.tickUpper = position.pool.concat('#').concat(positionResult.value6.toString())
+      position.tickLower = position.pool.concat('#').concat(positionResult.value4.toString())
+      position.tickUpper = position.pool.concat('#').concat(positionResult.value5.toString())
       position.liquidity = ZERO_BI
       position.depositedToken0 = ZERO_BD
       position.depositedToken1 = ZERO_BD
@@ -52,8 +52,8 @@ function getPosition(event: ethereum.Event, tokenId: BigInt): Position | null {
       position.collectedFeesToken0 = ZERO_BD
       position.collectedFeesToken1 = ZERO_BD
       position.transaction = loadTransaction(event).id
-      position.feeGrowthInside0LastX128 = positionResult.value8
-      position.feeGrowthInside1LastX128 = positionResult.value9
+      position.feeGrowthInside0LastX128 = positionResult.value7
+      position.feeGrowthInside1LastX128 = positionResult.value8
     }
   }
 
@@ -68,8 +68,8 @@ function updateFeeVars(position: Position, event: ethereum.Event, tokenId: BigIn
   let positionManagerContract = NonfungiblePositionManager.bind(event.address)
   let positionResult = positionManagerContract.try_positions(tokenId)
   if (!positionResult.reverted) {
-    position.feeGrowthInside0LastX128 = positionResult.value.value8
-    position.feeGrowthInside1LastX128 = positionResult.value.value9
+    position.feeGrowthInside0LastX128 = positionResult.value.value7
+    position.feeGrowthInside1LastX128 = positionResult.value.value8
   }
   return position
 }

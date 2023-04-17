@@ -4,7 +4,7 @@ import { Factory as FactoryContract } from '../types/templates/Pool/Factory'
 
 
 export const ADDRESS_ZERO = '0x0000000000000000000000000000000000000000'
-export const FACTORY_ADDRESS = '0x41931d519D6C0AF8e334C6A536298C2e878cC39c'
+export const FACTORY_ADDRESS = '0xF83D84C96E431547fA55F32b8254109f1145E592'
 
 export let ZERO_BI = BigInt.fromI32(0)
 export let ONE_BI = BigInt.fromI32(1)
