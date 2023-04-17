@@ -5,11 +5,11 @@ schema:
 dataSources:
   - kind: ethereum/contract
     name: Factory
-    network: matic
+    network: avalanche
     source:
-      address: '0x9742E5C4452ccA62ce115d302756e9150CbA36Aa'
+      address: '0x011DaE098C82F362A7ec018a1B13FA5DD29F3B1d'
       abi: Factory
-      startBlock: 31656556 
+      startBlock: 27970809 
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -34,11 +34,11 @@ dataSources:
           handler: handlePoolCreated
   - kind: ethereum/contract
     name: NonfungiblePositionManager
-    network: matic
+    network: avalanche
     source:
-      address: '0x5c43b3C6d5b7dF8A672db8DD66d0b5D74BAf099F'
+      address: '0x7E50c2ccc56D99Eb879B769802Dd45132388b426'
       abi: NonfungiblePositionManager
-      startBlock: 31656556 
+      startBlock: 27970809 
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -69,7 +69,7 @@ dataSources:
 templates:
   - kind: ethereum/contract
     name: Pool
-    network: matic
+    network: avalanche
     source:
       abi: Pool
     mapping:
