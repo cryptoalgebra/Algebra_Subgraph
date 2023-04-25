@@ -15,7 +15,7 @@ export let WHITELIST_TOKENS: string[] = [
   '0x5Cc61A78F164885776AA610fb0FE1257df78E59B' // SPIRIT 
 ]
 
-let MINIMUM_Matic_LOCKED = BigDecimal.fromString('0')
+let MINIMUM_Matic_LOCKED = BigDecimal.fromString('10')
 
 let Q192 = Math.pow(2, 192)
 

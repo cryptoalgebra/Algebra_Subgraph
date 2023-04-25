@@ -7,7 +7,7 @@ dataSources:
     name: Factory
     network: fantom
     source:
-      address: '0xF83D84C96E431547fA55F32b8254109f1145E592'
+      address: '0xC58A98644fCeee73bc2B6d349B3102627e2Ec58e'
       abi: Factory
       startBlock: 58201889 
     mapping:
@@ -38,7 +38,7 @@ dataSources:
     name: NonfungiblePositionManager
     network: fantom
     source:
-      address: '0x5f83bC541De4eC1B631f5Abd11f36C6616d60cb3'
+      address: '0x23C86Ee6d2cdF53662F322A7D9C2d8a097a06264'
       abi: NonfungiblePositionManager
       startBlock: 58201889 
     mapping:
