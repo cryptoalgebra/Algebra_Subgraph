@@ -5,7 +5,7 @@ import { BigDecimal, BigInt } from '@graphprotocol/graph-ts'
 import { exponentToBigDecimal, safeDiv } from '../utils/index'
 
 const WMatic_ADDRESS = '0x21be370d5312f44cb42ce377bc9b8a0cef1a4c83'
-const USDC_WMatic_03_POOL = '0xbf35e1314b80307ecce8c0d2bb878cc460fad003'
+const USDC_WMatic_03_POOL = '0x494c28292ce6980b4532831036ae2b4ebcb13d59'
 
 // token where amounts should contribute to tracked volume and liquidity
 // usually tokens that many tokens are paired with s
