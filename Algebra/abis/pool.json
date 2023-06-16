@@ -115,7 +115,13 @@
       {
         "indexed": false,
         "internalType": "uint16",
-        "name": "fee",
+        "name": "feeZto",
+        "type": "uint16"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint16",
+        "name": "feeOtz",
         "type": "uint16"
       }
     ],
@@ -306,6 +312,19 @@
       }
     ],
     "name": "Swap",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "int24",
+        "name": "newTickSpacing",
+        "type": "int24"
+      }
+    ],
+    "name": "TickSpacing",
     "type": "event"
   },
   {
@@ -537,17 +556,17 @@
       },
       {
         "internalType": "uint16",
-        "name": "fee",
+        "name": "feeZto",
+        "type": "uint16"
+      },
+      {
+        "internalType": "uint16",
+        "name": "feeOtz",
         "type": "uint16"
       },
       {
         "internalType": "uint16",
         "name": "timepointIndex",
-        "type": "uint16"
-      },
-      {
-        "internalType": "uint16",
-        "name": "timepointIndexSwap",
         "type": "uint16"
       },
       {
@@ -766,6 +785,19 @@
   {
     "inputs": [
       {
+        "internalType": "int24",
+        "name": "newTickSpacing",
+        "type": "int24"
+      }
+    ],
+    "name": "setTickSpacing",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "address",
         "name": "recipient",
         "type": "address"
@@ -866,7 +898,7 @@
         "type": "int24"
       }
     ],
-    "stateMutability": "pure",
+    "stateMutability": "view",
     "type": "function"
   },
   {
