@@ -253,50 +253,7 @@
         "type": "uint256"
       }
     ],
-    "name": "IncentiveAttached",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "contract IERC20Minimal",
-        "name": "rewardToken",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "contract IERC20Minimal",
-        "name": "bonusRewardToken",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "contract IAlgebraPool",
-        "name": "pool",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "virtualPool",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "startTime",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "endTime",
-        "type": "uint256"
-      }
-    ],
-    "name": "IncentiveDetached",
+    "name": "IncentiveDeactivated",
     "type": "event"
   },
   {
@@ -310,6 +267,44 @@
       }
     ],
     "name": "IncentiveMaker",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      }
+    ],
+    "name": "Owner",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "reward",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "bonusReward",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "incentiveId",
+        "type": "bytes32"
+      }
+    ],
+    "name": "RewardAmountsDecreased",
     "type": "event"
   },
   {
@@ -470,46 +465,6 @@
       }
     ],
     "name": "addRewards",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "components": [
-          {
-            "internalType": "contract IERC20Minimal",
-            "name": "rewardToken",
-            "type": "address"
-          },
-          {
-            "internalType": "contract IERC20Minimal",
-            "name": "bonusRewardToken",
-            "type": "address"
-          },
-          {
-            "internalType": "contract IAlgebraPool",
-            "name": "pool",
-            "type": "address"
-          },
-          {
-            "internalType": "uint256",
-            "name": "startTime",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "endTime",
-            "type": "uint256"
-          }
-        ],
-        "internalType": "struct IIncentiveKey.IncentiveKey",
-        "name": "key",
-        "type": "tuple"
-      }
-    ],
-    "name": "attachIncentive",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -759,16 +714,43 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "deployer",
-    "outputs": [
+    "inputs": [
       {
-        "internalType": "contract IAlgebraPoolDeployer",
-        "name": "",
-        "type": "address"
+        "components": [
+          {
+            "internalType": "contract IERC20Minimal",
+            "name": "rewardToken",
+            "type": "address"
+          },
+          {
+            "internalType": "contract IERC20Minimal",
+            "name": "bonusRewardToken",
+            "type": "address"
+          },
+          {
+            "internalType": "contract IAlgebraPool",
+            "name": "pool",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "startTime",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "endTime",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IIncentiveKey.IncentiveKey",
+        "name": "key",
+        "type": "tuple"
       }
     ],
-    "stateMutability": "view",
+    "name": "deactivateIncentive",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -804,11 +786,34 @@
         "internalType": "struct IIncentiveKey.IncentiveKey",
         "name": "key",
         "type": "tuple"
+      },
+      {
+        "internalType": "uint256",
+        "name": "rewardAmount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "bonusRewardAmount",
+        "type": "uint256"
       }
     ],
-    "name": "detachIncentive",
+    "name": "decreaseRewardsAmount",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "deployer",
+    "outputs": [
+      {
+        "internalType": "contract IAlgebraPoolDeployer",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -1025,6 +1030,19 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "incentiveMaker",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "bytes32",
@@ -1063,6 +1081,11 @@
         "internalType": "address",
         "name": "multiplierToken",
         "type": "address"
+      },
+      {
+        "internalType": "bool",
+        "name": "deactivated",
+        "type": "bool"
       },
       {
         "components": [
@@ -1119,6 +1142,19 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "owner",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
@@ -1164,6 +1200,19 @@
       }
     ],
     "name": "setIncentiveMaker",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_owner",
+        "type": "address"
+      }
+    ],
+    "name": "setOwner",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

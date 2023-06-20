@@ -1,12 +1,10 @@
 import { ethereum, crypto, BigInt} from '@graphprotocol/graph-ts';
-import { FarmEntered } from '../types/EternalFarming/EternalFarming';
 import {
   LimitFarmingCreated,
   FarmEntered,
   FarmEnded,
   RewardClaimed,  
-  IncentiveDetached,
-  IncentiveAttached,
+  IncentiveDeactivated,
   RewardsAdded,
   RewardAmountsDecreased
 } from '../types/LimitFarming/LimitFarming';
@@ -126,7 +124,7 @@ export function handleTokenUnstaked(event: FarmEnded): void {
 
 }
 
-export function handleDetached( event: IncentiveDetached): void{
+export function handleDeactivate( event: IncentiveDeactivated): void{
 
   let incentiveIdTuple: Array<ethereum.Value> = [
     ethereum.Value.fromAddress(event.params.rewardToken),
@@ -147,32 +145,6 @@ export function handleDetached( event: IncentiveDetached): void{
 
   if(entity){
     entity.isDetached = true
-    entity.save()
-  } 
-
-}
-
-export function handleAttached( event: IncentiveAttached): void{
-
-  let incentiveIdTuple: Array<ethereum.Value> = [
-    ethereum.Value.fromAddress(event.params.rewardToken),
-    ethereum.Value.fromAddress(event.params.bonusRewardToken),
-    ethereum.Value.fromAddress(event.params.pool),
-    ethereum.Value.fromUnsignedBigInt(event.params.startTime),
-    ethereum.Value.fromUnsignedBigInt(event.params.endTime)
-  ];
-
-  let _incentiveTuple = changetype<ethereum.Tuple>(incentiveIdTuple);
-
-  let incentiveIdEncoded = ethereum.encode(
-    ethereum.Value.fromTuple(_incentiveTuple)
-  )!;
-  let incentiveId = crypto.keccak256(incentiveIdEncoded);
-
-  let entity = LimitFarming.load(incentiveId.toHex());
-
-  if(entity){
-    entity.isDetached = false
     entity.save()
   } 
 

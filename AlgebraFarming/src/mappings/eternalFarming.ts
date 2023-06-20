@@ -4,13 +4,12 @@ import {
   FarmEntered,
   FarmEnded,
   RewardClaimed,
-  IncentiveDetached,
-  IncentiveAttached,
+  IncentiveDeactivated,
   RewardsRatesChanged,
   RewardsAdded,
+  RewardAmountsDecreased,
   RewardsCollected
 } from '../types/EternalFarming/EternalFarming';
-import { FarmEntered } from '../types/LimitFarming/LimitFarming';
 import { Deposit, Reward, EternalFarming } from '../types/schema';
 import { createTokenEntity } from '../utils/token'
 
@@ -134,7 +133,7 @@ export function handleTokenUnstaked(event: FarmEnded): void {
 
 }
 
-export function handleDetached( event: IncentiveDetached): void{
+export function handleDeactivate( event: IncentiveDeactivated): void{
 
   let incentiveIdTuple: Array<ethereum.Value> = [
     ethereum.Value.fromAddress(event.params.rewardToken),
@@ -160,30 +159,13 @@ export function handleDetached( event: IncentiveDetached): void{
 
 }
 
-export function handleAttached( event: IncentiveAttached): void{
-
-  let incentiveIdTuple: Array<ethereum.Value> = [
-    ethereum.Value.fromAddress(event.params.rewardToken),
-    ethereum.Value.fromAddress(event.params.bonusRewardToken),
-    ethereum.Value.fromAddress(event.params.pool),
-    ethereum.Value.fromUnsignedBigInt(event.params.startTime),
-    ethereum.Value.fromUnsignedBigInt(event.params.endTime)
-  ];
-
-  let _incentiveTuple = changetype<ethereum.Tuple>(incentiveIdTuple);
-
-  let incentiveIdEncoded = ethereum.encode(
-    ethereum.Value.fromTuple(_incentiveTuple)
-  )!;
-  let incentiveId = crypto.keccak256(incentiveIdEncoded);
-
-  let entity = EternalFarming.load(incentiveId.toHex());
-
-  if(entity){
-    entity.isDetached = false
-    entity.save()
-  } 
-
+export function handleRewardAmountsDecreased( event: RewardAmountsDecreased): void {
+  let incentive = EternalFarming.load(event.params.incentiveId.toHexString())
+  if(incentive){
+    incentive.bonusReward -= event.params.bonusReward
+    incentive.reward -= event.params.reward
+    incentive.save()
+  }
 }
 
 export function handleRewardsRatesChanged( event: RewardsRatesChanged): void{
