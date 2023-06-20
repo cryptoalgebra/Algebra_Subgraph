@@ -112,6 +112,8 @@ type Pool @entity {
   untrackedVolumeUSD: BigDecimal!
   # fees in USD
   feesUSD: BigDecimal!
+  # tick spacing
+  tickSpacing: BigInt!
   #
   untrackedFeesUSD: BigDecimal!
   # all time number of transactions

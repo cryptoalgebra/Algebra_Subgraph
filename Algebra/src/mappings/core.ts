@@ -10,7 +10,8 @@ import {
   Fee as ChangeFee,
   Mint as MintEvent,
   Swap as SwapEvent,
-  CommunityFee
+  CommunityFee,
+  TickSpacing
 } from '../types/templates/Pool/Pool'
 import { convertTokenToDecimal, loadTransaction, safeDiv } from '../utils'
 import { FACTORY_ADDRESS, ONE_BI, ZERO_BD, ZERO_BI, pools_list, TICK_SPACING } from '../utils/constants'
@@ -673,6 +674,12 @@ export function handleChangeFee(event: ChangeFee): void {
   }
   updateFeeHourData(event, BigInt.fromI32(event.params.fee))
   fee.save()
+}
+
+export function handleSetTickSpacing(event: TickSpacing): void {
+  let pool = Pool.load(event.address.toHexString())!
+  pool.tickSpacing = BigInt.fromI32(event.params.newTickSpacing)
+  pool.save()
 }
 
 
