@@ -17,6 +17,8 @@ type Factory @entity {
   untrackedVolumeUSD: BigDecimal!
   # TVL derived in USD
   totalValueLockedUSD: BigDecimal!
+  #
+  defaultCommunityFee: BigInt!
   # TVL derived in Matic
   totalValueLockedMatic: BigDecimal!
   # TVL derived in USD untracked

@@ -309,6 +309,19 @@
     "type": "event"
   },
   {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "int24",
+        "name": "newTickSpacing",
+        "type": "int24"
+      }
+    ],
+    "name": "TickSpacing",
+    "type": "event"
+  },
+  {
     "inputs": [],
     "name": "activeIncentive",
     "outputs": [
@@ -546,11 +559,6 @@
         "type": "uint16"
       },
       {
-        "internalType": "uint16",
-        "name": "timepointIndexSwap",
-        "type": "uint16"
-      },
-      {
         "internalType": "uint8",
         "name": "communityFeeToken0",
         "type": "uint8"
@@ -766,6 +774,19 @@
   {
     "inputs": [
       {
+        "internalType": "int24",
+        "name": "newTickSpacing",
+        "type": "int24"
+      }
+    ],
+    "name": "setTickSpacing",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "address",
         "name": "recipient",
         "type": "address"
@@ -866,7 +887,7 @@
         "type": "int24"
       }
     ],
-    "stateMutability": "pure",
+    "stateMutability": "view",
     "type": "function"
   },
   {
