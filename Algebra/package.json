@@ -9,7 +9,7 @@
     "build": "graph build",
     "create-local": "graph create cryptoalgebra/algebra --node http://127.0.0.1:8020",
     "deploy-local": "graph deploy cryptoalgebra/algebra --debug --ipfs http://localhost:5001 --node http://127.0.0.1:8020",
-    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ --access-token c048f4931db84e1c92efefd9d4bef642 iliaazhel/algebra subgraph.yaml",
+    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ --access-token  iliaazhel/zyberswap-info subgraph.yaml",
     "deploy-dev": "graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/  --access-token a3f47169869d4585a475d0d1d10a4062 iliaazhel/fuzzyswap subgraph.yaml",
     "create": "graph create cryptoalgebra/info --node https://api.thegraph.com/create/"
   },

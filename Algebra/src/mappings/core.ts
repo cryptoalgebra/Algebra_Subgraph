@@ -1,5 +1,5 @@
 /* eslint-disable prefer-const */
-import { Bundle, Burn, Factory, Mint, Pool, Swap, Tick, Token,PoolFeeData } from '../types/schema'
+import { Bundle, Burn, Factory, Mint, Pool, Swap, Tick, PoolPosition, Token,PoolFeeData } from '../types/schema'
 import { Pool as PoolABI } from '../types/Factory/Pool'
 import { BigDecimal, BigInt, ethereum, log} from '@graphprotocol/graph-ts'
 
@@ -155,6 +155,20 @@ export function handleMint(event: MintEvent): void {
   upperTick.liquidityGross = upperTick.liquidityGross.plus(amount)
   upperTick.liquidityNet = upperTick.liquidityNet.minus(amount)
 
+  let poolPositionid = pool.id + "#" + event.params.owner.toHexString() + '#' + BigInt.fromI32(event.params.bottomTick).toString() + "#" +  BigInt.fromI32(event.params.topTick).toString()
+  let poolPosition = PoolPosition.load(poolPositionid)
+  if (poolPosition){
+    poolPosition.liquidity += event.params.liquidityAmount 
+  }
+  else{
+    poolPosition = new PoolPosition(poolPositionid)
+    poolPosition.pool = pool.id
+    poolPosition.lowerTick = lowerTick.id
+    poolPosition.upperTick = upperTick.id
+    poolPosition.liquidity = event.params.liquidityAmount
+    poolPosition.owner = event.params.owner
+  }
+
   // TODO: Update Tick's volume, fees, and liquidity provider count
 
   updateAlgebraDayData(event)
@@ -168,6 +182,7 @@ export function handleMint(event: MintEvent): void {
   token0.save()
   token1.save()
   pool.save()
+  poolPosition.save()
   factory.save()
   mint.save()
 
@@ -268,6 +283,13 @@ export function handleBurn(event: BurnEvent): void {
   lowerTick.liquidityNet = lowerTick.liquidityNet.minus(amount)
   upperTick.liquidityGross = upperTick.liquidityGross.minus(amount)
   upperTick.liquidityNet = upperTick.liquidityNet.plus(amount)
+
+  let poolPositionid = pool.id + "#" + event.params.owner.toHexString() + '#' + BigInt.fromI32(event.params.bottomTick).toString() + "#" +  BigInt.fromI32(event.params.topTick).toString()
+  let poolPosition = PoolPosition.load(poolPositionid)
+  if (poolPosition){
+    poolPosition.liquidity -= event.params.liquidityAmount 
+    poolPosition.save()
+  }
 
   updateAlgebraDayData(event)
   updatePoolDayData(event)

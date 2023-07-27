@@ -4,7 +4,7 @@
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
-    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ --access-token a3f47169869d4585a475d0d1d10a4062 iliaazhel/mumbai-blocks subgraph.yaml",
+    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ --access-token  iliaazhel/arbitrum-blocks subgraph.yaml",
     "create-local": "graph create --node http://localhost:8020/ iliaazhel/ethereum-blocks",
     "remove-local": "graph remove --node http://localhost:8020/ iliaazhel/ethereum-blocks",
     "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 iliaazhel/ethereum-blocks",

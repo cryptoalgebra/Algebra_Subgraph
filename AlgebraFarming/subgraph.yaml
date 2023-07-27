@@ -5,11 +5,11 @@ schema:
 dataSources:
 - kind: ethereum/contract
   name: NonfungiblePositionManager
-  network: bsc
+  network: arbitrum-one
   source:
-      address: '0x79EA6cB3889fe1FC7490A1C69C7861761d882D4A'
+      address: '0xCB0347cc2c07f827Fdd49eD86Ee867A754b647DC'
       abi: NonfungiblePositionManager
-      startBlock: 28719203
+      startBlock: 60555368
   mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -36,11 +36,11 @@ dataSources:
           handler: handleDecreaseLiquidity
 - kind: ethereum/contract
   name: EternalFarming
-  network: bsc
+  network: arbitrum-one
   source:
-      address: '0x16bdBD70a4dC3cF42ADAb09D5D6dd863FC19212e'
+      address: '0x40F5AF7171b35963DBA9Cd9952d3f11F5e32Dd30'
       abi: EternalFarming
-      startBlock: 28719203
+      startBlock: 60555368
   mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -81,11 +81,11 @@ dataSources:
           handler: handleCollect
 - kind: ethereum/contract
   name: FarmingCenter
-  network: bsc
+  network: arbitrum-one
   source:
-      address: '0xcFE5bdF8801f9e6Dd0E7a894129c0c7B95f02E7F'
+      address: '0xa2Adf5EF43226a4a6A7c6b360F486bDaf2712Bc8'
       abi: FarmingCenter
-      startBlock: 28719203
+      startBlock: 60555368
   mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -108,11 +108,11 @@ dataSources:
           handler: handleTransfer
 - kind: ethereum/contract
   name: LimitFarming
-  network: bsc
+  network: arbitrum-one
   source:
-      address: '0x200A9a54938eF70d5D910f0E17189C14ACe08f19'
+      address: '0x67Db143dcfeEB9b1BfE7fdA64bb7b23c844Bc2Aa'
       abi: LimitFarming
-      startBlock: 28719203 
+      startBlock: 60555368 
   mapping:
       kind: ethereum/events
       apiVersion: 0.0.5

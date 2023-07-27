@@ -4,15 +4,18 @@ import { Bundle, Pool, Token } from './../types/schema'
 import { BigDecimal, BigInt } from '@graphprotocol/graph-ts'
 import { exponentToBigDecimal, safeDiv } from '../utils/index'
 
-const WMatic_ADDRESS = '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270'
-const USDC_WMatic_03_POOL = '0xc3c4074fbc2d504fb8ccd28e3ae46914a1ecc5ed'
+const WMatic_ADDRESS = '0x82af49447d8a07e3bd95bd0d56f35241523fbab1'
+const USDC_WMatic_03_POOL = '0x308c5b91f63307439fdb51a9fa4dfc979e2ed6b0'
 
 // token where amounts should contribute to tracked volume and liquidity
 // usually tokens that many tokens are paired with s
 export let WHITELIST_TOKENS: string[] = [
-  '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270', // WMATIC
-  '0x2791bca1f2de4661ed88a30c99a7a9449aa84174', // USDC
-  '0xc2132d05d31c914a87c6611c10748aeb04b58e8f' // USDT 
+  '0x82af49447d8a07e3bd95bd0d56f35241523fbab1', // WETH
+  '0xff970a61a04b1ca14834a43f5de4533ebddb5cc8', // USDC
+  '0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9', // USDT 
+  '0x3b475f6f2f41853706afc9fa6a6b8c5df1a2724c', // ZYBERSWAP
+  '0x2f2a2543b76a4166549f7aab2e75bef0aefc5b0f', // WBTC
+  '0xda10009cbd5d07dd0cecc66161fc93d7c9000da1', // DAI
 ]
 
 let MINIMUM_Matic_LOCKED = BigDecimal.fromString('0')
@@ -20,8 +23,9 @@ let MINIMUM_Matic_LOCKED = BigDecimal.fromString('0')
 let Q192 = Math.pow(2, 192)
 
 let STABLE_COINS: string[] = [
-  '0x2791bca1f2de4661ed88a30c99a7a9449aa84174', // USDC
-  '0xc2132d05d31c914a87c6611c10748aeb04b58e8f' // SUDT
+  '0xff970a61a04b1ca14834a43f5de4533ebddb5cc8', // USDC
+  '0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9', // USDT
+  '0xda10009cbd5d07dd0cecc66161fc93d7c9000da1', // DAI
 ]
 
 
@@ -40,7 +44,7 @@ export function priceToTokenPrices(price: BigInt, token0: Token, token1: Token):
 export function getEthPriceInUSD(): BigDecimal {
   let usdcPool = Pool.load(USDC_WMatic_03_POOL) // dai is token0
   if (usdcPool !== null) {
-    return usdcPool.token0Price
+    return usdcPool.token1Price
   } else {
     return ZERO_BD
   }
