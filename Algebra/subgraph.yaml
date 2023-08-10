@@ -1,18 +1,18 @@
-specVersion: 0.0.2
+specVersion: 0.0.4
 description: Algebra is a decentralized protocol for automated token exchange on Polygon.
 schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum/contract
     name: Factory
-    network: arbitrum-one
+    network: base
     source:
-      address: '0x9C2ABD632771b433E5E7507BcaA41cA3b25D8544'
+      address: '0xa37359E63D1aa44C0ACb2a4605D3B45785C97eE3'
       abi: Factory
-      startBlock: 60555368 
+      startBlock: 1459346 
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.6
       language: wasm/assemblyscript
       file: ./src/mappings/factory.ts
       entities:
@@ -34,14 +34,14 @@ dataSources:
           handler: handlePoolCreated
   - kind: ethereum/contract
     name: NonfungiblePositionManager
-    network: arbitrum-one
+    network: base
     source:
-      address: '0xCB0347cc2c07f827Fdd49eD86Ee867A754b647DC'
+      address: '0xE84F7A8ae66FB5dB5feCC92a0c695c8bb336731d'
       abi: NonfungiblePositionManager
-      startBlock: 60555368 
+      startBlock: 1459346 
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.6
       language: wasm/assemblyscript
       file: ./src/mappings/position-manager.ts
       entities:
@@ -69,12 +69,12 @@ dataSources:
 templates:
   - kind: ethereum/contract
     name: Pool
-    network: arbitrum-one
+    network: base
     source:
       abi: Pool
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.6
       language: wasm/assemblyscript
       file: ./src/mappings/core.ts
       entities:

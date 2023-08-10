@@ -45,7 +45,7 @@ type EternalFarming @entity {
 
 type Deposit @entity {
   id: ID!
-  L2tokenId: BigInt!
+  L2tokenId: BigInt
   owner: Bytes!
   onFarmingCenter: Boolean!
   pool: Bytes!
@@ -54,10 +54,10 @@ type Deposit @entity {
   enteredInEternalFarming: BigInt 
   liquidity: BigInt!
   rangeLength: BigInt!
-  tokensLockedLimit: BigInt!
-  tokensLockedEternal: BigInt!
-  tierLimit: BigInt!
-  tierEternal: BigInt! 
+  tokensLockedLimit: BigInt
+  tokensLockedEternal: BigInt
+  tierLimit: BigInt
+  tierEternal: BigInt 
 }
 
 type Reward @entity{

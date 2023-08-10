@@ -1,18 +1,18 @@
-specVersion: 0.0.2
+specVersion: 0.0.4
 description: Algebra is a Innovative DEX with concentrated liquidity, adaptive fee, build-in farming etc.
 schema:
   file: ./schema.graphql
 dataSources:
 - kind: ethereum/contract
   name: NonfungiblePositionManager
-  network: arbitrum-one
+  network: base
   source:
-      address: '0xCB0347cc2c07f827Fdd49eD86Ee867A754b647DC'
+      address: '0xE84F7A8ae66FB5dB5feCC92a0c695c8bb336731d'
       abi: NonfungiblePositionManager
-      startBlock: 60555368
+      startBlock: 1459346
   mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.6
       language: wasm/assemblyscript
       file: ./src/mappings/position-manager.ts
       entities:
@@ -36,14 +36,14 @@ dataSources:
           handler: handleDecreaseLiquidity
 - kind: ethereum/contract
   name: EternalFarming
-  network: arbitrum-one
+  network: base
   source:
-      address: '0x40F5AF7171b35963DBA9Cd9952d3f11F5e32Dd30'
+      address: '0x521bC0a04846e67F6933530Ad4900146e275EB7F'
       abi: EternalFarming
-      startBlock: 60555368
+      startBlock: 1459346
   mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.6
       language: wasm/assemblyscript
       file: ./src/mappings/eternalFarming.ts
       entities:
@@ -81,14 +81,14 @@ dataSources:
           handler: handleCollect
 - kind: ethereum/contract
   name: FarmingCenter
-  network: arbitrum-one
+  network: base
   source:
-      address: '0xa2Adf5EF43226a4a6A7c6b360F486bDaf2712Bc8'
+      address: '0x0Ca32f1d67D9e805d752Aa6250B9e37AC43d2119'
       abi: FarmingCenter
-      startBlock: 60555368
+      startBlock: 1459346
   mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.6
       language: wasm/assemblyscript
       file: ./src/mappings/center.ts
       entities:
@@ -108,14 +108,14 @@ dataSources:
           handler: handleTransfer
 - kind: ethereum/contract
   name: LimitFarming
-  network: arbitrum-one
+  network: base
   source:
-      address: '0x67Db143dcfeEB9b1BfE7fdA64bb7b23c844Bc2Aa'
+      address: '0xf9806d646793161303685C61b88DEe2649C3C6aE'
       abi: LimitFarming
-      startBlock: 60555368 
+      startBlock: 1459346 
   mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.6
       language: wasm/assemblyscript 
       file: ./src/mappings/limitFarming.ts
       entities:

@@ -64,6 +64,8 @@ export function updatePoolDayData(event: ethereum.Event): PoolDayData {
     poolDayData.untrackedVolumeUSD = ZERO_BD
     poolDayData.feesUSD = ZERO_BD
     poolDayData.txCount = ZERO_BI
+    poolDayData.feesToken0 = ZERO_BD
+    poolDayData.feesToken1 = ZERO_BD
     poolDayData.feeGrowthGlobal0X128 = ZERO_BI
     poolDayData.feeGrowthGlobal1X128 = ZERO_BI
     poolDayData.open = pool.token0Price
