@@ -1,6 +1,6 @@
 import { WHITELIST_TOKENS } from './../utils/pricing'
 /* eslint-disable prefer-const */
-import { FACTORY_ADDRESS, ZERO_BI, ONE_BI, ZERO_BD, ADDRESS_ZERO, pools_list} from './../utils/constants'
+import { FACTORY_ADDRESS, ZERO_BI, ONE_BI, ZERO_BD, ADDRESS_ZERO, XSYNTH_ADDRESS,pools_list} from './../utils/constants'
 import { Factory } from '../types/schema'
 import { Pool as PoolEvent } from '../types/Factory/Factory'
 import { DefaultCommunityFee } from '../types/Factory/Factory'
@@ -30,10 +30,36 @@ export function handlePoolCreated(event: PoolEvent): void {
     factory.txCount = ZERO_BI
     factory.owner = ADDRESS_ZERO
 
+    let xsynth = new Token(XSYNTH_ADDRESS.toHexString())
+    xsynth.symbol = fetchTokenSymbol(XSYNTH_ADDRESS)
+    xsynth.name = fetchTokenName(XSYNTH_ADDRESS)
+    xsynth.totalSupply = fetchTokenTotalSupply(XSYNTH_ADDRESS)
+    let decimals = fetchTokenDecimals(XSYNTH_ADDRESS)
+
+    // bail if we couldn't figure out the decimals
+    if (decimals === null) {
+      log.debug('mybug the decimal on token 0 was null', [])
+      return
+    }
+
+    xsynth.decimals = decimals
+    xsynth.derivedMatic = ZERO_BD
+    xsynth.volume = ZERO_BD
+    xsynth.volumeUSD = ZERO_BD
+    xsynth.feesUSD = ZERO_BD
+    xsynth.untrackedVolumeUSD = ZERO_BD
+    xsynth.totalValueLocked = ZERO_BD
+    xsynth.totalValueLockedUSD = ZERO_BD
+    xsynth.totalValueLockedUSDUntracked = ZERO_BD
+    xsynth.txCount = ZERO_BI
+    xsynth.poolCount = ZERO_BI
+    xsynth.whitelistPools = []
+
     // create new bundle for tracking matic price
     let bundle = new Bundle('1')
     bundle.maticPriceUSD = ZERO_BD
     bundle.save()
+    xsynth.save()
   }
 
   factory.poolCount = factory.poolCount.plus(ONE_BI)

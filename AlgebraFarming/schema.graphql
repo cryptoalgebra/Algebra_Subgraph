@@ -30,8 +30,8 @@ type EternalFarming @entity {
   endTime: BigInt!
   reward: BigInt!
   bonusReward: BigInt!
-  rewardRate: BigInt!
-  bonusRewardRate: BigInt!
+  rewardRate: BigInt
+  bonusRewardRate: BigInt
   isDetached: Boolean
   minRangeLength: BigInt!
   tokenAmountForTier1: BigInt!

@@ -14,7 +14,7 @@ import {
   TickSpacing
 } from '../types/templates/Pool/Pool'
 import { convertTokenToDecimal, loadTransaction, safeDiv } from '../utils'
-import { FACTORY_ADDRESS, ONE_BI, ZERO_BD, ZERO_BI, pools_list, TICK_SPACING } from '../utils/constants'
+import { FACTORY_ADDRESS, ONE_BI, ZERO_BD, ZERO_BI, pools_list, TICK_SPACING, XSYNTH_ADDRESS, SYNTH_ADDRESS } from '../utils/constants'
 import { findEthPerToken, getEthPriceInUSD, getTrackedAmountUSD, priceToTokenPrices } from '../utils/pricing'
 import {
   updatePoolDayData,
@@ -551,6 +551,8 @@ export function handleSwap(event: SwapEvent): void {
   pool.save()
   token0.save()
   token1.save()
+
+  updateXsynthPrice()
   
   // Update inner vars of current or crossed ticks
   let newTick = pool.tick
@@ -676,6 +678,15 @@ function updateTickFeeVarsAndSave(tick: Tick, event: ethereum.Event): void {
   tick.feeGrowthOutside1X128 = tickResult.value3
   tick.save()
   updateTickDayData(tick, event)
+}
+
+function updateXsynthPrice(): void {
+  let xsynth = Token.load(XSYNTH_ADDRESS.toHexString())
+  let synth = Token.load(SYNTH_ADDRESS)
+  if(synth != null && xsynth != null){
+    xsynth.derivedMatic = synth.derivedMatic
+    xsynth.save()
+  }
 }
 
 export function handleChangeFee(event: ChangeFee): void {
