@@ -11,7 +11,7 @@
     "create-pulse": "graph create cryptoalgebra/algebra-farming --node http://3.16.122.80:8120/",
     "deploy-pulse": "graph deploy cryptoalgebra/algebra-farming --debug --ipfs http://3.16.122.80:5101 --node http://3.16.122.80:8120/",
     "deploy-local": "graph deploy iliaazhel/karasb --debug --ipfs http://localhost:5001 --node http://127.0.0.1:8020",
-    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ --access-token c048f4931db84e1c92efefd9d4bef642 iliaazhel/algebra-farming subgraph.yaml",
+    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ --access-token  iliaazhel/zyberswap-farming  subgraph.yaml",
     "deploy-dev": "graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ iliaazhel/algebra-dev-staker subgraph.yaml"
   },
   "devDependencies": {
