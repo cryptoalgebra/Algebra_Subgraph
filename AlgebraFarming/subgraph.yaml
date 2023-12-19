@@ -38,7 +38,7 @@ dataSources:
   name: EternalFarming
   network: mantle
   source:
-      address: '0xe2eb7d3e55612Fe94E3b4E07d65087B379a730aB'
+      address: '0x865868fc16A364940fbfb392f4935E8487dfA8ff'
       abi: EternalFarming
       startBlock: 9796960
   mapping:
