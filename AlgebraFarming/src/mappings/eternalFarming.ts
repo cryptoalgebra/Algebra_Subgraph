@@ -36,9 +36,10 @@ export function handleIncentiveCreated(event: EternalFarmingCreated): void {
     entity = new EternalFarming(incentiveId.toHex());
     entity.reward = BigInt.fromString("0");
     entity.bonusReward = BigInt.fromString("0");
+    entity.rewardRate = BigInt.fromString("0");
+    entity.bonusRewardRate = BigInt.fromString("0");
   }
   
-
   entity.rewardToken = event.params.rewardToken;
   entity.bonusRewardToken = event.params.bonusRewardToken;
   entity.pool = event.params.pool;
