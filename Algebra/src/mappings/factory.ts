@@ -1,6 +1,6 @@
 import { WHITELIST_TOKENS } from './../utils/pricing'
 /* eslint-disable prefer-const */
-import { FACTORY_ADDRESS, ZERO_BI, ONE_BI, ZERO_BD, ADDRESS_ZERO, ICE_ADDRESS, pools_list} from './../utils/constants'
+import { FACTORY_ADDRESS, ZERO_BI, ONE_BI, ZERO_BD, ADDRESS_ZERO, pools_list} from './../utils/constants'
 import { Factory } from '../types/schema'
 import { Pool as PoolEvent } from '../types/Factory/Factory'
 import { DefaultCommunityFee } from '../types/Factory/Factory'
@@ -30,36 +30,11 @@ export function handlePoolCreated(event: PoolEvent): void {
     factory.txCount = ZERO_BI
     factory.owner = ADDRESS_ZERO
 
-    let ice = new Token(ICE_ADDRESS.toHexString())
-    ice.symbol = "ICE"
-    ice.name = "Swapsicle ICE Token"
-    ice.totalSupply = fetchTokenTotalSupply(ICE_ADDRESS)
-    let decimals = BigInt.fromI32(18)
-
-    // bail if we couldn't figure out the decimals
-    if (decimals === null) {
-      log.debug('mybug the decimal on token 0 was null', [])
-      return
-    }
-
-    ice.decimals = decimals
-    ice.derivedMatic = ZERO_BD
-    ice.volume = ZERO_BD
-    ice.volumeUSD = ZERO_BD
-    ice.feesUSD = ZERO_BD
-    ice.untrackedVolumeUSD = ZERO_BD
-    ice.totalValueLocked = ZERO_BD
-    ice.totalValueLockedUSD = ZERO_BD
-    ice.totalValueLockedUSDUntracked = ZERO_BD
-    ice.txCount = ZERO_BI
-    ice.poolCount = ZERO_BI
-    ice.whitelistPools = []
-
     // create new bundle for tracking matic price
     let bundle = new Bundle('1')
     bundle.maticPriceUSD = ZERO_BD
     bundle.save()
-    ice.save()
+
   }
 
   factory.poolCount = factory.poolCount.plus(ONE_BI)
@@ -206,36 +181,10 @@ export function handleNewCommunityFee(event: DefaultCommunityFee): void{
     factory.txCount = ZERO_BI
     factory.owner = ADDRESS_ZERO
 
-    let ice = new Token(ICE_ADDRESS.toHexString())
-    ice.symbol = "ICE"
-    ice.name = "Swapsicle ICE Token"
-    ice.totalSupply = fetchTokenTotalSupply(ICE_ADDRESS)
-    let decimals = BigInt.fromI32(18)
-
-    // bail if we couldn't figure out the decimals
-    if (decimals === null) {
-      log.debug('mybug the decimal on token 0 was null', [])
-      return
-    }
-
-    ice.decimals = decimals
-    ice.derivedMatic = ZERO_BD
-    ice.volume = ZERO_BD
-    ice.volumeUSD = ZERO_BD
-    ice.feesUSD = ZERO_BD
-    ice.untrackedVolumeUSD = ZERO_BD
-    ice.totalValueLocked = ZERO_BD
-    ice.totalValueLockedUSD = ZERO_BD
-    ice.totalValueLockedUSDUntracked = ZERO_BD
-    ice.txCount = ZERO_BI
-    ice.poolCount = ZERO_BI
-    ice.whitelistPools = []
-
     // create new bundle for tracking matic price
     let bundle = new Bundle('1')
     bundle.maticPriceUSD = ZERO_BD
     bundle.save()
-    ice.save()
   }
   factory.defaultCommunityFee = BigInt.fromI32(event.params.newDefaultCommunityFee as i32)
   factory.save()

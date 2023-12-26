@@ -14,7 +14,7 @@ import {
   TickSpacing
 } from '../types/templates/Pool/Pool'
 import { convertTokenToDecimal, loadTransaction, safeDiv } from '../utils'
-import { FACTORY_ADDRESS, ICE_ADDRESS, SLUSH_ADDRESS, ONE_BI, ZERO_BD, ZERO_BI, pools_list} from '../utils/constants'
+import { FACTORY_ADDRESS, ONE_BI, ZERO_BD, ZERO_BI, pools_list} from '../utils/constants'
 import { findEthPerToken, getEthPriceInUSD, getTrackedAmountUSD, priceToTokenPrices } from '../utils/pricing'
 import {
   updatePoolDayData,
@@ -552,7 +552,6 @@ export function handleSwap(event: SwapEvent): void {
   token0.save()
   token1.save()
   
-  updateIcePrice()
   // Update inner vars of current or crossed ticks
   let newTick = pool.tick
   let modulo = newTick.mod(pool.tickSpacing)
@@ -641,16 +640,6 @@ export function handleSetTickSpacing(event: TickSpacing): void {
   pool.tickSpacing = BigInt.fromI32(event.params.newTickSpacing as i32)
   pool.save
 }
-
-function updateIcePrice(): void {
-  let ice = Token.load(ICE_ADDRESS.toHexString())
-  let slush = Token.load(SLUSH_ADDRESS)
-  if(slush != null && ice != null){
-    ice.derivedMatic = slush.derivedMatic
-    ice.save()
-  }
-}
-
 
 export function handleChangeFee(event: ChangeFee): void {
 
