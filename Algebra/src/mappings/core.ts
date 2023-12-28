@@ -13,7 +13,7 @@ import {
   CommunityFee
 } from '../types/templates/Pool/Pool'
 import { convertTokenToDecimal, loadTransaction, safeDiv } from '../utils'
-import { FACTORY_ADDRESS, ONE_BI, ZERO_BD, ZERO_BI, pools_list, TICK_SPACING } from '../utils/constants'
+import { FACTORY_ADDRESS, ONE_BI, ZERO_BD, ZERO_BI, pools_list, TICK_SPACING, MAX_TVL } from '../utils/constants'
 import { findEthPerToken, getEthPriceInUSD, getTrackedAmountUSD, priceToTokenPrices } from '../utils/pricing'
 import {
   updatePoolDayData,
@@ -107,6 +107,7 @@ export function handleMint(event: MintEvent): void {
   pool.totalValueLockedMatic = pool.totalValueLockedToken0
     .times(token0.derivedMatic)
     .plus(pool.totalValueLockedToken1.times(token1.derivedMatic))
+  if (pool.totalValueLockedMatic > MAX_TVL) pool.totalValueLockedMatic = ZERO_BD
   pool.totalValueLockedUSD = pool.totalValueLockedMatic.times(bundle.maticPriceUSD)
 
   // reset aggregates with new amounts
@@ -232,6 +233,7 @@ export function handleBurn(event: BurnEvent): void {
   pool.totalValueLockedMatic = pool.totalValueLockedToken0
     .times(token0.derivedMatic)
     .plus(pool.totalValueLockedToken1.times(token1.derivedMatic))
+  if (pool.totalValueLockedMatic > MAX_TVL) pool.totalValueLockedMatic = ZERO_BD  
   pool.totalValueLockedUSD = pool.totalValueLockedMatic.times(bundle.maticPriceUSD)
 
   // reset aggregates with new amounts
@@ -428,6 +430,7 @@ export function handleSwap(event: SwapEvent): void {
   pool.totalValueLockedMatic = pool.totalValueLockedToken0
     .times(token0.derivedMatic)
     .plus(pool.totalValueLockedToken1.times(token1.derivedMatic))
+  if (pool.totalValueLockedMatic > MAX_TVL) pool.totalValueLockedMatic = ZERO_BD
   pool.totalValueLockedUSD = pool.totalValueLockedMatic.times(bundle.maticPriceUSD)
 
   factory.totalValueLockedMatic = factory.totalValueLockedMatic.plus(pool.totalValueLockedMatic)
@@ -630,6 +633,7 @@ export function handleCollect(event: Collect): void {
   pool.totalValueLockedMatic = pool.totalValueLockedToken0
     .times(token0.derivedMatic)
     .plus(pool.totalValueLockedToken1.times(token1.derivedMatic))
+  if (pool.totalValueLockedMatic > MAX_TVL) pool.totalValueLockedMatic = ZERO_BD
   pool.totalValueLockedUSD = pool.totalValueLockedMatic.times(bundle.maticPriceUSD)
  
   // reset aggregates with new amounts
