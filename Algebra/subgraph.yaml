@@ -1,8 +1,5 @@
 specVersion: 0.0.2
 description: Algebra is a decentralized protocol for automated token exchange on Polygon.
-graft:
-  base: QmQKbEDH37Z5uKzHunNmxAJUQga89aEuvnkKcFKXofNvem
-  block: 51646500
 schema:
   file: ./schema.graphql
 dataSources:
