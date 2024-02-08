@@ -7,7 +7,7 @@ dataSources:
     name: Factory
     network: matic
     source:
-      address: '0x9742E5C4452ccA62ce115d302756e9150CbA36Aa'
+      address: '0x411b0fAcC3489691f28ad58c47006AF5E3Ab3A28'
       abi: Factory
       startBlock: 31656556 
     mapping:
@@ -36,7 +36,7 @@ dataSources:
     name: NonfungiblePositionManager
     network: matic
     source:
-      address: '0x5c43b3C6d5b7dF8A672db8DD66d0b5D74BAf099F'
+      address: '0x8eF88E4c7CfbbaC1C163f7eddd4B578792201de6'
       abi: NonfungiblePositionManager
       startBlock: 31656556 
     mapping:

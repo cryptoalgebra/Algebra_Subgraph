@@ -1,5 +1,5 @@
 /* eslint-disable prefer-const */
-import { Bundle, Burn, Factory, Mint, Pool, Swap, Tick, Token,PoolFeeData } from '../types/schema'
+import { Bundle, Burn, Factory, Mint, Pool, Swap, Tick, PoolPosition, Token,PoolFeeData } from '../types/schema'
 import { Pool as PoolABI } from '../types/Factory/Pool'
 import { BigDecimal, BigInt, ethereum, log} from '@graphprotocol/graph-ts'
 
@@ -13,7 +13,7 @@ import {
   CommunityFee
 } from '../types/templates/Pool/Pool'
 import { convertTokenToDecimal, loadTransaction, safeDiv } from '../utils'
-import { FACTORY_ADDRESS, ONE_BI, ZERO_BD, ZERO_BI, pools_list, TICK_SPACING } from '../utils/constants'
+import { FACTORY_ADDRESS, ONE_BI, ZERO_BD, ZERO_BI, pools_list, TICK_SPACING, MAX_TVL } from '../utils/constants'
 import { findEthPerToken, getEthPriceInUSD, getTrackedAmountUSD, priceToTokenPrices } from '../utils/pricing'
 import {
   updatePoolDayData,
@@ -107,6 +107,7 @@ export function handleMint(event: MintEvent): void {
   pool.totalValueLockedMatic = pool.totalValueLockedToken0
     .times(token0.derivedMatic)
     .plus(pool.totalValueLockedToken1.times(token1.derivedMatic))
+  if (pool.totalValueLockedMatic > MAX_TVL) pool.totalValueLockedMatic = ZERO_BD
   pool.totalValueLockedUSD = pool.totalValueLockedMatic.times(bundle.maticPriceUSD)
 
   // reset aggregates with new amounts
@@ -154,6 +155,20 @@ export function handleMint(event: MintEvent): void {
   upperTick.liquidityGross = upperTick.liquidityGross.plus(amount)
   upperTick.liquidityNet = upperTick.liquidityNet.minus(amount)
 
+  let poolPositionid = pool.id + "#" + event.params.owner.toHexString() + '#' + BigInt.fromI32(event.params.bottomTick).toString() + "#" +  BigInt.fromI32(event.params.topTick).toString()
+  let poolPosition = PoolPosition.load(poolPositionid)
+  if (poolPosition){
+    poolPosition.liquidity += event.params.liquidityAmount 
+  }
+  else{
+    poolPosition = new PoolPosition(poolPositionid)
+    poolPosition.pool = pool.id
+    poolPosition.lowerTick = lowerTick.id
+    poolPosition.upperTick = upperTick.id
+    poolPosition.liquidity = event.params.liquidityAmount
+    poolPosition.owner = event.params.owner
+  }
+
   // TODO: Update Tick's volume, fees, and liquidity provider count
 
   updateAlgebraDayData(event)
@@ -167,6 +182,7 @@ export function handleMint(event: MintEvent): void {
   token0.save()
   token1.save()
   pool.save()
+  poolPosition.save()
   factory.save()
   mint.save()
 
@@ -177,7 +193,6 @@ export function handleMint(event: MintEvent): void {
 }
 
 export function handleBurn(event: BurnEvent): void {
-  
   let bundle = Bundle.load('1')!
   let poolAddress = event.address.toHexString()
   let pool = Pool.load(poolAddress)!
@@ -233,6 +248,7 @@ export function handleBurn(event: BurnEvent): void {
   pool.totalValueLockedMatic = pool.totalValueLockedToken0
     .times(token0.derivedMatic)
     .plus(pool.totalValueLockedToken1.times(token1.derivedMatic))
+  if (pool.totalValueLockedMatic > MAX_TVL) pool.totalValueLockedMatic = ZERO_BD  
   pool.totalValueLockedUSD = pool.totalValueLockedMatic.times(bundle.maticPriceUSD)
 
   // reset aggregates with new amounts
@@ -268,6 +284,13 @@ export function handleBurn(event: BurnEvent): void {
   upperTick.liquidityGross = upperTick.liquidityGross.minus(amount)
   upperTick.liquidityNet = upperTick.liquidityNet.plus(amount)
 
+  let poolPositionid = pool.id + "#" + event.params.owner.toHexString() + '#' + BigInt.fromI32(event.params.bottomTick).toString() + "#" +  BigInt.fromI32(event.params.topTick).toString()
+  let poolPosition = PoolPosition.load(poolPositionid)
+  if (poolPosition){
+    poolPosition.liquidity -= event.params.liquidityAmount 
+    poolPosition.save()
+  }
+
   updateAlgebraDayData(event)
   updatePoolDayData(event)
   updatePoolHourData(event)
@@ -286,6 +309,8 @@ export function handleBurn(event: BurnEvent): void {
 }
 
 export function handleSwap(event: SwapEvent): void {
+  if (event.block.number == BigInt.fromString("39474955"))
+    return
   let bundle = Bundle.load('1')!
   let factory = Factory.load(FACTORY_ADDRESS)!
   let pool = Pool.load(event.address.toHexString())!
@@ -427,6 +452,7 @@ export function handleSwap(event: SwapEvent): void {
   pool.totalValueLockedMatic = pool.totalValueLockedToken0
     .times(token0.derivedMatic)
     .plus(pool.totalValueLockedToken1.times(token1.derivedMatic))
+  if (pool.totalValueLockedMatic > MAX_TVL) pool.totalValueLockedMatic = ZERO_BD
   pool.totalValueLockedUSD = pool.totalValueLockedMatic.times(bundle.maticPriceUSD)
 
   factory.totalValueLockedMatic = factory.totalValueLockedMatic.plus(pool.totalValueLockedMatic)
@@ -629,6 +655,7 @@ export function handleCollect(event: Collect): void {
   pool.totalValueLockedMatic = pool.totalValueLockedToken0
     .times(token0.derivedMatic)
     .plus(pool.totalValueLockedToken1.times(token1.derivedMatic))
+  if (pool.totalValueLockedMatic > MAX_TVL) pool.totalValueLockedMatic = ZERO_BD
   pool.totalValueLockedUSD = pool.totalValueLockedMatic.times(bundle.maticPriceUSD)
  
   // reset aggregates with new amounts
