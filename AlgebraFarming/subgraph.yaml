@@ -7,9 +7,9 @@ dataSources:
   name: NonfungiblePositionManager
   network: testnet
   source:
-      address: '0x1B9335eB8C67CcacA41be3f4e53E45a7DB653A9D'
+      address: '0x83D4a9Ea77a4dbA073cD90b30410Ac9F95F93E7C'
       abi: NonfungiblePositionManager
-      startBlock: 20000000
+      startBlock: 8000
   mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -38,9 +38,9 @@ dataSources:
   name: EternalFarming
   network: testnet
   source:
-      address: '0xFf4F2A4acbA84271C6b5E2B98152BC863b2Df049'
+      address: '0x34D6F4f7D27B94C157aE3DB2D17C1beCB1bBF89C'
       abi: EternalFarming
-      startBlock: 20000000
+      startBlock: 8000
   mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
