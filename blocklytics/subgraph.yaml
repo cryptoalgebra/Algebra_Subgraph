@@ -1,5 +1,5 @@
 specVersion: 0.0.4
-description: Indexing all Polygon Block data
+description: Indexing block data
 repository: https://github.com/blocklytics/ethereum-blocks
 schema:
   file: ./schema.graphql
