@@ -123,6 +123,7 @@ export function handlePoolCreated(event: PoolEvent): void {
   pool.createdAtTimestamp = event.block.timestamp
   pool.createdAtBlockNumber = event.block.number
   pool.liquidityProviderCount = ZERO_BI
+  pool.tick = ZERO_BI
   pool.txCount = ZERO_BI
   pool.liquidity = ZERO_BI
   pool.sqrtPrice = ZERO_BI
@@ -145,6 +146,7 @@ export function handlePoolCreated(event: PoolEvent): void {
   pool.feesToken0 = ZERO_BD
   pool.feesToken1 = ZERO_BD
   pool.untrackedVolumeUSD = ZERO_BD
+  pool.untrackedFeesUSD = ZERO_BD
 
   pool.collectedFeesToken0 = ZERO_BD
   pool.collectedFeesToken1 = ZERO_BD
