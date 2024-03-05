@@ -5,11 +5,11 @@ schema:
 dataSources:
   - kind: ethereum/contract
     name: Factory
-    network: arbitrum-one
+    network: metis
     source:
-      address: '0x1a3c9B1d2F0529D97f2afC5136Cc23e58f1FD35B'
+      address: '0xC5BfA92f27dF36d268422EE314a1387bB5ffB06A'
       abi: Factory
-      startBlock: 100163738 
+      startBlock: 8836512 
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -36,11 +36,11 @@ dataSources:
           handler: handleDefaultCommFeeChange
   - kind: ethereum/contract
     name: NonfungiblePositionManager
-    network: arbitrum-one
+    network: metis
     source:
-      address: '0x00c7f3082833e796A5b3e4Bd59f6642FF44DCD15'
+      address: '0x3C93AEf118F8c2183B32dCa29Aa6220F2b2A1593'
       abi: NonfungiblePositionManager
-      startBlock: 100163738 
+      startBlock: 8836512 
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -71,7 +71,7 @@ dataSources:
 templates:
   - kind: ethereum/contract
     name: Pool
-    network: arbitrum-one
+    network: metis
     source:
       abi: Pool
     mapping:
