@@ -1,6 +1,6 @@
 specVersion: 0.0.4
 description: Indexing block data
-repository: https://github.com/blocklytics/ethereum-blocks
+repository: https://github.com/bertux/algebra_subgraph
 schema:
   file: ./schema.graphql
 dataSources:
