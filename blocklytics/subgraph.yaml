@@ -8,9 +8,9 @@ dataSources:
     name: ConverterRegistryContract
     network: mainnet
     source:
-      address: "0x0ddff327ddf7fe838e3e63d02001ef23ad1ede8e"
+      address: "0x4a19e54c0004e4e5E064F8EA9a56EDC9D85B383D"
       abi: ConverterRegistryContract
-      startBlock: 100000
+      startBlock: 9528
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
