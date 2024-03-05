@@ -8,7 +8,7 @@
     "build": "graph build",
     "create": "graph create arthera/mainnet-blocks --node http://127.0.0.1:8020/",
     "remove": "graph remove arthera/mainnet-blocks --node http://127.0.0.1:8020/",
-    "deploy": "graph deploy arthera/mainnet-blocks --debug --node http://127.0.0.1:8020/ --ipfs http://127.0.0.1:5001"
+    "deploy": "graph deploy arthera/mainnet-blocks --node http://127.0.0.1:8020/ --ipfs http://127.0.0.1:5001"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.64.0",
