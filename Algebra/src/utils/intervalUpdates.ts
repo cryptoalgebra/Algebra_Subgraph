@@ -117,6 +117,7 @@ export function updateFeeHourData(event: ethereum.Event, feeZtO: BigInt, feeOtZ:
     FeeHourDataEntity = new FeeHourData(hourFeeID)
     FeeHourDataEntity.timestamp = BigInt.fromI32(hourStartUnix)
     FeeHourDataEntity.feeZtO = feeZtO
+    FeeHourDataEntity.feeOtZ = feeOtZ
     FeeHourDataEntity.changesCount = ONE_BI
     FeeHourDataEntity.pool = event.address.toHexString()
     if(feeZtO != ZERO_BI){
