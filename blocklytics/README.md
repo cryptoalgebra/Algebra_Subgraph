@@ -1,13 +1,12 @@
 # Algebra_Subgraph
 
-## AlgebraFarming
+## Blocklytics
 
 ### Configure
 
 Before build you need to make a few changes:
 
-* Update FarmingCenterAddress in AlgebraFarming/src/utils/constants.ts
-* Update network, startBlock and addresses in subgraph.yaml
+* Update network, startBlock and address in subgraph.yaml
 
 ### Install
 
