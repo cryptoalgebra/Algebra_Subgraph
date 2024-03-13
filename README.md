@@ -1,4 +1,4 @@
-# Algebra_Subgraph
+# Algebra Subgraphs
 
 ## Algebra
 
