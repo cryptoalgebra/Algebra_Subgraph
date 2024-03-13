@@ -2,7 +2,7 @@
 
 ## Algebra
 
-### Build
+### Configure
 
 Before build you need to make a few changes: 
 
@@ -12,37 +12,103 @@ Before build you need to make a few changes:
 * You can also set the required number of native tokens in the pool to include it when calculating prices by changing MINIMUM_Matic_LOCKED in Algebra/src/utils/pricing.ts
 * Update network, startBlock and addresses in subgraph.yaml
 
-After that you need to run:
+### Install
+
+To install dependencies you need to run:
 ```
-$ yarn
-$ yarn codegen
-$ yarn build
+yarn
+```
+### Build
+
+To build you need to run:
+```
+yarn codegen
+yarn build
+```
+
+### Create
+
+To create you need to run:
+```
+yarn run create
 ```
 
 ### Deploy
 
-For deploy you need to run:
+To deploy you need to run:
 ```
-$ yarn graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ --access-token <access-token> <graph-name> subgraph.yaml
+yarn run deploy
 ```
 
 ## AlgebraFarming
 
+### Configure
+
 Before build you need to make a few changes:
 
-Update FarmingCenterAddress in AlgebraFarming/src/utils/constants.ts
-Update network, startBlock and addresses in subgraph.yaml
+* Update FarmingCenterAddress in AlgebraFarming/src/utils/constants.ts
+* Update network, startBlock and addresses in subgraph.yaml
 
-After that you need to run:
+### Install
+
+To install dependencies you need to run:
 ```
-$ yarn
-$ yarn codegen
-$ yarn build 
+yarn
+```
+### Build
+
+To build you need to run:
+```
+yarn codegen
+yarn build
+```
+
+### Create
+
+To create you need to run:
+```
+yarn run create
 ```
 
 ### Deploy
 
-For deploy you need to run:
+To deploy you need to run:
 ```
-$ yarn graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ --access-token <access-token> <graph-name> subgraph.yaml
+yarn run deploy
+```
+
+## Blocklytics
+
+### Configure
+
+Before build you need to make a few changes:
+
+* Update network, startBlock and address in subgraph.yaml
+
+### Install
+
+To install dependencies you need to run:
+```
+yarn
+```
+### Build
+
+To build you need to run:
+```
+yarn codegen
+yarn build
+```
+
+### Create
+
+To create you need to run:
+```
+yarn run create
+```
+
+### Deploy
+
+To deploy you need to run:
+```
+yarn run deploy
 ```
