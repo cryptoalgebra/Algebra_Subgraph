@@ -7,8 +7,8 @@
   "scripts": {
     "codegen": "graph codegen --output-dir src/types/",
     "build": "graph build",
-    "create-local": "graph create cryptoalgebra/algebra-farming --node http://127.0.0.1:8020",
-    "deploy-local": "graph deploy cryptoalgebra/algebra-farming --debug --ipfs http://localhost:5001 --node http://127.0.0.1:8020"
+    "create": "graph create cryptoalgebra/algebra-farming --node http://127.0.0.1:8020",
+    "deploy": "graph deploy cryptoalgebra/algebra-farming --debug --ipfs http://127.0.0.1:5001 --node http://127.0.0.1:8020"
   },
   "devDependencies": {
     "@graphprotocol/graph-cli": "0.64.0",

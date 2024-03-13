@@ -4,9 +4,9 @@
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
-    "create-local": "graph create --node http://localhost:8020/ bertux/testnet-blocks",
-    "remove-local": "graph remove --node http://localhost:8020/ bertux/testnet-blocks",
-    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 bertux/testnet-blocks"
+    "create": "graph create --node http://127.0.0.1:8020/ bertux/testnet-blocks",
+    "remove": "graph remove --node http://127.0.0.1:8020/ bertux/testnet-blocks",
+    "deploy": "graph deploy --node http://127.0.0.1:8020/ --ipfs http://127.0.0.1:5001 bertux/testnet-blocks"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.64.0",
