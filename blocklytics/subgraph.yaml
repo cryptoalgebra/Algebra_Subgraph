@@ -1,6 +1,6 @@
 specVersion: 0.0.4
 description: Indexing block data
-repository: https://github.com/blocklytics/ethereum-blocks
+repository: https://github.com/bertux/algebra_subgraph
 schema:
   file: ./schema.graphql
 dataSources:
@@ -8,9 +8,9 @@ dataSources:
     name: ConverterRegistryContract
     network: testnet
     source:
-      address: "0x0ddff327ddf7fe838e3e63d02001ef23ad1ede8e"
+      address: "0x9d8d95211A1732fce2b485A9E1c48294cB7ceeC7"
       abi: ConverterRegistryContract
-      startBlock: 8000
+      startBlock: 8843
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
