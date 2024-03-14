@@ -1,8 +1,6 @@
-# Algebra_Subgraph
+# Algebra subgraph
 
-## Algebra
-
-### Configure
+## Configure
 
 Before build you need to make a few changes:
 
@@ -12,13 +10,13 @@ Before build you need to make a few changes:
 * You can also set the required number of native tokens in the pool to include it when calculating prices by changing MINIMUM_Matic_LOCKED in Algebra/src/utils/pricing.ts
 * Update network, startBlock and addresses in subgraph.yaml
 
-### Install
+## Install
 
 To install dependencies you need to run:
 ```
 yarn
 ```
-### Build
+## Build
 
 To build you need to run:
 ```
@@ -26,14 +24,14 @@ yarn codegen
 yarn build
 ```
 
-### Create
+## Create
 
 To create you need to run:
 ```
 yarn run create
 ```
 
-### Deploy
+## Deploy
 
 To deploy you need to run:
 ```

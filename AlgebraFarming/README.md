@@ -1,21 +1,19 @@
-# Algebra_Subgraph
+# AlgebraFarming subgraph
 
-## AlgebraFarming
-
-### Configure
+## Configure
 
 Before build you need to make a few changes:
 
 * Update FarmingCenterAddress in AlgebraFarming/src/utils/constants.ts
 * Update network, startBlock and addresses in subgraph.yaml
 
-### Install
+## Install
 
 To install dependencies you need to run:
 ```
 yarn
 ```
-### Build
+## Build
 
 To build you need to run:
 ```
@@ -23,14 +21,14 @@ yarn codegen
 yarn build
 ```
 
-### Create
+## Create
 
 To create you need to run:
 ```
 yarn run create
 ```
 
-### Deploy
+## Deploy
 
 To deploy you need to run:
 ```
