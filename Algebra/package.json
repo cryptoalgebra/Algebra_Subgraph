@@ -8,7 +8,7 @@
     "codegen": "graph codegen --output-dir src/types/",
     "build": "graph build",
     "create": "graph create cryptoalgebra/algebra --node http://127.0.0.1:8020",
-    "deploy": "graph deploy cryptoalgebra/algebra --debug --ipfs http://127.0.0.1:5001 --node http://127.0.0.1:8020"
+    "deploy": "graph deploy cryptoalgebra/algebra --ipfs http://127.0.0.1:5001 --node http://127.0.0.1:8020"
   },
   "devDependencies": {
     "@graphprotocol/graph-cli": "0.64.0",
