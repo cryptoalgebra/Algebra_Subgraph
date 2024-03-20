@@ -1,18 +1,14 @@
 {
-  "name": "ethereum-blocks",
+  "name": "mainnet-blocks",
+  "version": "1.0.0",
+  "repository": "https://github.com/bertux/algebra-subgraph",
   "license": "UNLICENSED",
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
-    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ --access-token iliaazhel/goerli-blocks subgraph.yaml",
-    "create-local": "graph create --node http://localhost:8020/ iliaazhel/ethereum-blocks",
-    "remove-local": "graph remove --node http://localhost:8020/ iliaazhel/ethereum-blocks",
-    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 iliaazhel/ethereum-blocks",
-    "deploy-rinkeby": "graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ blocklytics/rinkeby-blocks",
-    "deploy-kovan": "graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ blocklytics/kovan-blocks",
-    "deploy-goerli": "graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ blocklytics/goerli-blocks",
-    "deploy-ropsten": "graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ blocklytics/ropsten-blocks",
-    "deploy-poa": "graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ blocklytics/poa-core-blocks"
+    "create": "graph create arthera/mainnet-blocks --node http://127.0.0.1:8020/",
+    "remove": "graph remove arthera/mainnet-blocks --node http://127.0.0.1:8020/",
+    "deploy": "graph deploy arthera/mainnet-blocks --node http://127.0.0.1:8020/ --ipfs http://127.0.0.1:5001"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.64.0",

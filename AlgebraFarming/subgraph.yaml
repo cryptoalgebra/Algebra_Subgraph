@@ -9,7 +9,7 @@ dataSources:
   source:
       address: '0x0BFaCE9a5c9F884a4f09fadB83b69e81EA41424B'
       abi: NonfungiblePositionManager
-      startBlock: 100000
+      startBlock: 138126
   mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -40,7 +40,7 @@ dataSources:
   source:
       address: '0x13fcE0acbe6Fb11641ab753212550574CaD31415'
       abi: EternalFarming
-      startBlock: 100000
+      startBlock: 138130
   mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
