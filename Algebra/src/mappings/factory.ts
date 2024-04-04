@@ -19,6 +19,7 @@ export function handlePoolCreated(event: PoolEvent): void {
     factory.poolCount = ZERO_BI
     factory.totalVolumeEth = ZERO_BD
     factory.totalVolumeUSD = ZERO_BD
+    factory.defaultCommunityFee = ZERO_BI
     factory.untrackedVolumeUSD = ZERO_BD
     factory.totalFeesUSD = ZERO_BD
     factory.totalFeesEth = ZERO_BD
@@ -125,6 +126,7 @@ export function handlePoolCreated(event: PoolEvent): void {
   pool.createdAtBlockNumber = event.block.number
   pool.liquidityProviderCount = ZERO_BI
   pool.tickSpacing = BigInt.fromI32(60)
+  pool.tick = ZERO_BI
   pool.txCount = ZERO_BI
   pool.liquidity = ZERO_BI
   pool.sqrtPrice = ZERO_BI
@@ -147,6 +149,7 @@ export function handlePoolCreated(event: PoolEvent): void {
   pool.feesToken0 = ZERO_BD
   pool.feesToken1 = ZERO_BD
   pool.untrackedVolumeUSD = ZERO_BD
+  pool.untrackedFeesUSD = ZERO_BD
 
   pool.collectedFeesToken0 = ZERO_BD
   pool.collectedFeesToken1 = ZERO_BD
