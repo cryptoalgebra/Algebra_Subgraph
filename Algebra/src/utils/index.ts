@@ -76,8 +76,8 @@ export function convertTokenToDecimal(tokenAmount: BigInt, exchangeDecimals: Big
   return tokenAmount.toBigDecimal().div(exponentToBigDecimal(exchangeDecimals))
 }
 
-export function convertEthToDecimal(matic: BigInt): BigDecimal {
-  return matic.toBigDecimal().div(exponentToBigDecimal(18))
+export function convertEthToDecimal(eth: BigInt): BigDecimal {
+  return eth.toBigDecimal().div(exponentToBigDecimal(18))
 }
 
 export function loadTransaction(event: ethereum.Event): Transaction {

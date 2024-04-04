@@ -17,21 +17,21 @@ export function handlePoolCreated(event: PoolEvent): void {
   if (factory == null) {
     factory = new Factory(FACTORY_ADDRESS)
     factory.poolCount = ZERO_BI
-    factory.totalVolumeMatic = ZERO_BD
+    factory.totalVolumeEth = ZERO_BD
     factory.totalVolumeUSD = ZERO_BD
     factory.untrackedVolumeUSD = ZERO_BD
     factory.totalFeesUSD = ZERO_BD
-    factory.totalFeesMatic = ZERO_BD
-    factory.totalValueLockedMatic = ZERO_BD
+    factory.totalFeesEth = ZERO_BD
+    factory.totalValueLockedEth = ZERO_BD
     factory.totalValueLockedUSD = ZERO_BD
     factory.totalValueLockedUSDUntracked = ZERO_BD
-    factory.totalValueLockedMaticUntracked = ZERO_BD
+    factory.totalValueLockedEthUntracked = ZERO_BD
     factory.txCount = ZERO_BI
     factory.owner = ADDRESS_ZERO
 
-    // create new bundle for tracking matic price
+    // create new bundle for tracking eth price
     let bundle = new Bundle('1')
-    bundle.maticPriceUSD = ZERO_BD
+    bundle.ethPriceUSD = ZERO_BD
     bundle.save()
   }
 
@@ -68,7 +68,7 @@ export function handlePoolCreated(event: PoolEvent): void {
     }
 
     token0.decimals = decimals
-    token0.derivedMatic = ZERO_BD
+    token0.derivedEth = ZERO_BD
     token0.volume = ZERO_BD
     token0.volumeUSD = ZERO_BD
     token0.feesUSD = ZERO_BD
@@ -93,7 +93,7 @@ export function handlePoolCreated(event: PoolEvent): void {
       return
     }
     token1.decimals = decimals
-    token1.derivedMatic = ZERO_BD
+    token1.derivedEth = ZERO_BD
     token1.volume = ZERO_BD
     token1.volumeUSD = ZERO_BD
     token1.untrackedVolumeUSD = ZERO_BD
@@ -138,7 +138,7 @@ export function handlePoolCreated(event: PoolEvent): void {
   pool.totalValueLockedToken0 = ZERO_BD
   pool.totalValueLockedToken1 = ZERO_BD
   pool.totalValueLockedUSD = ZERO_BD
-  pool.totalValueLockedMatic = ZERO_BD
+  pool.totalValueLockedEth = ZERO_BD
   pool.totalValueLockedUSDUntracked = ZERO_BD
   pool.volumeToken0 = ZERO_BD
   pool.volumeToken1 = ZERO_BD
@@ -166,21 +166,21 @@ export function handleDefaultCommFeeChange(event: DefaultCommunityFee): void{
   if (factory == null) {
     factory = new Factory(FACTORY_ADDRESS)
     factory.poolCount = ZERO_BI
-    factory.totalVolumeMatic = ZERO_BD
+    factory.totalVolumeEth = ZERO_BD
     factory.totalVolumeUSD = ZERO_BD
     factory.untrackedVolumeUSD = ZERO_BD
     factory.totalFeesUSD = ZERO_BD
-    factory.totalFeesMatic = ZERO_BD
-    factory.totalValueLockedMatic = ZERO_BD
+    factory.totalFeesEth = ZERO_BD
+    factory.totalValueLockedEth = ZERO_BD
     factory.totalValueLockedUSD = ZERO_BD
     factory.totalValueLockedUSDUntracked = ZERO_BD
-    factory.totalValueLockedMaticUntracked = ZERO_BD
+    factory.totalValueLockedEthUntracked = ZERO_BD
     factory.txCount = ZERO_BI
     factory.owner = ADDRESS_ZERO
 
-    // create new bundle for tracking matic price
+    // create new bundle for tracking eth price
     let bundle = new Bundle('1')
-    bundle.maticPriceUSD = ZERO_BD
+    bundle.ethPriceUSD = ZERO_BD
     bundle.save()
   }
   factory.defaultCommunityFee = BigInt.fromI32(event.params.newDefaultCommunityFee as i32)

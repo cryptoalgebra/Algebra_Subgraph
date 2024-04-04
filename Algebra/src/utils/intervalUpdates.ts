@@ -31,7 +31,7 @@ export function updateAlgebraDayData(event: ethereum.Event): AlgebraDayData {
   if (algebraDayData === null) {
     algebraDayData = new AlgebraDayData(dayID.toString())
     algebraDayData.date = dayStartTimestamp
-    algebraDayData.volumeMatic = ZERO_BD
+    algebraDayData.volumeEth = ZERO_BD
     algebraDayData.volumeUSD = ZERO_BD
     algebraDayData.volumeUSDUntracked = ZERO_BD
     algebraDayData.feesUSD = ZERO_BD
@@ -188,7 +188,7 @@ export function updateTokenDayData(token: Token, event: ethereum.Event): TokenDa
     .toString()
     .concat('-')
     .concat(dayID.toString())
-  let tokenPrice = token.derivedMatic.times(bundle.maticPriceUSD)
+  let tokenPrice = token.derivedEth.times(bundle.ethPriceUSD)
 
   let tokenDayData = TokenDayData.load(tokenDayID)
   if (tokenDayData === null) {
@@ -214,7 +214,7 @@ export function updateTokenDayData(token: Token, event: ethereum.Event): TokenDa
   }
 
   tokenDayData.close = tokenPrice
-  tokenDayData.priceUSD = token.derivedMatic.times(bundle.maticPriceUSD)
+  tokenDayData.priceUSD = token.derivedEth.times(bundle.ethPriceUSD)
   tokenDayData.totalValueLocked = token.totalValueLocked
   tokenDayData.totalValueLockedUSD = token.totalValueLockedUSD
   tokenDayData.save()
@@ -233,7 +233,7 @@ export function updateTokenHourData(token: Token, event: ethereum.Event): TokenH
     .concat('-')
     .concat(hourIndex.toString())
   let tokenHourData = TokenHourData.load(tokenHourID)
-  let tokenPrice = token.derivedMatic.times(bundle.maticPriceUSD)
+  let tokenPrice = token.derivedEth.times(bundle.ethPriceUSD)
 
   if (tokenHourData === null) {
     tokenHourData = new TokenHourData(tokenHourID)

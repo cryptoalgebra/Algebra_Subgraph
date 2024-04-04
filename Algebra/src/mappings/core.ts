@@ -37,15 +37,15 @@ export function handleInitialize(event: Initialize): void {
   let token0 = Token.load(pool.token0)!
   let token1 = Token.load(pool.token1)!
 
-  // update Matic price now that prices could have changed
+  // update Eth price now that prices could have changed
   let bundle = Bundle.load('1')!
-  bundle.maticPriceUSD = getEthPriceInUSD()
+  bundle.ethPriceUSD = getEthPriceInUSD()
   bundle.save()
   updatePoolDayData(event)
   updatePoolHourData(event)
   // update token prices
-  token0.derivedMatic = findEthPerToken(token0 as Token)
-  token1.derivedMatic = findEthPerToken(token1 as Token)
+  token0.derivedEth = findEthPerToken(token0 as Token)
+  token1.derivedEth = findEthPerToken(token1 as Token)
   token0.save()
   token1.save()
 
@@ -72,11 +72,11 @@ export function handleMint(event: MintEvent): void {
   }
 
   let amountUSD = amount0
-    .times(token0.derivedMatic.times(bundle.maticPriceUSD))
-    .plus(amount1.times(token1.derivedMatic.times(bundle.maticPriceUSD)))
+    .times(token0.derivedEth.times(bundle.ethPriceUSD))
+    .plus(amount1.times(token1.derivedEth.times(bundle.ethPriceUSD)))
 
   // reset tvl aggregates until new amounts calculated
-  factory.totalValueLockedMatic = factory.totalValueLockedMatic.minus(pool.totalValueLockedMatic)
+  factory.totalValueLockedEth = factory.totalValueLockedEth.minus(pool.totalValueLockedEth)
 
   // update globals
   factory.txCount = factory.txCount.plus(ONE_BI)
@@ -84,12 +84,12 @@ export function handleMint(event: MintEvent): void {
   // update token0 data
   token0.txCount = token0.txCount.plus(ONE_BI)
   token0.totalValueLocked = token0.totalValueLocked.plus(amount0)
-  token0.totalValueLockedUSD = token0.totalValueLocked.times(token0.derivedMatic.times(bundle.maticPriceUSD))
+  token0.totalValueLockedUSD = token0.totalValueLocked.times(token0.derivedEth.times(bundle.ethPriceUSD))
 
   // update token1 data
   token1.txCount = token1.txCount.plus(ONE_BI)
   token1.totalValueLocked = token1.totalValueLocked.plus(amount1)
-  token1.totalValueLockedUSD = token1.totalValueLocked.times(token1.derivedMatic.times(bundle.maticPriceUSD))
+  token1.totalValueLockedUSD = token1.totalValueLocked.times(token1.derivedEth.times(bundle.ethPriceUSD))
 
   // pool data
   pool.txCount = pool.txCount.plus(ONE_BI)
@@ -105,14 +105,14 @@ export function handleMint(event: MintEvent): void {
   }
   pool.totalValueLockedToken0 = pool.totalValueLockedToken0.plus(amount0)
   pool.totalValueLockedToken1 = pool.totalValueLockedToken1.plus(amount1)
-  pool.totalValueLockedMatic = pool.totalValueLockedToken0
-    .times(token0.derivedMatic)
-    .plus(pool.totalValueLockedToken1.times(token1.derivedMatic))
-  pool.totalValueLockedUSD = pool.totalValueLockedMatic.times(bundle.maticPriceUSD)
+  pool.totalValueLockedEth = pool.totalValueLockedToken0
+    .times(token0.derivedEth)
+    .plus(pool.totalValueLockedToken1.times(token1.derivedEth))
+  pool.totalValueLockedUSD = pool.totalValueLockedEth.times(bundle.ethPriceUSD)
 
   // reset aggregates with new amounts
-  factory.totalValueLockedMatic = factory.totalValueLockedMatic.plus(pool.totalValueLockedMatic)
-  factory.totalValueLockedUSD = factory.totalValueLockedMatic.times(bundle.maticPriceUSD)
+  factory.totalValueLockedEth = factory.totalValueLockedEth.plus(pool.totalValueLockedEth)
+  factory.totalValueLockedUSD = factory.totalValueLockedEth.times(bundle.ethPriceUSD)
 
   let transaction = loadTransaction(event)
   let mint = new Mint(transaction.id.toString() + '#' + pool.txCount.toString())
@@ -213,11 +213,11 @@ export function handleBurn(event: BurnEvent): void {
   }
 
   let amountUSD = amount0
-    .times(token0.derivedMatic.times(bundle.maticPriceUSD))
-    .plus(amount1.times(token1.derivedMatic.times(bundle.maticPriceUSD)))
+    .times(token0.derivedEth.times(bundle.ethPriceUSD))
+    .plus(amount1.times(token1.derivedEth.times(bundle.ethPriceUSD)))
 
   // reset tvl aggregates until new amounts calculated
-  factory.totalValueLockedMatic = factory.totalValueLockedMatic.minus(pool.totalValueLockedMatic)
+  factory.totalValueLockedEth = factory.totalValueLockedEth.minus(pool.totalValueLockedEth)
 
   // update globals
   factory.txCount = factory.txCount.plus(ONE_BI)
@@ -225,12 +225,12 @@ export function handleBurn(event: BurnEvent): void {
   // update token0 data
   token0.txCount = token0.txCount.plus(ONE_BI)
   token0.totalValueLocked = token0.totalValueLocked.minus(amount0)
-  token0.totalValueLockedUSD = token0.totalValueLocked.times(token0.derivedMatic.times(bundle.maticPriceUSD))
+  token0.totalValueLockedUSD = token0.totalValueLocked.times(token0.derivedEth.times(bundle.ethPriceUSD))
 
   // update token1 data
   token1.txCount = token1.txCount.plus(ONE_BI)
   token1.totalValueLocked = token1.totalValueLocked.minus(amount1)
-  token1.totalValueLockedUSD = token1.totalValueLocked.times(token1.derivedMatic.times(bundle.maticPriceUSD))
+  token1.totalValueLockedUSD = token1.totalValueLocked.times(token1.derivedEth.times(bundle.ethPriceUSD))
 
   // pool data
   pool.txCount = pool.txCount.plus(ONE_BI)
@@ -246,14 +246,14 @@ export function handleBurn(event: BurnEvent): void {
 
   pool.totalValueLockedToken0 = pool.totalValueLockedToken0.minus(amount0)
   pool.totalValueLockedToken1 = pool.totalValueLockedToken1.minus(amount1)
-  pool.totalValueLockedMatic = pool.totalValueLockedToken0
-    .times(token0.derivedMatic)
-    .plus(pool.totalValueLockedToken1.times(token1.derivedMatic))
-  pool.totalValueLockedUSD = pool.totalValueLockedMatic.times(bundle.maticPriceUSD)
+  pool.totalValueLockedEth = pool.totalValueLockedToken0
+    .times(token0.derivedEth)
+    .plus(pool.totalValueLockedToken1.times(token1.derivedEth))
+  pool.totalValueLockedUSD = pool.totalValueLockedEth.times(bundle.ethPriceUSD)
 
   // reset aggregates with new amounts
-  factory.totalValueLockedMatic = factory.totalValueLockedMatic.plus(pool.totalValueLockedMatic)
-  factory.totalValueLockedUSD = factory.totalValueLockedMatic.times(bundle.maticPriceUSD)
+  factory.totalValueLockedEth = factory.totalValueLockedEth.plus(pool.totalValueLockedEth)
+  factory.totalValueLockedUSD = factory.totalValueLockedEth.times(bundle.ethPriceUSD)
 
   // burn entity
   let transaction = loadTransaction(event)
@@ -355,11 +355,11 @@ export function handleSwap(event: SwapEvent): void {
    amount1Abs = amount1
  }
 
-  let amount0Matic = amount0Abs.times(token0.derivedMatic)
-  let amount1Matic = amount1Abs.times(token1.derivedMatic)
+  let amount0Eth = amount0Abs.times(token0.derivedEth)
+  let amount1Eth = amount1Abs.times(token1.derivedEth)
 
-  let amount0USD = amount0Matic.times(bundle.maticPriceUSD)
-  let amount1USD = amount1Matic.times(bundle.maticPriceUSD)
+  let amount0USD = amount0Eth.times(bundle.ethPriceUSD)
+  let amount1USD = amount1Eth.times(bundle.ethPriceUSD)
 
 
 
@@ -368,25 +368,25 @@ export function handleSwap(event: SwapEvent): void {
     BigDecimal.fromString('2')
   )
 
-  let amountTotalMaticTracked = safeDiv(amountTotalUSDTracked, bundle.maticPriceUSD)
+  let amountTotalEthTracked = safeDiv(amountTotalUSDTracked, bundle.ethPriceUSD)
   let amountTotalUSDUntracked = amount0USD.plus(amount1USD).div(BigDecimal.fromString('2'))
 
-  let feesMatic = amountTotalMaticTracked.times(pool.fee.toBigDecimal()).div(BigDecimal.fromString('1000000'))
+  let feesEth = amountTotalEthTracked.times(pool.fee.toBigDecimal()).div(BigDecimal.fromString('1000000'))
   let feesUSD = amountTotalUSDTracked.times(pool.fee.toBigDecimal()).div(BigDecimal.fromString('1000000'))
   let untrackedFees = amountTotalUSDUntracked.times(pool.fee.toBigDecimal()).div(BigDecimal.fromString('1000000'))
 
 
   // global updates
   factory.txCount = factory.txCount.plus(ONE_BI)
-  factory.totalVolumeMatic = factory.totalVolumeMatic.plus(amountTotalMaticTracked)
+  factory.totalVolumeEth = factory.totalVolumeEth.plus(amountTotalEthTracked)
   factory.totalVolumeUSD = factory.totalVolumeUSD.plus(amountTotalUSDTracked)
   factory.untrackedVolumeUSD = factory.untrackedVolumeUSD.plus(amountTotalUSDUntracked)
-  factory.totalFeesMatic = factory.totalFeesMatic.plus(feesMatic)
+  factory.totalFeesEth = factory.totalFeesEth.plus(feesEth)
   factory.totalFeesUSD = factory.totalFeesUSD.plus(feesUSD)
 
   // reset aggregate tvl before individual pool tvl updates
-  let currentPoolTvlMatic = pool.totalValueLockedMatic
-  factory.totalValueLockedMatic = factory.totalValueLockedMatic.minus(currentPoolTvlMatic)
+  let currentPoolTvlEth = pool.totalValueLockedEth
+  factory.totalValueLockedEth = factory.totalValueLockedEth.minus(currentPoolTvlEth)
 
 
   // pool volume
@@ -438,25 +438,25 @@ export function handleSwap(event: SwapEvent): void {
   pool.save()
 
   // update USD pricing
-  bundle.maticPriceUSD = getEthPriceInUSD()
+  bundle.ethPriceUSD = getEthPriceInUSD()
   bundle.save()
 
-  token0.derivedMatic = findEthPerToken(token0 as Token)
-  token1.derivedMatic = findEthPerToken(token1 as Token)
+  token0.derivedEth = findEthPerToken(token0 as Token)
+  token1.derivedEth = findEthPerToken(token1 as Token)
 
   /**
    * Things afffected by new USD rates
    */
-  pool.totalValueLockedMatic = pool.totalValueLockedToken0
-    .times(token0.derivedMatic)
-    .plus(pool.totalValueLockedToken1.times(token1.derivedMatic))
-  pool.totalValueLockedUSD = pool.totalValueLockedMatic.times(bundle.maticPriceUSD)
+  pool.totalValueLockedEth = pool.totalValueLockedToken0
+    .times(token0.derivedEth)
+    .plus(pool.totalValueLockedToken1.times(token1.derivedEth))
+  pool.totalValueLockedUSD = pool.totalValueLockedEth.times(bundle.ethPriceUSD)
 
-  factory.totalValueLockedMatic = factory.totalValueLockedMatic.plus(pool.totalValueLockedMatic)
-  factory.totalValueLockedUSD = factory.totalValueLockedMatic.times(bundle.maticPriceUSD)
+  factory.totalValueLockedEth = factory.totalValueLockedEth.plus(pool.totalValueLockedEth)
+  factory.totalValueLockedUSD = factory.totalValueLockedEth.times(bundle.ethPriceUSD)
 
-  token0.totalValueLockedUSD = token0.totalValueLocked.times(token0.derivedMatic).times(bundle.maticPriceUSD)
-  token1.totalValueLockedUSD = token1.totalValueLocked.times(token1.derivedMatic).times(bundle.maticPriceUSD)
+  token0.totalValueLockedUSD = token0.totalValueLocked.times(token0.derivedEth).times(bundle.ethPriceUSD)
+  token1.totalValueLockedUSD = token1.totalValueLocked.times(token1.derivedEth).times(bundle.ethPriceUSD)
 
   // create Swap event
   let transaction = loadTransaction(event)
@@ -504,7 +504,7 @@ export function handleSwap(event: SwapEvent): void {
   }
 
   // update volume metrics
-  algebraDayData.volumeMatic = algebraDayData.volumeMatic.plus(amountTotalMaticTracked)
+  algebraDayData.volumeEth = algebraDayData.volumeEth.plus(amountTotalEthTracked)
   algebraDayData.volumeUSD = algebraDayData.volumeUSD.plus(amountTotalUSDTracked)
   algebraDayData.feesUSD = algebraDayData.feesUSD.plus(feesUSD)
 
