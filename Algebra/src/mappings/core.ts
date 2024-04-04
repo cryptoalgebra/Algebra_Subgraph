@@ -11,10 +11,12 @@ import {
   Mint as MintEvent,
   Swap as SwapEvent,
   CommunityFee,
-  TickSpacing
+  TickSpacing,
+  Flash,
+  ExcessTokens
 } from '../types/templates/Pool/Pool'
 import { convertTokenToDecimal, loadTransaction, safeDiv } from '../utils'
-import { FACTORY_ADDRESS, ONE_BI, ZERO_BD, ZERO_BI, pools_list} from '../utils/constants'
+import { FACTORY_ADDRESS, ONE_BI, ZERO_BD, ZERO_BI, pools_list, COMM_FEE_DENOMINATOR } from '../utils/constants'
 import { findEthPerToken, getEthPriceInUSD, getTrackedAmountUSD, priceToTokenPrices } from '../utils/pricing'
 import {
   updatePoolDayData,
@@ -622,6 +624,65 @@ export function handleCollect(event: Collect): void {
  
 }
 
+
+export function handleFlash(event: Flash): void {
+
+  let poolAddress = event.address.toHexString()
+  let pool = Pool.load(poolAddress)!
+  let factory = Factory.load(FACTORY_ADDRESS)!
+
+  let token0 = Token.load(pool.token0)!
+  let token1 = Token.load(pool.token1)!
+
+  let feesWithoutCommunityFees0 = (event.params.paid0.times(COMM_FEE_DENOMINATOR.minus(pool.communityFee))).div(COMM_FEE_DENOMINATOR)
+  let feesWithoutCommunityFees1 = (event.params.paid1.times(COMM_FEE_DENOMINATOR.minus(pool.communityFee))).div(COMM_FEE_DENOMINATOR)
+
+  let amount0 = convertTokenToDecimal(feesWithoutCommunityFees0, token0.decimals)
+  let amount1 = convertTokenToDecimal(feesWithoutCommunityFees1, token1.decimals)
+  
+  pool.feesFromFlashCollected0 = pool.feesFromFlashCollected0.plus(amount0)
+  pool.feesFromFlashCollected1 = pool.feesFromFlashCollected1.plus(amount1)
+
+  factory.txCount = factory.txCount.plus(ONE_BI)
+ 
+  // update token0 data
+  token0.txCount = token0.txCount.plus(ONE_BI)
+ 
+  // update token1 data
+  token1.txCount = token1.txCount.plus(ONE_BI)
+ 
+  // pool data
+  pool.txCount = pool.txCount.plus(ONE_BI)
+ 
+  token0.save()
+  token1.save()
+  pool.save()
+  factory.save()
+}
+
+export function handleExcessTokens(event: ExcessTokens): void {
+  let poolAddress = event.address.toHexString()
+  let pool = Pool.load(poolAddress)!
+
+  let token0 = Token.load(pool.token0)!
+  let token1 = Token.load(pool.token1)!
+
+  let amount0 = convertTokenToDecimal(event.params.amount0, token0.decimals)
+  let amount1 = convertTokenToDecimal(event.params.amount1, token1.decimals)
+
+  pool.tokensExcess0 = pool.tokensExcess0.plus(amount0)
+  pool.tokensExcess1 = pool.tokensExcess1.plus(amount1)
+
+  let amountTotalUSDTracked = getTrackedAmountUSD(amount0, token0 as Token, amount1, token1 as Token).div(
+    BigDecimal.fromString('2')
+  )
+
+  pool.tokensExcessUSD = pool.tokensExcessUSD.plus(amountTotalUSDTracked)
+
+  token0.save()
+  token1.save()
+  pool.save()
+}
 
 function updateTickFeeVarsAndSave(tick: Tick, event: ethereum.Event): void {
   let poolAddress = event.address

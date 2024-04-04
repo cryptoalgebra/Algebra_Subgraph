@@ -106,3 +106,7 @@ templates:
           handler: handleSetCommunityFee
         - event: TickSpacing(int24)
           handler: handleSetTickSpacing
+        - event: Flash(indexed address,indexed address,uint256,uint256,uint256,uint256)
+          handler: handleFlash
+        - event: ExcessTokens(uint256,uint256)
+          handler: handleExcessTokens

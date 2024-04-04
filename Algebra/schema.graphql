@@ -131,6 +131,11 @@ type Pool @entity {
   totalValueLockedToken1: BigDecimal!
   feesToken0: BigDecimal!
   feesToken1: BigDecimal!
+  feesFromFlashCollected0: BigDecimal!
+  feesFromFlashCollected1: BigDecimal!
+  tokensExcess0: BigDecimal!
+  tokensExcess1: BigDecimal!
+  tokensExcessUSD: BigDecimal!
   # tvl derived Matic
   totalValueLockedMatic: BigDecimal!
   # tvl USD
