@@ -32,6 +32,8 @@ dataSources:
       eventHandlers:
         - event: Pool(indexed address,indexed address,address)
           handler: handlePoolCreated
+        - event: DefaultCommunityFee(uint16)
+          handler: handleDefaultCommFeeChange
   - kind: ethereum/contract
     name: NonfungiblePositionManager
     network: linea
