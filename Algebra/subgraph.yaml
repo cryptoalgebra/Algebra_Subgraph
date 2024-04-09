@@ -104,3 +104,5 @@ templates:
           handler: handleCollect
         - event: CommunityFee(uint16,uint16)
           handler: handleSetCommunityFee
+        - event: TickSpacing(int24)
+          handler: handleSetTickSpacing
