@@ -5,11 +5,11 @@ schema:
 dataSources:
 - kind: ethereum/contract
   name: NonfungiblePositionManager
-  network: testnet
+  network: xlayer-sepolia
   source:
-      address: '0x1B9335eB8C67CcacA41be3f4e53E45a7DB653A9D'
+      address: '0xAd276d26BF120839efdB7168c065f8A59186A5AC'
       abi: NonfungiblePositionManager
-      startBlock: 20000000
+      startBlock: 13485381
   mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -36,11 +36,11 @@ dataSources:
           handler: handleDecreaseLiquidity
 - kind: ethereum/contract
   name: EternalFarming
-  network: testnet
+  network: xlayer-sepolia
   source:
-      address: '0xFf4F2A4acbA84271C6b5E2B98152BC863b2Df049'
+      address: '0xd3EB4f63257480E3269653bAf373df85D31Ab438'
       abi: EternalFarming
-      startBlock: 20000000
+      startBlock: 13485381
   mapping:
       kind: ethereum/events
       apiVersion: 0.0.6

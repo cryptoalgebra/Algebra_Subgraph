@@ -5,11 +5,11 @@ schema:
 dataSources:
   - kind: ethereum/contract
     name: Factory
-    network: goerli
+    network: xlayer-sepolia
     source:
-      address: '0x13fcE0acbe6Fb11641ab753212550574CaD31415'
+      address: '0x6d63b39017F379bfd0301293022581C6EF237a19'
       abi: Factory
-      startBlock: 9705888 
+      startBlock: 13485381 
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -36,11 +36,11 @@ dataSources:
           handler: handleNewCommunityFee
   - kind: ethereum/contract
     name: NonfungiblePositionManager
-    network: goerli
+    network: xlayer-sepolia
     source:
-      address: '0xAbAc6f23fdf1313FC2E9C9244f666157CcD32990'
+      address: '0xAd276d26BF120839efdB7168c065f8A59186A5AC'
       abi: NonfungiblePositionManager
-      startBlock: 9705888 
+      startBlock: 13485381 
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -71,7 +71,7 @@ dataSources:
 templates:
   - kind: ethereum/contract
     name: Pool
-    network: goerli
+    network: xlayer-sepolia
     source:
       abi: Pool
     mapping:
