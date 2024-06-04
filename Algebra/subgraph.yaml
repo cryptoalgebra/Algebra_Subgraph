@@ -1,15 +1,15 @@
 specVersion: 0.0.4
-description: Algebra is a decentralized protocol for automated token exchange on Polygon.
+description: Algebra is a decentralized protocol for automated token exchange on core testnet.
 schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum/contract
     name: Factory
-    network: goerli
+    network: mainnet
     source:
-      address: '0x13fcE0acbe6Fb11641ab753212550574CaD31415'
+      address: '0x731afF9bA38D4F888f7ECCe820240f0845BB78cb'
       abi: Factory
-      startBlock: 9705888 
+      startBlock: 20257871 
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -36,11 +36,11 @@ dataSources:
           handler: handleNewCommunityFee
   - kind: ethereum/contract
     name: NonfungiblePositionManager
-    network: goerli
+    network: mainnet
     source:
-      address: '0xAbAc6f23fdf1313FC2E9C9244f666157CcD32990'
+      address: '0xA2f9D139Be631b35Ab25867e4b60ad85f2D9EEa5'
       abi: NonfungiblePositionManager
-      startBlock: 9705888 
+      startBlock: 20257871 
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -71,7 +71,7 @@ dataSources:
 templates:
   - kind: ethereum/contract
     name: Pool
-    network: goerli
+    network: mainnet
     source:
       abi: Pool
     mapping:
