@@ -38,7 +38,7 @@ dataSources:
     name: NonfungiblePositionManager
     network: mainnet
     source:
-      address: '0x812AB48dc57075e6e032AfB577E88c4B810cfe74'
+      address: '0x5322c08603C7C17fbC5cf68e9Ad7919865EEfE2f'
       abi: NonfungiblePositionManager
       startBlock: 20280670 
     mapping:
