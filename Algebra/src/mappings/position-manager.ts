@@ -40,8 +40,8 @@ function getPosition(event: ethereum.Event, tokenId: BigInt): Position | null {
         position.token0 = positionResult.value2.toHexString()
         position.token1 = positionResult.value3.toHexString()
       } 
-      position.tickLower = position.pool.concat('#').concat(positionResult.value4.toString())
-      position.tickUpper = position.pool.concat('#').concat(positionResult.value5.toString())
+      position.tickLower = position.pool.concat('#').concat(positionResult.value5.toString())
+      position.tickUpper = position.pool.concat('#').concat(positionResult.value6.toString())
       position.liquidity = ZERO_BI
       position.depositedToken0 = ZERO_BD
       position.depositedToken1 = ZERO_BD
@@ -52,8 +52,8 @@ function getPosition(event: ethereum.Event, tokenId: BigInt): Position | null {
       position.collectedFeesToken0 = ZERO_BD
       position.collectedFeesToken1 = ZERO_BD
       position.transaction = loadTransaction(event).id
-      position.feeGrowthInside0LastX128 = positionResult.value7
-      position.feeGrowthInside1LastX128 = positionResult.value8
+      position.feeGrowthInside0LastX128 = positionResult.value8
+      position.feeGrowthInside1LastX128 = positionResult.value9
     }
   }
 
@@ -137,7 +137,7 @@ export function handleIncreaseLiquidity(event: IncreaseLiquidity): void {
     else
       amount1 = convertTokenToDecimal(event.params.amount1, token1!.decimals)
 
-  position.liquidity = position.liquidity.plus(event.params.liquidity)
+  position.liquidity = position.liquidity.plus(event.params.actualLiquidity)
   position.depositedToken0 = position.depositedToken0.plus(amount0)
   position.depositedToken1 = position.depositedToken1.plus(amount1)
   

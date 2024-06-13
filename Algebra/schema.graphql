@@ -84,6 +84,7 @@ type Pool @entity {
   token0: Token!
   # token1
   token1: Token!
+  deployer: Bytes!
   # fee amount
   fee: BigInt!
   communityFee: BigInt!

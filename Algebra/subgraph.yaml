@@ -5,11 +5,11 @@ schema:
 dataSources:
   - kind: ethereum/contract
     name: Factory
-    network: goerli
+    network: holesky
     source:
-      address: '0x13fcE0acbe6Fb11641ab753212550574CaD31415'
+      address: '0x9C80DE1dE95369432f1cC4D971aEE2EbA7Ac5215'
       abi: Factory
-      startBlock: 9705888 
+      startBlock: 1712090 
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -32,15 +32,17 @@ dataSources:
       eventHandlers:
         - event: Pool(indexed address,indexed address,address)
           handler: handlePoolCreated
+        - event: CustomPool(indexed address,indexed address,indexed address,address)
+          handler: handleCustomPoolCreated
         - event: DefaultCommunityFee(uint16)
           handler: handleNewCommunityFee
   - kind: ethereum/contract
     name: NonfungiblePositionManager
-    network: goerli
+    network: holesky
     source:
-      address: '0xAbAc6f23fdf1313FC2E9C9244f666157CcD32990'
+      address: '0x74a337102AA5a25D0D71ec2f917a3361F8fbE289'
       abi: NonfungiblePositionManager
-      startBlock: 9705888 
+      startBlock: 1712090 
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -71,7 +73,7 @@ dataSources:
 templates:
   - kind: ethereum/contract
     name: Pool
-    network: goerli
+    network: holesky
     source:
       abi: Pool
     mapping:
