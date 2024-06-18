@@ -1,7 +1,7 @@
 /* eslint-disable prefer-const */
-import { BigInt, BigDecimal, ethereum } from '@graphprotocol/graph-ts'
+import { BigInt, BigDecimal, ethereum, log } from '@graphprotocol/graph-ts'
 import { Transaction } from '../types/schema'
-import { ONE_BI, ZERO_BI, ZERO_BD, ONE_BD } from '../utils/constants'
+import { ONE_BI, ZERO_BI, ZERO_BD, ONE_BD} from '../utils/constants'
 
 export function exponentToBigDecimal(decimals: BigInt): BigDecimal {
   let bd = BigDecimal.fromString('1')
@@ -76,8 +76,8 @@ export function convertTokenToDecimal(tokenAmount: BigInt, exchangeDecimals: Big
   return tokenAmount.toBigDecimal().div(exponentToBigDecimal(exchangeDecimals))
 }
 
-export function convertEthToDecimal(matic: BigInt): BigDecimal {
-  return matic.toBigDecimal().div(exponentToBigDecimal(18))
+export function convertEthToDecimal(bnb: BigInt): BigDecimal {
+  return bnb.toBigDecimal().div(exponentToBigDecimal(18))
 }
 
 export function loadTransaction(event: ethereum.Event): Transaction {
@@ -92,3 +92,32 @@ export function loadTransaction(event: ethereum.Event): Transaction {
   transaction.save()
   return transaction as Transaction
 }
+
+export function tickToSqrtPrice(tick: BigInt): BigDecimal{
+    return bigDecimalExponated(BigDecimal.fromString('1.0001'), tick.div(BigInt.fromI32(2)))
+}
+
+export function getAmounts(liquidity: BigInt, tickLower: BigInt, tickUpper: BigInt, tick: BigInt, token0: boolean): BigDecimal{
+  if(tickLower < BigInt.fromI32(-887272) || tickUpper > BigInt.fromI32(887272))
+    return ZERO_BD
+  let lowerPrice = tickToSqrtPrice(tickLower)
+  let upperPrice = tickToSqrtPrice(tickUpper)
+  let currentPrice = tickToSqrtPrice(tick)
+  let amount0 = ZERO_BD
+  let amount1 = ZERO_BD
+  if (currentPrice < lowerPrice){
+      amount0 = liquidity.toBigDecimal().times(ONE_BD.div(lowerPrice).minus(ONE_BD.div(upperPrice)))
+  } else {
+      if (lowerPrice <= currentPrice && currentPrice <= upperPrice){
+        amount1 = liquidity.toBigDecimal().times(currentPrice - lowerPrice)
+        amount0 = liquidity.toBigDecimal().times(ONE_BD.div(currentPrice) - ONE_BD.div(upperPrice))
+      }
+      else{
+        amount1 = liquidity.toBigDecimal().times(upperPrice - lowerPrice)
+
+      }
+    }
+  
+  return token0 ? amount0 : amount1
+}
+

@@ -1,7 +1,7 @@
 import { ZERO_BD, ZERO_BI, ONE_BI } from './constants'
 /* eslint-disable prefer-const */
 import {
-  AlgebraDayData,
+  FusionDayData,
   Factory,
   Pool,
   PoolDayData,
@@ -22,24 +22,24 @@ import { ethereum, BigInt } from '@graphprotocol/graph-ts'
  * Tracks global aggregate data over daily windows
  * @param event
  */
-export function updateAlgebraDayData(event: ethereum.Event): AlgebraDayData {
-  let algebra = Factory.load(FACTORY_ADDRESS)!
+export function updateFusionDayData(event: ethereum.Event): FusionDayData {
+  let fusion = Factory.load(FACTORY_ADDRESS)!
   let timestamp = event.block.timestamp.toI32()
   let dayID = timestamp / 86400 // rounded
   let dayStartTimestamp = dayID * 86400
-  let algebraDayData = AlgebraDayData.load(dayID.toString())
-  if (algebraDayData === null) {
-    algebraDayData = new AlgebraDayData(dayID.toString())
-    algebraDayData.date = dayStartTimestamp
-    algebraDayData.volumeMatic = ZERO_BD
-    algebraDayData.volumeUSD = ZERO_BD
-    algebraDayData.volumeUSDUntracked = ZERO_BD
-    algebraDayData.feesUSD = ZERO_BD
+  let fusionDayData = FusionDayData.load(dayID.toString())
+  if (fusionDayData === null) {
+    fusionDayData = new FusionDayData(dayID.toString())
+    fusionDayData.date = dayStartTimestamp
+    fusionDayData.volumeBnb = ZERO_BD
+    fusionDayData.volumeUSD = ZERO_BD
+    fusionDayData.volumeUSDUntracked = ZERO_BD
+    fusionDayData.feesUSD = ZERO_BD
   }
-  algebraDayData.tvlUSD = algebra.totalValueLockedUSD
-  algebraDayData.txCount = algebra.txCount
-  algebraDayData.save()
-  return algebraDayData as AlgebraDayData
+  fusionDayData.tvlUSD = fusion.totalValueLockedUSD
+  fusionDayData.txCount = fusion.txCount
+  fusionDayData.save()
+  return fusionDayData as FusionDayData
 }
 
 
@@ -62,9 +62,9 @@ export function updatePoolDayData(event: ethereum.Event): PoolDayData {
     poolDayData.volumeToken1 = ZERO_BD
     poolDayData.volumeUSD = ZERO_BD
     poolDayData.untrackedVolumeUSD = ZERO_BD
-    poolDayData.feesUSD = ZERO_BD
     poolDayData.feesToken0 = ZERO_BD
     poolDayData.feesToken1 = ZERO_BD
+    poolDayData.feesUSD = ZERO_BD
     poolDayData.txCount = ZERO_BI
     poolDayData.feeGrowthGlobal0X128 = ZERO_BI
     poolDayData.feeGrowthGlobal1X128 = ZERO_BI
@@ -190,7 +190,7 @@ export function updateTokenDayData(token: Token, event: ethereum.Event): TokenDa
     .toString()
     .concat('-')
     .concat(dayID.toString())
-  let tokenPrice = token.derivedMatic.times(bundle.maticPriceUSD)
+  let tokenPrice = token.derivedBnb.times(bundle.bnbPriceUSD)
 
   let tokenDayData = TokenDayData.load(tokenDayID)
   if (tokenDayData === null) {
@@ -216,7 +216,7 @@ export function updateTokenDayData(token: Token, event: ethereum.Event): TokenDa
   }
 
   tokenDayData.close = tokenPrice
-  tokenDayData.priceUSD = token.derivedMatic.times(bundle.maticPriceUSD)
+  tokenDayData.priceUSD = token.derivedBnb.times(bundle.bnbPriceUSD)
   tokenDayData.totalValueLocked = token.totalValueLocked
   tokenDayData.totalValueLockedUSD = token.totalValueLockedUSD
   tokenDayData.save()
@@ -235,7 +235,7 @@ export function updateTokenHourData(token: Token, event: ethereum.Event): TokenH
     .concat('-')
     .concat(hourIndex.toString())
   let tokenHourData = TokenHourData.load(tokenHourID)
-  let tokenPrice = token.derivedMatic.times(bundle.maticPriceUSD)
+  let tokenPrice = token.derivedBnb.times(bundle.bnbPriceUSD)
 
   if (tokenHourData === null) {
     tokenHourData = new TokenHourData(tokenHourID)

@@ -7,22 +7,22 @@ type Factory @entity {
   txCount: BigInt!
   # total volume all time in derived USD
   totalVolumeUSD: BigDecimal!
-  # total volume all time in derived Matic
-  totalVolumeMatic: BigDecimal!
+  # total volume all time in derived BNB
+  totalVolumeBnb: BigDecimal!
   # total swap fees all time in USD
   totalFeesUSD: BigDecimal!
   # total swap fees all time in USD
-  totalFeesMatic: BigDecimal!
+  totalFeesBnb: BigDecimal!
   # all volume even through less reliable USD values
   untrackedVolumeUSD: BigDecimal!
   # TVL derived in USD
   totalValueLockedUSD: BigDecimal!
-  # TVL derived in Matic
-  totalValueLockedMatic: BigDecimal!
+  # TVL derived in Bnb
+  totalValueLockedBnb: BigDecimal!
   # TVL derived in USD untracked
   totalValueLockedUSDUntracked: BigDecimal!
-  # TVL derived in Matic untracked
-  totalValueLockedMaticUntracked: BigDecimal!
+  # TVL derived in Bnb untracked
+  totalValueLockedBnbUntracked: BigDecimal!
   # current owner of the factory
   owner: ID!
 }
@@ -30,8 +30,8 @@ type Factory @entity {
 # stores for USD calculations
 type Bundle @entity {
   id: ID!
-  # price of Matic in usd
-  maticPriceUSD: BigDecimal!
+  # price of Bnb in usd
+  bnbPriceUSD: BigDecimal!
 }
 
 type Token @entity {
@@ -63,8 +63,8 @@ type Token @entity {
   totalValueLockedUSD: BigDecimal!
   # TVL derived in USD untracked
   totalValueLockedUSDUntracked: BigDecimal!
-  # derived price in Matic
-  derivedMatic: BigDecimal!
+  # derived price in Bnb
+  derivedBnb: BigDecimal!
   # pools token is in that are white listed for USD pricing
   whitelistPools: [Pool!]!
   # derived fields
@@ -128,8 +128,8 @@ type Pool @entity {
   totalValueLockedToken1: BigDecimal!
   feesToken0: BigDecimal!
   feesToken1: BigDecimal!
-  # tvl derived Matic
-  totalValueLockedMatic: BigDecimal!
+  # tvl derived Bnb
+  totalValueLockedBnb: BigDecimal!
   # tvl USD
   totalValueLockedUSD: BigDecimal!
   # TVL derived in USD untracked
@@ -445,17 +445,17 @@ type Flash @entity {
   logIndex: BigInt
 }
 
-# Data accumulated and condensed into day stats for all of Algebra
-type AlgebraDayData @entity {
+# Data accumulated and condensed into day stats for all of Fusion
+type FusionDayData @entity {
   # timestamp rounded to current day by dividing by 86400
   id: ID!
   # timestamp rounded to current day by dividing by 86400
   date: Int!
-  # total daily volume in Algebra derived in terms of Matic
-  volumeMatic: BigDecimal!
-  # total daily volume in Algebra derived in terms of USD
+  # total daily volume in Fusion derived in terms of Bnb
+  volumeBnb: BigDecimal!
+  # total daily volume in Fusion derived in terms of USD
   volumeUSD: BigDecimal!
-  # total daily volume in Algebra derived in terms of USD untracked
+  # total daily volume in Fusion derived in terms of USD untracked
   volumeUSDUntracked: BigDecimal!
   # fees in USD
   feesUSD: BigDecimal!

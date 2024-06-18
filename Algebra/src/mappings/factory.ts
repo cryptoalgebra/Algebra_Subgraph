@@ -16,21 +16,21 @@ export function handlePoolCreated(event: PoolEvent): void {
   if (factory == null) {
     factory = new Factory(FACTORY_ADDRESS)
     factory.poolCount = ZERO_BI
-    factory.totalVolumeMatic = ZERO_BD
+    factory.totalVolumeBnb = ZERO_BD
     factory.totalVolumeUSD = ZERO_BD
     factory.untrackedVolumeUSD = ZERO_BD
     factory.totalFeesUSD = ZERO_BD
-    factory.totalFeesMatic = ZERO_BD
-    factory.totalValueLockedMatic = ZERO_BD
+    factory.totalFeesBnb = ZERO_BD
+    factory.totalValueLockedBnb = ZERO_BD
     factory.totalValueLockedUSD = ZERO_BD
     factory.totalValueLockedUSDUntracked = ZERO_BD
-    factory.totalValueLockedMaticUntracked = ZERO_BD
+    factory.totalValueLockedBnbUntracked = ZERO_BD
     factory.txCount = ZERO_BI
     factory.owner = ADDRESS_ZERO
 
-    // create new bundle for tracking matic price
+    // create new bundle for tracking bnb price
     let bundle = new Bundle('1')
-    bundle.maticPriceUSD = ZERO_BD
+    bundle.bnbPriceUSD = ZERO_BD
     bundle.save()
   }
 
@@ -67,7 +67,7 @@ export function handlePoolCreated(event: PoolEvent): void {
     }
 
     token0.decimals = decimals
-    token0.derivedMatic = ZERO_BD
+    token0.derivedBnb = ZERO_BD
     token0.volume = ZERO_BD
     token0.volumeUSD = ZERO_BD
     token0.feesUSD = ZERO_BD
@@ -92,7 +92,7 @@ export function handlePoolCreated(event: PoolEvent): void {
       return
     }
     token1.decimals = decimals
-    token1.derivedMatic = ZERO_BD
+    token1.derivedBnb = ZERO_BD
     token1.volume = ZERO_BD
     token1.volumeUSD = ZERO_BD
     token1.untrackedVolumeUSD = ZERO_BD
@@ -137,7 +137,7 @@ export function handlePoolCreated(event: PoolEvent): void {
   pool.totalValueLockedToken0 = ZERO_BD
   pool.totalValueLockedToken1 = ZERO_BD
   pool.totalValueLockedUSD = ZERO_BD
-  pool.totalValueLockedMatic = ZERO_BD
+  pool.totalValueLockedBnb = ZERO_BD
   pool.totalValueLockedUSDUntracked = ZERO_BD
   pool.volumeToken0 = ZERO_BD
   pool.volumeToken1 = ZERO_BD
@@ -147,6 +147,7 @@ export function handlePoolCreated(event: PoolEvent): void {
   pool.feesToken1 = ZERO_BD
   pool.untrackedVolumeUSD = ZERO_BD
   pool.untrackedFeesUSD = ZERO_BD
+
 
   pool.collectedFeesToken0 = ZERO_BD
   pool.collectedFeesToken1 = ZERO_BD

@@ -21,7 +21,7 @@ import {
   updateTickDayData,
   updateTokenDayData,
   updateTokenHourData,
-  updateAlgebraDayData,
+  updateFusionDayData,
   updateFeeHourData
 } from '../utils/intervalUpdates'
 import { createTick } from '../utils/tick'
@@ -36,15 +36,15 @@ export function handleInitialize(event: Initialize): void {
   let token0 = Token.load(pool.token0)!
   let token1 = Token.load(pool.token1)!
 
-  // update Matic price now that prices could have changed
+  // update Bnb price now that prices could have changed
   let bundle = Bundle.load('1')!
-  bundle.maticPriceUSD = getEthPriceInUSD()
+  bundle.bnbPriceUSD = getEthPriceInUSD()
   bundle.save()
   updatePoolDayData(event)
   updatePoolHourData(event)
   // update token prices
-  token0.derivedMatic = findEthPerToken(token0 as Token)
-  token1.derivedMatic = findEthPerToken(token1 as Token)
+  token0.derivedBnb = findEthPerToken(token0 as Token)
+  token1.derivedBnb = findEthPerToken(token1 as Token)
   token0.save()
   token1.save()
 
@@ -71,11 +71,11 @@ export function handleMint(event: MintEvent): void {
   }
 
   let amountUSD = amount0
-    .times(token0.derivedMatic.times(bundle.maticPriceUSD))
-    .plus(amount1.times(token1.derivedMatic.times(bundle.maticPriceUSD)))
+    .times(token0.derivedBnb.times(bundle.bnbPriceUSD))
+    .plus(amount1.times(token1.derivedBnb.times(bundle.bnbPriceUSD)))
 
   // reset tvl aggregates until new amounts calculated
-  factory.totalValueLockedMatic = factory.totalValueLockedMatic.minus(pool.totalValueLockedMatic)
+  factory.totalValueLockedBnb = factory.totalValueLockedBnb.minus(pool.totalValueLockedBnb)
 
   // update globals
   factory.txCount = factory.txCount.plus(ONE_BI)
@@ -83,12 +83,12 @@ export function handleMint(event: MintEvent): void {
   // update token0 data
   token0.txCount = token0.txCount.plus(ONE_BI)
   token0.totalValueLocked = token0.totalValueLocked.plus(amount0)
-  token0.totalValueLockedUSD = token0.totalValueLocked.times(token0.derivedMatic.times(bundle.maticPriceUSD))
+  token0.totalValueLockedUSD = token0.totalValueLocked.times(token0.derivedBnb.times(bundle.bnbPriceUSD))
 
   // update token1 data
   token1.txCount = token1.txCount.plus(ONE_BI)
   token1.totalValueLocked = token1.totalValueLocked.plus(amount1)
-  token1.totalValueLockedUSD = token1.totalValueLocked.times(token1.derivedMatic.times(bundle.maticPriceUSD))
+  token1.totalValueLockedUSD = token1.totalValueLocked.times(token1.derivedBnb.times(bundle.bnbPriceUSD))
 
   // pool data
   pool.txCount = pool.txCount.plus(ONE_BI)
@@ -104,14 +104,14 @@ export function handleMint(event: MintEvent): void {
   }
   pool.totalValueLockedToken0 = pool.totalValueLockedToken0.plus(amount0)
   pool.totalValueLockedToken1 = pool.totalValueLockedToken1.plus(amount1)
-  pool.totalValueLockedMatic = pool.totalValueLockedToken0
-    .times(token0.derivedMatic)
-    .plus(pool.totalValueLockedToken1.times(token1.derivedMatic))
-  pool.totalValueLockedUSD = pool.totalValueLockedMatic.times(bundle.maticPriceUSD)
+  pool.totalValueLockedBnb = pool.totalValueLockedToken0
+    .times(token0.derivedBnb)
+    .plus(pool.totalValueLockedToken1.times(token1.derivedBnb))
+  pool.totalValueLockedUSD = pool.totalValueLockedBnb.times(bundle.bnbPriceUSD)
 
   // reset aggregates with new amounts
-  factory.totalValueLockedMatic = factory.totalValueLockedMatic.plus(pool.totalValueLockedMatic)
-  factory.totalValueLockedUSD = factory.totalValueLockedMatic.times(bundle.maticPriceUSD)
+  factory.totalValueLockedBnb = factory.totalValueLockedBnb.plus(pool.totalValueLockedBnb)
+  factory.totalValueLockedUSD = factory.totalValueLockedBnb.times(bundle.bnbPriceUSD)
 
   let transaction = loadTransaction(event)
   let mint = new Mint(transaction.id.toString() + '#' + pool.txCount.toString())
@@ -156,7 +156,7 @@ export function handleMint(event: MintEvent): void {
 
   // TODO: Update Tick's volume, fees, and liquidity provider count
 
-  updateAlgebraDayData(event)
+  updateFusionDayData(event)
   updatePoolDayData(event)
   updatePoolHourData(event)
   updateTokenDayData(token0 as Token, event)
@@ -197,11 +197,11 @@ export function handleBurn(event: BurnEvent): void {
   }
 
   let amountUSD = amount0
-    .times(token0.derivedMatic.times(bundle.maticPriceUSD))
-    .plus(amount1.times(token1.derivedMatic.times(bundle.maticPriceUSD)))
+    .times(token0.derivedBnb.times(bundle.bnbPriceUSD))
+    .plus(amount1.times(token1.derivedBnb.times(bundle.bnbPriceUSD)))
 
   // reset tvl aggregates until new amounts calculated
-  factory.totalValueLockedMatic = factory.totalValueLockedMatic.minus(pool.totalValueLockedMatic)
+  factory.totalValueLockedBnb = factory.totalValueLockedBnb.minus(pool.totalValueLockedBnb)
 
   // update globals
   factory.txCount = factory.txCount.plus(ONE_BI)
@@ -209,12 +209,12 @@ export function handleBurn(event: BurnEvent): void {
   // update token0 data
   token0.txCount = token0.txCount.plus(ONE_BI)
   token0.totalValueLocked = token0.totalValueLocked.minus(amount0)
-  token0.totalValueLockedUSD = token0.totalValueLocked.times(token0.derivedMatic.times(bundle.maticPriceUSD))
+  token0.totalValueLockedUSD = token0.totalValueLocked.times(token0.derivedBnb.times(bundle.bnbPriceUSD))
 
   // update token1 data
   token1.txCount = token1.txCount.plus(ONE_BI)
   token1.totalValueLocked = token1.totalValueLocked.minus(amount1)
-  token1.totalValueLockedUSD = token1.totalValueLocked.times(token1.derivedMatic.times(bundle.maticPriceUSD))
+  token1.totalValueLockedUSD = token1.totalValueLocked.times(token1.derivedBnb.times(bundle.bnbPriceUSD))
 
   // pool data
   pool.txCount = pool.txCount.plus(ONE_BI)
@@ -230,14 +230,14 @@ export function handleBurn(event: BurnEvent): void {
 
   pool.totalValueLockedToken0 = pool.totalValueLockedToken0.minus(amount0)
   pool.totalValueLockedToken1 = pool.totalValueLockedToken1.minus(amount1)
-  pool.totalValueLockedMatic = pool.totalValueLockedToken0
-    .times(token0.derivedMatic)
-    .plus(pool.totalValueLockedToken1.times(token1.derivedMatic))
-  pool.totalValueLockedUSD = pool.totalValueLockedMatic.times(bundle.maticPriceUSD)
+  pool.totalValueLockedBnb = pool.totalValueLockedToken0
+    .times(token0.derivedBnb)
+    .plus(pool.totalValueLockedToken1.times(token1.derivedBnb))
+  pool.totalValueLockedUSD = pool.totalValueLockedBnb.times(bundle.bnbPriceUSD)
 
   // reset aggregates with new amounts
-  factory.totalValueLockedMatic = factory.totalValueLockedMatic.plus(pool.totalValueLockedMatic)
-  factory.totalValueLockedUSD = factory.totalValueLockedMatic.times(bundle.maticPriceUSD)
+  factory.totalValueLockedBnb = factory.totalValueLockedBnb.plus(pool.totalValueLockedBnb)
+  factory.totalValueLockedUSD = factory.totalValueLockedBnb.times(bundle.bnbPriceUSD)
 
   // burn entity
   let transaction = loadTransaction(event)
@@ -268,7 +268,7 @@ export function handleBurn(event: BurnEvent): void {
   upperTick.liquidityGross = upperTick.liquidityGross.minus(amount)
   upperTick.liquidityNet = upperTick.liquidityNet.plus(amount)
 
-  updateAlgebraDayData(event)
+  updateFusionDayData(event)
   updatePoolDayData(event)
   updatePoolHourData(event)
   updateTokenDayData(token0 as Token, event)
@@ -286,6 +286,7 @@ export function handleBurn(event: BurnEvent): void {
 }
 
 export function handleSwap(event: SwapEvent): void {
+
   let bundle = Bundle.load('1')!
   let factory = Factory.load(FACTORY_ADDRESS)!
   let pool = Pool.load(event.address.toHexString())!
@@ -332,11 +333,11 @@ export function handleSwap(event: SwapEvent): void {
    amount1Abs = amount1
  }
 
-  let amount0Matic = amount0Abs.times(token0.derivedMatic)
-  let amount1Matic = amount1Abs.times(token1.derivedMatic)
+  let amount0Bnb = amount0Abs.times(token0.derivedBnb)
+  let amount1Bnb = amount1Abs.times(token1.derivedBnb)
 
-  let amount0USD = amount0Matic.times(bundle.maticPriceUSD)
-  let amount1USD = amount1Matic.times(bundle.maticPriceUSD)
+  let amount0USD = amount0Bnb.times(bundle.bnbPriceUSD)
+  let amount1USD = amount1Bnb.times(bundle.bnbPriceUSD)
 
 
 
@@ -345,25 +346,25 @@ export function handleSwap(event: SwapEvent): void {
     BigDecimal.fromString('2')
   )
 
-  let amountTotalMaticTracked = safeDiv(amountTotalUSDTracked, bundle.maticPriceUSD)
+  let amountTotalBnbTracked = safeDiv(amountTotalUSDTracked, bundle.bnbPriceUSD)
   let amountTotalUSDUntracked = amount0USD.plus(amount1USD).div(BigDecimal.fromString('2'))
 
-  let feesMatic = amountTotalMaticTracked.times(pool.fee.toBigDecimal()).div(BigDecimal.fromString('1000000'))
+  let feesBnb = amountTotalBnbTracked.times(pool.fee.toBigDecimal()).div(BigDecimal.fromString('1000000'))
   let feesUSD = amountTotalUSDTracked.times(pool.fee.toBigDecimal()).div(BigDecimal.fromString('1000000'))
   let untrackedFees = amountTotalUSDUntracked.times(pool.fee.toBigDecimal()).div(BigDecimal.fromString('1000000'))
 
 
   // global updates
   factory.txCount = factory.txCount.plus(ONE_BI)
-  factory.totalVolumeMatic = factory.totalVolumeMatic.plus(amountTotalMaticTracked)
+  factory.totalVolumeBnb = factory.totalVolumeBnb.plus(amountTotalBnbTracked)
   factory.totalVolumeUSD = factory.totalVolumeUSD.plus(amountTotalUSDTracked)
   factory.untrackedVolumeUSD = factory.untrackedVolumeUSD.plus(amountTotalUSDUntracked)
-  factory.totalFeesMatic = factory.totalFeesMatic.plus(feesMatic)
+  factory.totalFeesBnb = factory.totalFeesBnb.plus(feesBnb)
   factory.totalFeesUSD = factory.totalFeesUSD.plus(feesUSD)
 
   // reset aggregate tvl before individual pool tvl updates
-  let currentPoolTvlMatic = pool.totalValueLockedMatic
-  factory.totalValueLockedMatic = factory.totalValueLockedMatic.minus(currentPoolTvlMatic)
+  let currentPoolTvlBnb = pool.totalValueLockedBnb
+  factory.totalValueLockedBnb = factory.totalValueLockedBnb.minus(currentPoolTvlBnb)
 
 
   // pool volume
@@ -415,25 +416,25 @@ export function handleSwap(event: SwapEvent): void {
   pool.save()
 
   // update USD pricing
-  bundle.maticPriceUSD = getEthPriceInUSD()
+  bundle.bnbPriceUSD = getEthPriceInUSD()
   bundle.save()
 
-  token0.derivedMatic = findEthPerToken(token0 as Token)
-  token1.derivedMatic = findEthPerToken(token1 as Token)
+  token0.derivedBnb = findEthPerToken(token0 as Token)
+  token1.derivedBnb = findEthPerToken(token1 as Token)
 
   /**
    * Things afffected by new USD rates
    */
-  pool.totalValueLockedMatic = pool.totalValueLockedToken0
-    .times(token0.derivedMatic)
-    .plus(pool.totalValueLockedToken1.times(token1.derivedMatic))
-  pool.totalValueLockedUSD = pool.totalValueLockedMatic.times(bundle.maticPriceUSD)
+  pool.totalValueLockedBnb = pool.totalValueLockedToken0
+    .times(token0.derivedBnb)
+    .plus(pool.totalValueLockedToken1.times(token1.derivedBnb))
+  pool.totalValueLockedUSD = pool.totalValueLockedBnb.times(bundle.bnbPriceUSD)
 
-  factory.totalValueLockedMatic = factory.totalValueLockedMatic.plus(pool.totalValueLockedMatic)
-  factory.totalValueLockedUSD = factory.totalValueLockedMatic.times(bundle.maticPriceUSD)
+  factory.totalValueLockedBnb = factory.totalValueLockedBnb.plus(pool.totalValueLockedBnb)
+  factory.totalValueLockedUSD = factory.totalValueLockedBnb.times(bundle.bnbPriceUSD)
 
-  token0.totalValueLockedUSD = token0.totalValueLocked.times(token0.derivedMatic).times(bundle.maticPriceUSD)
-  token1.totalValueLockedUSD = token1.totalValueLocked.times(token1.derivedMatic).times(bundle.maticPriceUSD)
+  token0.totalValueLockedUSD = token0.totalValueLocked.times(token0.derivedBnb).times(bundle.bnbPriceUSD)
+  token1.totalValueLockedUSD = token1.totalValueLocked.times(token1.derivedBnb).times(bundle.bnbPriceUSD)
 
   // create Swap event
   let transaction = loadTransaction(event)
@@ -462,7 +463,7 @@ export function handleSwap(event: SwapEvent): void {
   pool.feeGrowthGlobal1X128 = feeGrowthGlobal1X128 as BigInt
 
   // interval data
-  let algebraDayData = updateAlgebraDayData(event)
+  let fusionDayData = updateFusionDayData(event)
   let poolDayData = updatePoolDayData(event)
   let poolHourData = updatePoolHourData(event)
   let token0DayData = updateTokenDayData(token0 as Token, event)
@@ -481,9 +482,9 @@ export function handleSwap(event: SwapEvent): void {
   }
 
   // update volume metrics
-  algebraDayData.volumeMatic = algebraDayData.volumeMatic.plus(amountTotalMaticTracked)
-  algebraDayData.volumeUSD = algebraDayData.volumeUSD.plus(amountTotalUSDTracked)
-  algebraDayData.feesUSD = algebraDayData.feesUSD.plus(feesUSD)
+  fusionDayData.volumeBnb = fusionDayData.volumeBnb.plus(amountTotalBnbTracked)
+  fusionDayData.volumeUSD = fusionDayData.volumeUSD.plus(amountTotalUSDTracked)
+  fusionDayData.feesUSD = fusionDayData.feesUSD.plus(feesUSD)
 
   poolDayData.volumeUSD = poolDayData.volumeUSD.plus(amountTotalUSDTracked)
   poolDayData.untrackedVolumeUSD = poolDayData.untrackedVolumeUSD.plus(amountTotalUSDUntracked)
@@ -521,7 +522,7 @@ export function handleSwap(event: SwapEvent): void {
   swap.save()
   token0DayData.save()
   token1DayData.save()
-  algebraDayData.save()
+  fusionDayData.save()
   poolHourData.save()
   poolDayData.save()
   factory.save()
@@ -602,11 +603,11 @@ export function handleCollect(event: Collect): void {
   }
  
   let amountUSD = amount0
-    .times(token0.derivedMatic.times(bundle.maticPriceUSD))
-    .plus(amount1.times(token1.derivedMatic.times(bundle.maticPriceUSD)))
+    .times(token0.derivedBnb.times(bundle.bnbPriceUSD))
+    .plus(amount1.times(token1.derivedBnb.times(bundle.bnbPriceUSD)))
  
   // reset tvl aggregates until new amounts calculated
-  factory.totalValueLockedMatic = factory.totalValueLockedMatic.minus(pool.totalValueLockedMatic)
+  factory.totalValueLockedBnb = factory.totalValueLockedBnb.minus(pool.totalValueLockedBnb)
  
   // update globals
   factory.txCount = factory.txCount.plus(ONE_BI)
@@ -614,26 +615,26 @@ export function handleCollect(event: Collect): void {
   // update token0 data
   token0.txCount = token0.txCount.plus(ONE_BI)
   token0.totalValueLocked = token0.totalValueLocked.minus(amount0)
-  token0.totalValueLockedUSD = token0.totalValueLocked.times(token0.derivedMatic.times(bundle.maticPriceUSD))
+  token0.totalValueLockedUSD = token0.totalValueLocked.times(token0.derivedBnb.times(bundle.bnbPriceUSD))
  
   // update token1 data
   token1.txCount = token1.txCount.plus(ONE_BI)
   token1.totalValueLocked = token1.totalValueLocked.minus(amount1)
-  token1.totalValueLockedUSD = token1.totalValueLocked.times(token1.derivedMatic.times(bundle.maticPriceUSD))
+  token1.totalValueLockedUSD = token1.totalValueLocked.times(token1.derivedBnb.times(bundle.bnbPriceUSD))
  
   // pool data
   pool.txCount = pool.txCount.plus(ONE_BI)
  
   pool.totalValueLockedToken0 = pool.totalValueLockedToken0.minus(amount0)
   pool.totalValueLockedToken1 = pool.totalValueLockedToken1.minus(amount1)
-  pool.totalValueLockedMatic = pool.totalValueLockedToken0
-    .times(token0.derivedMatic)
-    .plus(pool.totalValueLockedToken1.times(token1.derivedMatic))
-  pool.totalValueLockedUSD = pool.totalValueLockedMatic.times(bundle.maticPriceUSD)
+  pool.totalValueLockedBnb = pool.totalValueLockedToken0
+    .times(token0.derivedBnb)
+    .plus(pool.totalValueLockedToken1.times(token1.derivedBnb))
+  pool.totalValueLockedUSD = pool.totalValueLockedBnb.times(bundle.bnbPriceUSD)
  
   // reset aggregates with new amounts
-  factory.totalValueLockedMatic = factory.totalValueLockedMatic.plus(pool.totalValueLockedMatic)
-  factory.totalValueLockedUSD = factory.totalValueLockedMatic.times(bundle.maticPriceUSD)
+  factory.totalValueLockedBnb = factory.totalValueLockedBnb.plus(pool.totalValueLockedBnb)
+  factory.totalValueLockedUSD = factory.totalValueLockedBnb.times(bundle.bnbPriceUSD)
  
   token0.save()
   token1.save()
