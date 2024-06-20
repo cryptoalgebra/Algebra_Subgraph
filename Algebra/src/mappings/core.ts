@@ -334,6 +334,7 @@ export function handleSwap(event: SwapEvent): void {
 
  // need absolute amounts for volume
  let amount0Abs = amount0
+ let amount0withFee = amount0
  if (amount0.lt(ZERO_BD)) {
    amount0Abs = amount0.times(BigDecimal.fromString('-1'))
  }
@@ -341,11 +342,12 @@ export function handleSwap(event: SwapEvent): void {
    fee = pool.feeZtO
    let communityFeeAmount = amount0.times(BigDecimal.fromString((pool.feeZtO.times(pool.communityFee0).toString())).div(BigDecimal.fromString('1000000000')))
    communityFeeAmount = communityFeeAmount.times(BigDecimal.fromString("1")) 
-   amount0 = amount0.minus(communityFeeAmount)
+   amount0withFee = amount0.times(BigDecimal.fromString('1000000').minus(pool.fee.toBigDecimal())).div(BigDecimal.fromString('1000000'))
    amount0Abs = amount0
  } 
 
  let amount1Abs = amount1
+ let amount1withFee = amount1
  if (amount1.lt(ZERO_BD)) {
    amount1Abs = amount1.times(BigDecimal.fromString('-1'))
  }
@@ -353,8 +355,8 @@ export function handleSwap(event: SwapEvent): void {
    fee = pool.feeOtZ
    let communityFeeAmount = amount1.times(BigDecimal.fromString((pool.feeOtZ.times(pool.communityFee1).toString())).div(BigDecimal.fromString('1000000000')))
    communityFeeAmount = communityFeeAmount.times(BigDecimal.fromString("1"))  
-   amount1 = amount1.minus(communityFeeAmount)
    amount1Abs = amount1
+   amount1withFee = amount1.times(BigDecimal.fromString('1000000').minus(pool.fee.toBigDecimal())).div(BigDecimal.fromString('1000000'))
  }
 
   let amount0Matic = amount0Abs.times(token0.derivedMatic)
@@ -404,12 +406,12 @@ export function handleSwap(event: SwapEvent): void {
   pool.liquidity = event.params.liquidity
   pool.tick = BigInt.fromI32(event.params.tick as i32)
   pool.sqrtPrice = event.params.price
-  pool.totalValueLockedToken0 = pool.totalValueLockedToken0.plus(amount0)
-  pool.totalValueLockedToken1 = pool.totalValueLockedToken1.plus(amount1)
+  pool.totalValueLockedToken0 = pool.totalValueLockedToken0.plus(amount0withFee)
+  pool.totalValueLockedToken1 = pool.totalValueLockedToken1.plus(amount1withFee)
 
   // update token0 data
   token0.volume = token0.volume.plus(amount0Abs)
-  token0.totalValueLocked = token0.totalValueLocked.plus(amount0)
+  token0.totalValueLocked = token0.totalValueLocked.plus(amount0withFee)
   token0.volumeUSD = token0.volumeUSD.plus(amountTotalUSDTracked)
   token0.untrackedVolumeUSD = token0.untrackedVolumeUSD.plus(amountTotalUSDUntracked)
   token0.feesUSD = token0.feesUSD.plus(feesUSD)
@@ -417,7 +419,7 @@ export function handleSwap(event: SwapEvent): void {
 
   // update token1 data
   token1.volume = token1.volume.plus(amount1Abs)
-  token1.totalValueLocked = token1.totalValueLocked.plus(amount1)
+  token1.totalValueLocked = token1.totalValueLocked.plus(amount1withFee)
   token1.volumeUSD = token1.volumeUSD.plus(amountTotalUSDTracked)
   token1.untrackedVolumeUSD = token1.untrackedVolumeUSD.plus(amountTotalUSDUntracked)
   token1.feesUSD = token1.feesUSD.plus(feesUSD)
