@@ -5,7 +5,7 @@ import { BigDecimal, BigInt} from '@graphprotocol/graph-ts'
 import { exponentToBigDecimal, safeDiv, getAmounts } from '../utils/index'
 
 const WBNB_ADDRESS = '0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c'
-const USDT_WBNB_POOL = '0xd405b976ac01023c9064024880999fc450a8668b'
+export const USDT_WBNB_POOL = '0xd405b976ac01023c9064024880999fc450a8668b'
 
 // token where amounts should contribute to tracked volume and liquidity
 // usually tokens that many tokens are paired with s

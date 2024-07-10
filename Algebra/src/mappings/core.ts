@@ -14,7 +14,7 @@ import {
 } from '../types/templates/Pool/Pool'
 import { convertTokenToDecimal, loadTransaction, safeDiv } from '../utils'
 import { FACTORY_ADDRESS, ONE_BI, ZERO_BD, ZERO_BI, pools_list, TICK_SPACING } from '../utils/constants'
-import { findEthPerToken, getEthPriceInUSD, getTrackedAmountUSD, priceToTokenPrices } from '../utils/pricing'
+import { findEthPerToken, getEthPriceInUSD, getTrackedAmountUSD, priceToTokenPrices, USDT_WBNB_POOL } from '../utils/pricing'
 import {
   updatePoolDayData,
   updatePoolHourData,
@@ -287,7 +287,7 @@ export function handleBurn(event: BurnEvent): void {
 
 export function handleSwap(event: SwapEvent): void {
 
-  if(event.block.number == BigInt.fromString("40204673")) return
+  let currentTick = BigInt.fromI32(event.params.tick)
 
   let bundle = Bundle.load('1')!
   let factory = Factory.load(FACTORY_ADDRESS)!
@@ -296,6 +296,7 @@ export function handleSwap(event: SwapEvent): void {
   let oldTick = pool.tick
   let flag = false 
 
+  if( (currentTick < BigInt.fromI32(-70000) || currentTick > BigInt.fromI32(-53000)) && pool.id == USDT_WBNB_POOL) return
 
   let token0 = Token.load(pool.token0)!
   let token1 = Token.load(pool.token1)!
