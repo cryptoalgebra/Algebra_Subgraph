@@ -7,7 +7,7 @@ dataSources:
   name: NonfungiblePositionManager
   network: core
   source:
-      address: '0x4F55d8B6926265150505ABF6Ac1a95318f51B887'
+      address: '0x7b3794f728780A61e0eB709b5bB849F50aad1E7f'
       abi: NonfungiblePositionManager
       startBlock: 15741604
   mapping:
@@ -38,7 +38,7 @@ dataSources:
   name: EternalFarming
   network: core
   source:
-      address: '0xC19284eE933B00236e1f0f3143c3e84EA3aCE8Ef'
+      address: '0xf3784e22F36FfA9292423b08392726440F5Fe81E'
       abi: EternalFarming
       startBlock: 15741604
   mapping:
