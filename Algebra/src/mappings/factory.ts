@@ -6,7 +6,7 @@ import { Pool as PoolEvent } from '../types/Factory/Factory'
 import { Pool, Token, Bundle } from '../types/schema'
 import { Pool as PoolTemplate} from '../types/templates'
 import { fetchTokenSymbol, fetchTokenName, fetchTokenTotalSupply, fetchTokenDecimals } from '../utils/token'
-import { log,BigInt } from '@graphprotocol/graph-ts'
+import { log,BigInt, Bytes } from '@graphprotocol/graph-ts'
 
 export function handlePoolCreated(event: PoolEvent): void {
   // temp fix
@@ -29,7 +29,7 @@ export function handlePoolCreated(event: PoolEvent): void {
     factory.owner = ADDRESS_ZERO
 
     // create new bundle for tracking bnb price
-    let bundle = new Bundle('1')
+    let bundle = new Bundle(Bytes.fromI32(1))
     bundle.bnbPriceUSD = ZERO_BD
     bundle.save()
   }

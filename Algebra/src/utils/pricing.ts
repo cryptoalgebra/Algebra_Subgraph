@@ -1,7 +1,7 @@
 /* eslint-disable prefer-const */
 import { ONE_BD, ONE_BI, ZERO_BD, ZERO_BI } from './constants'
 import { Bundle, Pool, Token } from './../types/schema'
-import { BigDecimal, BigInt} from '@graphprotocol/graph-ts'
+import { BigDecimal, BigInt, Bytes} from '@graphprotocol/graph-ts'
 import { exponentToBigDecimal, safeDiv, getAmounts } from '../utils/index'
 
 const WBNB_ADDRESS = '0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c'
@@ -76,7 +76,7 @@ export function findEthPerToken(token: Token): BigDecimal {
   // need to update this to actually detect best rate based on liquidity distribution
   let largestliquidityConcentration = ZERO_BD
   let priceSoFar = ZERO_BD
-  let bundle = Bundle.load('1')
+  let bundle = Bundle.load(Bytes.fromI32(1))
 
   // hardcoded fix for incorrect rates
   // if whitelist includes token - get the safe price
@@ -136,7 +136,7 @@ export function getTrackedAmountUSD(
   tokenAmount1: BigDecimal,
   token1: Token
 ): BigDecimal {
-  let bundle = Bundle.load('1')!
+  let bundle = Bundle.load(Bytes.fromI32(1))!
   let price0USD = token0.derivedBnb.times(bundle.bnbPriceUSD)
   let price1USD = token1.derivedBnb.times(bundle.bnbPriceUSD)
 
