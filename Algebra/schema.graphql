@@ -238,7 +238,7 @@ type Position @entity {
   token1Tvl : BigDecimal 
 }
 
-type PositionSnapshot @entity {
+type PositionSnapshot @entity(immutable: true) {
   # <NFT token id>#<block number>
   id: ID!
   # owner of the NFT
@@ -290,7 +290,7 @@ type Transaction @entity {
   collects: [Collect!]! @derivedFrom(field: "transaction")
 }
 
-type Mint @entity {
+type Mint @entity(immutable: true) {
   # transaction hash + "#" + index in mints Transaction array
   id: ID!
   # which txn the mint was included in
@@ -325,7 +325,7 @@ type Mint @entity {
   logIndex: BigInt
 }
 
-type Burn @entity {
+type Burn @entity(immutable: true) {
   # transaction hash + "#" + index in mints Transaction array
   id: ID!
   # txn burn was included in
@@ -358,7 +358,7 @@ type Burn @entity {
   logIndex: BigInt
 }
 
-type Swap @entity {
+type Swap @entity(immutable: true) {
   # transaction hash + "#" + index in swaps Transaction array
   id: ID!
   # pointer to transaction
@@ -393,7 +393,7 @@ type Swap @entity {
   logIndex: BigInt
 }
 
-type Collect @entity {
+type Collect @entity(immutable: true) {
   # transaction hash + "#" + index in collect Transaction array
   id: ID!
   # pointer to txn
@@ -418,7 +418,7 @@ type Collect @entity {
   logIndex: BigInt
 }
 
-type Flash @entity {
+type Flash @entity(immutable: true) {
   # transaction hash + "-" + index in collect Transaction array
   id: ID!
   # pointer to txn
