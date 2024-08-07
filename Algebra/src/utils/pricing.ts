@@ -1,28 +1,28 @@
 /* eslint-disable prefer-const */
 import { ONE_BD, ZERO_BD, ZERO_BI } from './constants'
 import { Bundle, Pool, Token } from './../types/schema'
-import { BigDecimal, BigInt } from '@graphprotocol/graph-ts'
+import { BigDecimal, BigInt, log } from '@graphprotocol/graph-ts'
 import { exponentToBigDecimal, safeDiv } from '../utils/index'
 
-const WMatic_ADDRESS = '0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6'
-const USDC_WMatic_03_POOL = '0xb104f0535a35a69880dab51008756c31d47dbf0f'
+const WMatic_ADDRESS = '0x4300000000000000000000000000000000000004'
+const USDC_WMatic_03_POOL = '0x1d74611f3ef04e7252f7651526711a937aa1f75e'
 
 // token where amounts should contribute to tracked volume and liquidity
 // usually tokens that many tokens are paired with s
 export let WHITELIST_TOKENS: string[] = [
-  '0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6', // WMATIC
-  '0xf2a0bc44debd394076c67962bb4869fd43c78018', // USDC
-  '0x5aefba317baba46eaf98fd6f381d07673bca6467', // USDT 
-  '0x49a390a3dfd2d01389f799965f3af5961f87d228'
+  '0x4300000000000000000000000000000000000004', // WETH
+  '0xf7bc58b8d8f97adc129cfc4c9f45ce3c0e1d2692', // WBTC
+  '0x4300000000000000000000000000000000000003', // USDB 
+  '0xeb466342c4d449bc9f53a865d5cb90586f405215', // axlUSDC
 ]
 
-let MINIMUM_Matic_LOCKED = BigDecimal.fromString('0')
+let MINIMUM_Matic_LOCKED = BigDecimal.fromString('1')
 
 let Q192 = Math.pow(2, 192)
 
 let STABLE_COINS: string[] = [
-  '0xf2a0bc44debd394076c67962bb4869fd43c78018', // USDC
-  '0x5aefba317baba46eaf98fd6f381d07673bca6467' // SUDT
+  '0x4300000000000000000000000000000000000003', // USDB
+  '0xeb466342c4d449bc9f53a865d5cb90586f405215' // axlUSDC
 ]
 
 
@@ -47,7 +47,6 @@ export function getEthPriceInUSD(): BigDecimal {
   }
 } 
 
-
 /**
  * Search through graph to find derived Eth per token.
  * @todo update to be derived Matic (add stablecoin estimates)
@@ -62,7 +61,6 @@ export function findEthPerToken(token: Token): BigDecimal {
   let largestLiquidityMatic = ZERO_BD
   let priceSoFar = ZERO_BD
   let bundle = Bundle.load('1')
-
   // hardcoded fix for incorrect rates
   // if whitelist includes token - get the safe price
   if (STABLE_COINS.includes(token.id)) {
@@ -115,7 +113,6 @@ export function getTrackedAmountUSD(
   let bundle = Bundle.load('1')!
   let price0USD = token0.derivedMatic.times(bundle.maticPriceUSD)
   let price1USD = token1.derivedMatic.times(bundle.maticPriceUSD)
-
   // both are whitelist tokens, return sum of both amounts
   if (WHITELIST_TOKENS.includes(token0.id) && WHITELIST_TOKENS.includes(token1.id)) {
     return tokenAmount0.times(price0USD).plus(tokenAmount1.times(price1USD))

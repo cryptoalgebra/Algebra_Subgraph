@@ -5,11 +5,11 @@ schema:
 dataSources:
   - kind: ethereum/contract
     name: Factory
-    network: goerli
+    network: blast-mainnet
     source:
-      address: '0x13fcE0acbe6Fb11641ab753212550574CaD31415'
+      address: '0x7a44CD060afC1B6F4c80A2B9b37f4473E74E25Df'
       abi: Factory
-      startBlock: 9705888 
+      startBlock: 1586149 
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -36,11 +36,11 @@ dataSources:
           handler: handleNewCommunityFee
   - kind: ethereum/contract
     name: NonfungiblePositionManager
-    network: goerli
+    network: blast-mainnet
     source:
-      address: '0xAbAc6f23fdf1313FC2E9C9244f666157CcD32990'
+      address: '0x8881b3Fb762d1D50e6172f621F107E24299AA1Cd'
       abi: NonfungiblePositionManager
-      startBlock: 9705888 
+      startBlock: 1586149 
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -71,7 +71,7 @@ dataSources:
 templates:
   - kind: ethereum/contract
     name: Pool
-    network: goerli
+    network: blast-mainnet
     source:
       abi: Pool
     mapping:

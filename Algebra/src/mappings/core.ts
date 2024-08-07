@@ -44,8 +44,10 @@ export function handleInitialize(event: Initialize): void {
   updatePoolDayData(event)
   updatePoolHourData(event)
   // update token prices
+  if(event.block.number > BigInt.fromString('2318754')){
   token0.derivedMatic = findEthPerToken(token0 as Token)
   token1.derivedMatic = findEthPerToken(token1 as Token)
+  }
   token0.save()
   token1.save()
 
@@ -443,8 +445,10 @@ export function handleSwap(event: SwapEvent): void {
   bundle.maticPriceUSD = getEthPriceInUSD()
   bundle.save()
 
+  if(event.block.number > BigInt.fromString('2318754')){
   token0.derivedMatic = findEthPerToken(token0 as Token)
   token1.derivedMatic = findEthPerToken(token1 as Token)
+  }
 
   /**
    * Things afffected by new USD rates
