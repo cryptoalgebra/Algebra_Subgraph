@@ -5,11 +5,11 @@ schema:
 dataSources:
   - kind: ethereum/contract
     name: Factory
-    network: zircuit-testnet
+    network: base
     source:
-      address: '0xA177F1c033EcE9dCEf75A06D4408f5F4e48C058d'
+      address: '0xBa90FC740a95A6997306255853959Bb284cb748a'
       abi: Factory
-      startBlock: 10472060 
+      startBlock: 18166421 
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -36,11 +36,11 @@ dataSources:
           handler: handleNewCommunityFee
   - kind: ethereum/contract
     name: NonfungiblePositionManager
-    network: zircuit-testnet
+    network: base
     source:
-      address: '0xAbAc6f23fdf1313FC2E9C9244f666157CcD32990'
+      address: '0x1145c252F70740f4b5953A04E18A701620724f78'
       abi: NonfungiblePositionManager
-      startBlock: 10472060 
+      startBlock: 18166421 
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -71,7 +71,7 @@ dataSources:
 templates:
   - kind: ethereum/contract
     name: Pool
-    network: zircuit-testnet
+    network: base
     source:
       abi: Pool
     mapping:
