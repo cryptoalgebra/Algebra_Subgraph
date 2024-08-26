@@ -24,6 +24,7 @@ import {
   updateFusionDayData,
   updateFeeHourData
 } from '../utils/intervalUpdates'
+import { fetchTokenAmounts } from '../utils/token'
 import { createTick } from '../utils/tick'
 
 export function handleInitialize(event: Initialize): void {
@@ -296,7 +297,22 @@ export function handleSwap(event: SwapEvent): void {
   let oldTick = pool.tick
   let flag = false 
 
-  if( (currentTick < BigInt.fromI32(-70000) || currentTick > BigInt.fromI32(-53000)) && pool.id == USDT_WBNB_POOL) return
+  if( (currentTick < BigInt.fromI32(-70000) || currentTick > BigInt.fromI32(-53000)) && pool.id == USDT_WBNB_POOL) {
+    let balance0 = fetchTokenAmounts(pool.token0, pool.id)
+    let balance1 = fetchTokenAmounts(pool.token1, pool.id)
+      
+    let token0 = Token.load(pool.token0)!
+    let token1 = Token.load(pool.token1)!
+
+    let amount0 = convertTokenToDecimal(balance0, token0.decimals)
+    let amount1 = convertTokenToDecimal(balance1, token1.decimals)    
+
+    pool.totalValueLockedToken0 = amount0
+    pool.totalValueLockedToken1 = amount1
+
+    pool.save()
+    return
+  }
 
   let token0 = Token.load(pool.token0)!
   let token1 = Token.load(pool.token1)!

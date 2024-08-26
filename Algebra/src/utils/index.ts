@@ -120,4 +120,3 @@ export function getAmounts(liquidity: BigInt, tickLower: BigInt, tickUpper: BigI
   
   return token0 ? amount0 : amount1
 }
-
