@@ -3,7 +3,7 @@ import { ERC20 } from '../types/Factory/ERC20'
 import { ERC20SymbolBytes } from '../types/Factory/ERC20SymbolBytes'
 import { ERC20NameBytes } from '../types/Factory/ERC20NameBytes'
 import { StaticTokenDefinition } from './staticTokenDefinition'
-import { BigInt, Address } from '@graphprotocol/graph-ts'
+import { BigInt, Address} from '@graphprotocol/graph-ts'
 import { isNullEthValue } from '.'
 
 
@@ -92,12 +92,12 @@ export function fetchTokenDecimals(tokenAddress: Address): BigInt {
   return decimalValue
 }
 
-export function fetchTokenAmounts(tokenAddress: Address, poolAddress):  BigInt {
-  let contract = ERC20.bind(tokenAddress)
-  let result = contract.try_balanceOf(poolAddress)
+export function fetchTokenAmounts(tokenAddress: string, poolAddress: string):  BigInt {
+  let contract = ERC20.bind(Address.fromString(tokenAddress))
+  let result = contract.try_balanceOf(Address.fromString(poolAddress))
   let balance = BigInt.fromString("0")
   if(!result.reverted) {
-    balance = result.value
+    balance = result.value as BigInt
   }
   return balance
 } 

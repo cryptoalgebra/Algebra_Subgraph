@@ -6,7 +6,7 @@ features:
   - grafting
 graft:
   base: QmXJF8ptng63aan78aoARrgAv6XEHPVVWKqNzg7im19NaM
-  block: 41695314
+  block: 41300173
 dataSources:
   - kind: ethereum/contract
     name: Factory
