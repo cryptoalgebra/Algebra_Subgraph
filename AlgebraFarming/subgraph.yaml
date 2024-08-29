@@ -5,11 +5,11 @@ schema:
 dataSources:
 - kind: ethereum/contract
   name: NonfungiblePositionManager
-  network: zircuit-testnet
+  network: zetachain
   source:
-      address: '0x0f38D5f743C0E04776dA547Bc7E2C8D998c38028'
+      address: '0xA20f688ca75d6d6C88f5B328829C064D4c9dfE28'
       abi: NonfungiblePositionManager
-      startBlock: 10472060
+      startBlock: 4596503
   mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -36,11 +36,11 @@ dataSources:
           handler: handleDecreaseLiquidity
 - kind: ethereum/contract
   name: EternalFarming
-  network: zircuit-testnet
+  network: zetachain
   source:
-      address: '0xE6D658Db29EEcd8E457bb3452D6478E28641627b'
+      address: '0x0eBf303691B39Da22b33CaE4e67EBD1dFBa6a2f2'
       abi: EternalFarming
-      startBlock: 10472060
+      startBlock: 4596503
   mapping:
       kind: ethereum/events
       apiVersion: 0.0.6

@@ -5,11 +5,11 @@ schema:
 dataSources:
   - kind: ethereum/contract
     name: Factory
-    network: base
+    network: zetachain
     source:
-      address: '0xBa90FC740a95A6997306255853959Bb284cb748a'
+      address: '0xCe2D0F9bEe07848f0E7d97ea3623Fc7Efce93Ef0'
       abi: Factory
-      startBlock: 18166421 
+      startBlock: 4596503 
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -36,11 +36,11 @@ dataSources:
           handler: handleNewCommunityFee
   - kind: ethereum/contract
     name: NonfungiblePositionManager
-    network: base
+    network: zetachain
     source:
-      address: '0x1145c252F70740f4b5953A04E18A701620724f78'
+      address: '0xA20f688ca75d6d6C88f5B328829C064D4c9dfE28'
       abi: NonfungiblePositionManager
-      startBlock: 18166421 
+      startBlock: 4596503 
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -71,7 +71,7 @@ dataSources:
 templates:
   - kind: ethereum/contract
     name: Pool
-    network: base
+    network: zetachain
     source:
       abi: Pool
     mapping:
