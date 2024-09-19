@@ -5,7 +5,7 @@ schema:
 dataSources:
   - kind: ethereum/contract
     name: Factory
-    network: metis
+    network: andromeda
     source:
       address: '0xC5BfA92f27dF36d268422EE314a1387bB5ffB06A'
       abi: Factory
@@ -36,7 +36,7 @@ dataSources:
           handler: handleDefaultCommFeeChange
   - kind: ethereum/contract
     name: NonfungiblePositionManager
-    network: metis
+    network: andromeda
     source:
       address: '0x3C93AEf118F8c2183B32dCa29Aa6220F2b2A1593'
       abi: NonfungiblePositionManager
@@ -71,7 +71,7 @@ dataSources:
 templates:
   - kind: ethereum/contract
     name: Pool
-    network: metis
+    network: andromeda
     source:
       abi: Pool
     mapping:

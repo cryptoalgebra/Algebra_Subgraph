@@ -342,7 +342,7 @@ export function handleSwap(event: SwapEvent): void {
    fee = pool.feeZtO
    let communityFeeAmount = amount0.times(BigDecimal.fromString((pool.feeZtO.times(pool.communityFee0).toString())).div(BigDecimal.fromString('1000000000')))
    communityFeeAmount = communityFeeAmount.times(BigDecimal.fromString("1")) 
-   amount0withFee = amount0.times(BigDecimal.fromString('1000000').minus(pool.fee.toBigDecimal())).div(BigDecimal.fromString('1000000'))
+   amount0withFee = amount0.times(BigDecimal.fromString('1000000').minus(pool.feeZtO.toBigDecimal())).div(BigDecimal.fromString('1000000'))
    amount0Abs = amount0
  } 
 
@@ -356,7 +356,7 @@ export function handleSwap(event: SwapEvent): void {
    let communityFeeAmount = amount1.times(BigDecimal.fromString((pool.feeOtZ.times(pool.communityFee1).toString())).div(BigDecimal.fromString('1000000000')))
    communityFeeAmount = communityFeeAmount.times(BigDecimal.fromString("1"))  
    amount1Abs = amount1
-   amount1withFee = amount1.times(BigDecimal.fromString('1000000').minus(pool.fee.toBigDecimal())).div(BigDecimal.fromString('1000000'))
+   amount1withFee = amount1.times(BigDecimal.fromString('1000000').minus(pool.feeOtZ.toBigDecimal())).div(BigDecimal.fromString('1000000'))
  }
 
   let amount0Matic = amount0Abs.times(token0.derivedMatic)
