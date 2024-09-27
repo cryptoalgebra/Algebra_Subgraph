@@ -122,6 +122,7 @@ export function handlePoolCreated(event: PoolEvent): void {
   pool.token0 = token0.id
   pool.token1 = token1.id
   pool.fee = BigInt.fromI32(100)
+  pool.pluginConfig = 0
   pool.createdAtTimestamp = event.block.timestamp
   pool.createdAtBlockNumber = event.block.number
   pool.liquidityProviderCount = ZERO_BI
@@ -276,6 +277,7 @@ export function handleCustomPoolCreated(event: CustomPool): void {
   pool.token0 = token0.id
   pool.token1 = token1.id
   pool.fee = BigInt.fromI32(100)
+  pool.pluginConfig = 0
   pool.createdAtTimestamp = event.block.timestamp
   pool.createdAtBlockNumber = event.block.number
   pool.liquidityProviderCount = ZERO_BI

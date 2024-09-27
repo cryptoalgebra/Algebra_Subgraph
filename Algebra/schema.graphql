@@ -86,6 +86,7 @@ type Pool @entity {
   token1: Token!
   deployer: Bytes!
   plugin: Bytes!
+  pluginConfig: Int!
   # fee amount
   fee: BigInt!
   communityFee: BigInt!

@@ -110,3 +110,5 @@ templates:
           handler: handleSetTickSpacing
         - event: Plugin(address)
           handler: handlePlugin
+        - event: PluginConfig(uint8)
+          handler: handlePluginConfig

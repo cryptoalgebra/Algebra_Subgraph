@@ -678,6 +678,12 @@ export function handlePlugin(event: PluginEvent): void {
   plugin.save()
 }
 
+export function handlePluginFeeConfig(event: PluginConfig): void {
+  let pool = Pool.load(event.address.toHexString())!
+  pool.pluginConfig = event.params.newPluginConfig
+  pool.save()
+}
+
 
 function loadTickUpdateFeeVarsAndSave(tickId: i32, event: ethereum.Event): void {
   let poolAddress = event.address
