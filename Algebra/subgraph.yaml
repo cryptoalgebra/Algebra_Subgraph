@@ -108,3 +108,5 @@ templates:
           handler: handleSetCommunityFee
         - event: TickSpacing(int24)
           handler: handleSetTickSpacing
+        - event: Plugin(address)
+          handler: handlePlugin

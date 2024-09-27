@@ -1,6 +1,6 @@
 /* eslint-disable prefer-const */
-import { Bundle, Burn, Factory, Mint, Pool, Swap, Tick, PoolPosition, Token,PoolFeeData } from '../types/schema'
-import { Pool as PoolABI } from '../types/Factory/Pool'
+import { Bundle, Burn, Factory, Mint, Pool, Swap, Tick, PoolPosition, Plugin, Token, PoolFeeData } from '../types/schema'
+import { PluginConfig, Pool as PoolABI } from '../types/Factory/Pool'
 import { BigDecimal, BigInt, ethereum, log} from '@graphprotocol/graph-ts'
 
 import {
@@ -11,7 +11,8 @@ import {
   Mint as MintEvent,
   Swap as SwapEvent,
   CommunityFee,
-  TickSpacing
+  TickSpacing,
+  Plugin as PluginEvent
 } from '../types/templates/Pool/Pool'
 import { convertTokenToDecimal, loadTransaction, safeDiv } from '../utils'
 import { FACTORY_ADDRESS, ONE_BI, ZERO_BD, ZERO_BI, pools_list} from '../utils/constants'
@@ -661,6 +662,20 @@ export function handleChangeFee(event: ChangeFee): void {
   }
   updateFeeHourData(event, BigInt.fromI32(event.params.fee))
   fee.save()
+}
+
+export function handlePlugin(event: PluginEvent): void {
+  let pool = Pool.load(event.address.toHexString())!
+  pool.plugin = event.params.newPluginAddress
+  pool.save()
+
+  let plugin = Plugin.load(event.params.newPluginAddress.toHexString())
+  if (plugin === null) {
+    plugin = new Plugin(event.params.newPluginAddress.toHexString())
+    plugin.pool = event.address.toHexString()
+  }
+
+  plugin.save()
 }
 
 

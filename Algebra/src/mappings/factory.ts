@@ -118,6 +118,7 @@ export function handlePoolCreated(event: PoolEvent): void {
   }
 
   pool.deployer = Address.fromString(ADDRESS_ZERO)
+  pool.plugin = Address.fromString(ADDRESS_ZERO)
   pool.token0 = token0.id
   pool.token1 = token1.id
   pool.fee = BigInt.fromI32(100)
@@ -271,6 +272,7 @@ export function handleCustomPoolCreated(event: CustomPool): void {
   }
 
   pool.deployer = event.params.deployer
+  pool.plugin = Address.fromString(ADDRESS_ZERO)
   pool.token0 = token0.id
   pool.token1 = token1.id
   pool.fee = BigInt.fromI32(100)
