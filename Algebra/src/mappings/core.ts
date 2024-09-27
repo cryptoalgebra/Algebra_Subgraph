@@ -341,6 +341,13 @@ export function handleSwap(event: SwapEvent): void {
   
   }
 
+  let swapFee = pool.fee
+  if(event.params.overrideFee > 0){
+    swapFee = BigInt.fromI32(event.params.overrideFee)
+  }  
+
+  let pluginFee = BigInt.fromI32(event.params.pluginFee)
+
  // need absolute amounts for volume
  let amount0Abs = amount0
  let amount0withFee = amount0
@@ -348,9 +355,9 @@ export function handleSwap(event: SwapEvent): void {
    amount0Abs = amount0.times(BigDecimal.fromString('-1'))
  }
  else { 
-   let communityFeeAmount = amount0.times(BigDecimal.fromString((pool.fee.times(pool.communityFee).toString())).div(BigDecimal.fromString('1000000000')))
+   let communityFeeAmount = amount0.times(BigDecimal.fromString((swapFee.times(pool.communityFee).toString())).div(BigDecimal.fromString('1000000000')))
    communityFeeAmount = communityFeeAmount.times(BigDecimal.fromString("1")) 
-   amount0withFee = amount0.times(BigDecimal.fromString('1000000').minus(pool.fee.toBigDecimal())).div(BigDecimal.fromString('1000000'))
+   amount0withFee = amount0.times(FEE_DENOMINATOR.minus((swapFee.plus(pluginFee)).toBigDecimal())).div(FEE_DENOMINATOR)
    amount0Abs = amount0
  } 
 
@@ -360,10 +367,10 @@ export function handleSwap(event: SwapEvent): void {
    amount1Abs = amount1.times(BigDecimal.fromString('-1'))
  }
  else{
-   let communityFeeAmount = amount1.times(BigDecimal.fromString((pool.fee.times(pool.communityFee).toString())).div(BigDecimal.fromString('1000000000')))
+   let communityFeeAmount = amount1.times(BigDecimal.fromString((swapFee.times(pool.communityFee).toString())).div(BigDecimal.fromString('1000000000')))
    communityFeeAmount = communityFeeAmount.times(BigDecimal.fromString("1"))  
    amount1Abs = amount1
-   amount1withFee = amount1.times(BigDecimal.fromString('1000000').minus(pool.fee.toBigDecimal())).div(BigDecimal.fromString('1000000'))
+   amount1withFee = amount1.times(FEE_DENOMINATOR.minus((swapFee.plus(pluginFee)).toBigDecimal())).div(FEE_DENOMINATOR)
  }
 
   let amount0Matic = amount0Abs.times(token0.derivedMatic)
@@ -382,10 +389,9 @@ export function handleSwap(event: SwapEvent): void {
   let amountTotalMaticTracked = safeDiv(amountTotalUSDTracked, bundle.maticPriceUSD)
   let amountTotalUSDUntracked = amount0USD.plus(amount1USD).div(BigDecimal.fromString('2'))
 
-  let feesMatic = amountTotalMaticTracked.times(pool.fee.toBigDecimal()).div(BigDecimal.fromString('1000000'))
-  let feesUSD = amountTotalUSDTracked.times(pool.fee.toBigDecimal()).div(BigDecimal.fromString('1000000'))
-  let untrackedFees = amountTotalUSDUntracked.times(pool.fee.toBigDecimal()).div(BigDecimal.fromString('1000000'))
-
+  let feesMatic = amountTotalMaticTracked.times(swapFee.toBigDecimal()).div(FEE_DENOMINATOR)
+  let feesUSD = amountTotalUSDTracked.times(swapFee.toBigDecimal()).div(FEE_DENOMINATOR)
+  let untrackedFees = amountTotalUSDUntracked.times(swapFee.toBigDecimal()).div(FEE_DENOMINATOR)
 
   // global updates
   factory.txCount = factory.txCount.plus(ONE_BI)
@@ -433,7 +439,6 @@ export function handleSwap(event: SwapEvent): void {
   token1.txCount = token1.txCount.plus(ONE_BI)
 
   // updated pool ratess
- 
 
   let prices = priceToTokenPrices(pool.sqrtPrice, token0 as Token, token1 as Token)
   pool.token0Price = prices[0]
@@ -445,6 +450,16 @@ export function handleSwap(event: SwapEvent): void {
     pool.token1Price = prices[0]
   }
 
+  let plugin = Plugin.load(pool.plugin.toHexString())!
+
+  if(amount0.lt(ZERO_BD)) {
+    plugin.collectedFeesToken1 += amount1.times(pluginFee.toBigDecimal()).div(FEE_DENOMINATOR)
+  } else {
+    plugin.collectedFeesToken0 += amount0.times(pluginFee.toBigDecimal()).div(FEE_DENOMINATOR)
+  }
+
+  plugin.collectedFeesUSD += amountTotalUSDTracked.times(pluginFee.toBigDecimal()).div(FEE_DENOMINATOR)
+  plugin.save()
 
   pool.save()
 
@@ -505,13 +520,13 @@ export function handleSwap(event: SwapEvent): void {
   let token1HourData = updateTokenHourData(token1 as Token, event)
 
   if(amount0.lt(ZERO_BD)){
-    pool.feesToken1 = pool.feesToken1.plus(amount1.times(pool.fee.toBigDecimal()).div(FEE_DENOMINATOR))
-    poolDayData.feesToken1 = poolDayData.feesToken1.plus(amount1.times(pool.fee.toBigDecimal()).div(FEE_DENOMINATOR))
+    pool.feesToken1 = pool.feesToken1.plus(amount1.times(swapFee.toBigDecimal()).div(FEE_DENOMINATOR))
+    poolDayData.feesToken1 = poolDayData.feesToken1.plus(amount1.times(swapFee.toBigDecimal()).div(FEE_DENOMINATOR))
   }
 
   if(amount1.lt(ZERO_BD) ){
-    pool.feesToken0 = pool.feesToken0.plus(amount0.times(pool.fee.toBigDecimal()).div(FEE_DENOMINATOR))
-    poolDayData.feesToken0 = poolDayData.feesToken0.plus(amount0.times(pool.fee.toBigDecimal()).div(FEE_DENOMINATOR))
+    pool.feesToken0 = pool.feesToken0.plus(amount0.times(swapFee.toBigDecimal()).div(FEE_DENOMINATOR))
+    poolDayData.feesToken0 = poolDayData.feesToken0.plus(amount0.times(swapFee.toBigDecimal()).div(FEE_DENOMINATOR))
   }
 
   // update volume metrics
