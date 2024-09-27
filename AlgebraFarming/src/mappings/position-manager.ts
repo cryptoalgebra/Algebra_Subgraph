@@ -17,7 +17,7 @@ export function handleIncreaseLiquidity(event: IncreaseLiquidity): void {
     entity.liquidity = BigInt.fromString("0")
     entity.rangeLength = getRangeLength(event.params.tokenId, event.address)
   }
-  entity.liquidity = entity.liquidity.plus(event.params.liquidity);
+  entity.liquidity = entity.liquidity.plus(event.params.actualLiquidity);
   entity.save();
 
 }
@@ -52,7 +52,7 @@ function getRangeLength(tokenId: BigInt, eventAddress: Address): BigInt {
     const stringBoolean = `${positionCall.reverted}`
     if (!positionCall.reverted) {
       let positionResult = positionCall.value
-      return BigInt.fromI32(positionResult.value5 - positionResult.value4)
+      return BigInt.fromI32(positionResult.value6 - positionResult.value5)
     }
     else{
       return BigInt.fromString('0')

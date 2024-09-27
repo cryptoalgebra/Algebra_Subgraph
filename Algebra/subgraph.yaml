@@ -7,9 +7,9 @@ dataSources:
     name: Factory
     network: holesky
     source:
-      address: '0x9C80DE1dE95369432f1cC4D971aEE2EbA7Ac5215'
+      address: '0x54De180Ce1779e27A998b38498e86da24aA31661'
       abi: Factory
-      startBlock: 1712090 
+      startBlock: 2418516 
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -40,9 +40,9 @@ dataSources:
     name: NonfungiblePositionManager
     network: holesky
     source:
-      address: '0x74a337102AA5a25D0D71ec2f917a3361F8fbE289'
+      address: '0x99788bB2f3C998d8F0556120afEe0C40ee473fdc'
       abi: NonfungiblePositionManager
-      startBlock: 1712090 
+      startBlock: 2418516 
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
