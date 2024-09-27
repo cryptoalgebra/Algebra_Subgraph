@@ -15,7 +15,7 @@ import {
   Plugin as PluginEvent
 } from '../types/templates/Pool/Pool'
 import { convertTokenToDecimal, loadTransaction, safeDiv } from '../utils'
-import { FACTORY_ADDRESS, ONE_BI, ZERO_BD, ZERO_BI, pools_list} from '../utils/constants'
+import { FACTORY_ADDRESS, ONE_BI, ZERO_BD, ZERO_BI, pools_list, FEE_DENOMINATOR} from '../utils/constants'
 import { findEthPerToken, getEthPriceInUSD, getTrackedAmountUSD, priceToTokenPrices } from '../utils/pricing'
 import {
   updatePoolDayData,
@@ -198,6 +198,7 @@ export function handleBurn(event: BurnEvent): void {
   let bundle = Bundle.load('1')!
   let poolAddress = event.address.toHexString()
   let pool = Pool.load(poolAddress)!
+  let plugin = Plugin.load(pool.plugin.toHexString())!
   let factory = Factory.load(FACTORY_ADDRESS)!
 
   let token0 = Token.load(pool.token0)!
@@ -216,6 +217,13 @@ export function handleBurn(event: BurnEvent): void {
   let amountUSD = amount0
     .times(token0.derivedMatic.times(bundle.maticPriceUSD))
     .plus(amount1.times(token1.derivedMatic.times(bundle.maticPriceUSD)))
+
+  let pluginFee = BigInt.fromI32(event.params.pluginFee).toBigDecimal()
+  plugin.collectedFeesToken0 += amount0.times(pluginFee).div(FEE_DENOMINATOR)
+  plugin.collectedFeesToken1 += amount1.times(pluginFee).div(FEE_DENOMINATOR)
+  plugin.collectedFeesUSD += amountUSD.times(pluginFee).div(FEE_DENOMINATOR)
+
+  plugin.save()
 
   // reset tvl aggregates until new amounts calculated
   factory.totalValueLockedMatic = factory.totalValueLockedMatic.minus(pool.totalValueLockedMatic)
@@ -497,13 +505,13 @@ export function handleSwap(event: SwapEvent): void {
   let token1HourData = updateTokenHourData(token1 as Token, event)
 
   if(amount0.lt(ZERO_BD)){
-    pool.feesToken1 = pool.feesToken1.plus(amount1.times(pool.fee.toBigDecimal()).div(BigDecimal.fromString('1000000')))
-    poolDayData.feesToken1 = poolDayData.feesToken1.plus(amount1.times(pool.fee.toBigDecimal()).div(BigDecimal.fromString('1000000')))
+    pool.feesToken1 = pool.feesToken1.plus(amount1.times(pool.fee.toBigDecimal()).div(FEE_DENOMINATOR))
+    poolDayData.feesToken1 = poolDayData.feesToken1.plus(amount1.times(pool.fee.toBigDecimal()).div(FEE_DENOMINATOR))
   }
 
   if(amount1.lt(ZERO_BD) ){
-    pool.feesToken0 = pool.feesToken0.plus(amount0.times(pool.fee.toBigDecimal()).div(BigDecimal.fromString('1000000')))
-    poolDayData.feesToken0 = poolDayData.feesToken0.plus(amount0.times(pool.fee.toBigDecimal()).div(BigDecimal.fromString('1000000')))
+    pool.feesToken0 = pool.feesToken0.plus(amount0.times(pool.fee.toBigDecimal()).div(FEE_DENOMINATOR))
+    poolDayData.feesToken0 = poolDayData.feesToken0.plus(amount0.times(pool.fee.toBigDecimal()).div(FEE_DENOMINATOR))
   }
 
   // update volume metrics
