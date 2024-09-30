@@ -696,12 +696,15 @@ export function handlePlugin(event: PluginEvent): void {
   if (plugin === null) {
     plugin = new Plugin(event.params.newPluginAddress.toHexString())
     plugin.pool = event.address.toHexString()
+    plugin.collectedFeesToken0 = ZERO_BD
+    plugin.collectedFeesToken1 = ZERO_BD
+    plugin.collectedFeesUSD = ZERO_BD
   }
 
   plugin.save()
 }
 
-export function handlePluginFeeConfig(event: PluginConfig): void {
+export function handlePluginConfig(event: PluginConfig): void {
   let pool = Pool.load(event.address.toHexString())!
   pool.pluginConfig = event.params.newPluginConfig
   pool.save()
