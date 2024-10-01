@@ -68,8 +68,8 @@ function updateFeeVars(position: Position, event: ethereum.Event, tokenId: BigIn
   let positionManagerContract = NonfungiblePositionManager.bind(event.address)
   let positionResult = positionManagerContract.try_positions(tokenId)
   if (!positionResult.reverted) {
-    position.feeGrowthInside0LastX128 = positionResult.value.value7
-    position.feeGrowthInside1LastX128 = positionResult.value.value8
+    position.feeGrowthInside0LastX128 = positionResult.value.value8
+    position.feeGrowthInside1LastX128 = positionResult.value.value9
   }
   return position
 }
