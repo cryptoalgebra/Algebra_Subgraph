@@ -7,7 +7,7 @@ dataSources:
   name: NonfungiblePositionManager
   network: holesky
   source:
-      address: '0x99788bB2f3C998d8F0556120afEe0C40ee473fdc'
+      address: '0xDE4da840d2c602abC583eF7558251Ff188d27A1D'
       abi: NonfungiblePositionManager
       startBlock: 2418516
   mapping:
@@ -38,7 +38,7 @@ dataSources:
   name: EternalFarming
   network: holesky
   source:
-      address: '0xC59001d6e9E6B3043ab17A4486B2A3c224C18ce3'
+      address: '0x6155F87733088567b8107127801ff67409C11582'
       abi: EternalFarming
       startBlock: 2418516
   mapping:

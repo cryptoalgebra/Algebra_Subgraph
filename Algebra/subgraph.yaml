@@ -7,7 +7,7 @@ dataSources:
     name: Factory
     network: holesky
     source:
-      address: '0x54De180Ce1779e27A998b38498e86da24aA31661'
+      address: '0xDfCC62B3eE40EE453Cb2788576B56e746FC79827'
       abi: Factory
       startBlock: 2418516 
     mapping:
@@ -40,7 +40,7 @@ dataSources:
     name: NonfungiblePositionManager
     network: holesky
     source:
-      address: '0x99788bB2f3C998d8F0556120afEe0C40ee473fdc'
+      address: '0xDE4da840d2c602abC583eF7558251Ff188d27A1D'
       abi: NonfungiblePositionManager
       startBlock: 2418516 
     mapping:
