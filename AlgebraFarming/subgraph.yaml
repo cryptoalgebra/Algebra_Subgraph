@@ -7,9 +7,9 @@ dataSources:
   name: NonfungiblePositionManager
   network: zetachain
   source:
-      address: '0x4260E13e299F5e66A96B5f512541272018F9FdcE'
+      address: '0xD2F0d8cd7A1d7276D8Ac13AC761F83310dA9c1e2'
       abi: NonfungiblePositionManager
-      startBlock: 5319873
+      startBlock: 5320498
   mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -38,9 +38,9 @@ dataSources:
   name: EternalFarming
   network: zetachain
   source:
-      address: '0xf83DeA487c6B604De33fdcACf6E2390300BFc96a'
+      address: '0xe310Ce3A6382E522e4d988735b2De13b35E30149'
       abi: EternalFarming
-      startBlock: 5319873
+      startBlock: 5320498
   mapping:
       kind: ethereum/events
       apiVersion: 0.0.6

@@ -7,9 +7,9 @@ dataSources:
     name: Factory
     network: zetachain
     source:
-      address: '0x08d6000f0fCd3fb691f2A3a6D7b5A8595BeE7D56'
+      address: '0x28b5244B6CA7Cb07f2f7F40edE944c07C2395603'
       abi: Factory
-      startBlock: 5319873
+      startBlock: 5320498
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -38,9 +38,9 @@ dataSources:
     name: NonfungiblePositionManager
     network: zetachain
     source:
-      address: '0x4260E13e299F5e66A96B5f512541272018F9FdcE'
+      address: '0xD2F0d8cd7A1d7276D8Ac13AC761F83310dA9c1e2'
       abi: NonfungiblePositionManager
-      startBlock: 5319873 
+      startBlock: 5320498 
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
