@@ -7,7 +7,7 @@ type Factory @entity {
   txCount: BigInt!
   # total volume all time in derived USD
   totalVolumeUSD: BigDecimal!
-  # total volume all time in derived Matic
+  # total volume all time in derived Arthera
   totalVolumeMatic: BigDecimal!
   # total swap fees all time in USD
   totalFeesUSD: BigDecimal!
@@ -19,11 +19,11 @@ type Factory @entity {
   totalValueLockedUSD: BigDecimal!
   #
   defaultCommunityFee: BigInt!
-  # TVL derived in Matic
+  # TVL derived in Arthera
   totalValueLockedMatic: BigDecimal!
   # TVL derived in USD untracked
   totalValueLockedUSDUntracked: BigDecimal!
-  # TVL derived in Matic untracked
+  # TVL derived in Arthera untracked
   totalValueLockedMaticUntracked: BigDecimal!
   # current owner of the factory
   owner: ID!
@@ -32,7 +32,7 @@ type Factory @entity {
 # stores for USD calculations
 type Bundle @entity {
   id: ID!
-  # price of Matic in usd
+  # price of Arthera in usd
   maticPriceUSD: BigDecimal!
 }
 
@@ -65,7 +65,7 @@ type Token @entity {
   totalValueLockedUSD: BigDecimal!
   # TVL derived in USD untracked
   totalValueLockedUSDUntracked: BigDecimal!
-  # derived price in Matic
+  # derived price in Arthera
   derivedMatic: BigDecimal!
   # pools token is in that are white listed for USD pricing
   whitelistPools: [Pool!]!
@@ -131,7 +131,7 @@ type Pool @entity {
   totalValueLockedToken1: BigDecimal!
   feesToken0: BigDecimal!
   feesToken1: BigDecimal!
-  # tvl derived Matic
+  # tvl derived Arthera
   totalValueLockedMatic: BigDecimal!
   # tvl USD
   totalValueLockedUSD: BigDecimal!
@@ -463,7 +463,7 @@ type AlgebraDayData @entity {
   id: ID!
   # timestamp rounded to current day by dividing by 86400
   date: Int!
-  # total daily volume in Algebra derived in terms of Matic
+  # total daily volume in Algebra derived in terms of Arthera
   volumeMatic: BigDecimal!
   # total daily volume in Algebra derived in terms of USD
   volumeUSD: BigDecimal!

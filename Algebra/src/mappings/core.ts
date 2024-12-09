@@ -37,7 +37,7 @@ export function handleInitialize(event: Initialize): void {
   let token0 = Token.load(pool.token0)!
   let token1 = Token.load(pool.token1)!
 
-  // update Matic price now that prices could have changed
+  // update Arthera price now that prices could have changed
   let bundle = Bundle.load('1')!
   bundle.maticPriceUSD = getEthPriceInUSD()
   bundle.save()
