@@ -26,7 +26,7 @@ function getPosition(event: ethereum.Event, tokenId: BigInt): Position | null {
     const stringBoolean = `${positionCall.reverted}`;
     if (!positionCall.reverted) {
       let positionResult = positionCall.value
-      let poolAddress = factoryContract.poolByPair(positionResult.value2, positionResult.value3)
+      let poolAddress = getPool(positionResult.value2, positionResult.value3, positionResult.value4)
 
       position = new Position(tokenId.toString())
       // The owner gets correctly updated in the Transfer handler
@@ -58,8 +58,6 @@ function getPosition(event: ethereum.Event, tokenId: BigInt): Position | null {
   }
 
   return position
-  
-  return null 
 }
 
 
@@ -251,3 +249,14 @@ export function handleTransfer(event: Transfer): void {
   
 }
 
+
+
+function getPool(token0: Address, token1: Address, deployer: Address): Address {
+  let poolAddress : Address;
+  if( deployer.toHexString() == ADDRESS_ZERO) {
+    poolAddress = factoryContract.poolByPair(token0, token1);
+  } else {
+    poolAddress = factoryContract.customPoolByPair(deployer, token0, token1);
+  }
+  return poolAddress;
+}
