@@ -3,6 +3,7 @@ type Epoch @entity{
   pool: Bytes!
   filled: Boolean!
   totalLiquidity: BigInt!
+  fillTimestamp: BigInt!
 }
 
 type LimitOrder @entity{
@@ -10,6 +11,8 @@ type LimitOrder @entity{
   epoch: Epoch!
   owner: Bytes!
   pool: Bytes!
+  placeTimestamp: BigInt!
+  closeTimestamp: BigInt!
   initialLiquidity: BigInt!
   killedLiquidity: BigInt!
   killed: Boolean!
