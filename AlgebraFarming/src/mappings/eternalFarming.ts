@@ -80,8 +80,8 @@ export function handleTokenUnstaked(event: FarmEnded): void {
     let eternalFarming = EternalFarming.load(entity.eternalFarming! .toHexString())
 
     if(eternalFarming){
-      eternalFarming.reward -= event.params.reward
-      eternalFarming.bonusReward -= event.params.bonusReward
+      eternalFarming.reward = eternalFarming.reward.minus(event.params.reward)
+      eternalFarming.bonusReward = eternalFarming.bonusReward.minus(event.params.bonusReward)
       eternalFarming.save()
     }
   }
@@ -144,8 +144,8 @@ export function handleRewardsRatesChanged( event: RewardsRatesChanged): void{
 export function handleRewardsAdded( event: RewardsAdded): void{
   let eternalFarming = EternalFarming.load(event.params.incentiveId.toHexString())
   if(eternalFarming){
-    eternalFarming.reward += event.params.rewardAmount
-    eternalFarming.bonusReward += event.params.bonusRewardAmount 
+    eternalFarming.reward = eternalFarming.reward.plus(event.params.rewardAmount)
+    eternalFarming.bonusReward = eternalFarming.bonusReward.plus(event.params.bonusRewardAmount) 
     eternalFarming.save()
   }
 }
@@ -153,8 +153,8 @@ export function handleRewardsAdded( event: RewardsAdded): void{
 export function handleRewardDecreased( event: RewardAmountsDecreased): void{
   let eternalFarming = EternalFarming.load(event.params.incentiveId.toHexString())
   if(eternalFarming){
-    eternalFarming.reward -= event.params.rewardAmount
-    eternalFarming.bonusReward -= event.params.bonusRewardAmount 
+    eternalFarming.reward = eternalFarming.reward.minus(event.params.rewardAmount)
+    eternalFarming.bonusReward = eternalFarming.bonusReward.minus(event.params.bonusRewardAmount) 
     eternalFarming.save()
   }
 }
@@ -168,8 +168,8 @@ export function handleCollect( event: RewardsCollected): void{
     let eternalFarming = EternalFarming.load(eternalFarmingID)
 
     if(eternalFarming){
-      eternalFarming.reward -= event.params.rewardAmount
-      eternalFarming.bonusReward -= event.params.bonusRewardAmount
+      eternalFarming.reward = eternalFarming.reward.minus(event.params.rewardAmount)
+      eternalFarming.bonusReward = eternalFarming.bonusReward.minus(event.params.bonusRewardAmount)
       eternalFarming.save()
     
 

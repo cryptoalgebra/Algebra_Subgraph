@@ -5,11 +5,11 @@ schema:
 dataSources:
   - kind: ethereum/contract
     name: Factory
-    network: base
+    network: sonic-mainnet
     source:
-      address: '0x51a744E9FEdb15842c3080d0937C99A365C6c358'
+      address: '0x7C839669a12FAE0BFBE2F6a16516Dd2ADc2F1a1b'
       abi: Factory
-      startBlock: 26801612 
+      startBlock: 33883713 
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -38,11 +38,11 @@ dataSources:
           handler: handleNewCommunityFee
   - kind: ethereum/contract
     name: NonfungiblePositionManager
-    network: base
+    network: sonic-mainnet
     source:
-      address: '0x8aD26dc9f724c9A7319E0E25b907d15626D9a056'
+      address: '0x661782394B845D61dDc9f18cAD9C374C1E5297B2'
       abi: NonfungiblePositionManager
-      startBlock: 26801612 
+      startBlock: 33883879 
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -73,7 +73,7 @@ dataSources:
 templates:
   - kind: ethereum/contract
     name: Pool
-    network: base
+    network: sonic-mainnet
     source:
       abi: Pool
     mapping:
@@ -94,11 +94,15 @@ templates:
       eventHandlers:
         - event: Initialize(uint160,int24)
           handler: handleInitialize
-        - event: Swap(indexed address,indexed address,int256,int256,uint160,uint128,int24,uint24,uint24)
+        - event: SwapFee(indexed address,uint24,uint24)
+          handler: handleSwapFee
+        - event: Swap(indexed address,indexed address,int256,int256,uint160,uint128,int24)
           handler: handleSwap
         - event: Mint(address,indexed address,indexed int24,indexed int24,uint128,uint256,uint256)
           handler: handleMint
-        - event: Burn(indexed address,indexed int24,indexed int24,uint128,uint256,uint256,uint24)
+        - event: BurnFee(indexed address,uint24)
+          handler: handleBurnFee
+        - event: Burn(indexed address,indexed int24,indexed int24,uint128,uint256,uint256)
           handler: handleBurn
         - event: Fee(uint16)
           handler: handleChangeFee

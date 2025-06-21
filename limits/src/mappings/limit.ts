@@ -17,7 +17,7 @@ export function PlaceHandler(event: Place): void{
         epoch.filled = false;
     }
 
-    epoch.totalLiquidity += event.params.liquidity;
+    epoch.totalLiquidity = epoch.totalLiquidity.plus(event.params.liquidity);
     epoch.save();
 
     let limit = LimitOrder.load(event.params.owner.toHexString() + "#" + event.params.epoch.toString())
@@ -36,8 +36,8 @@ export function PlaceHandler(event: Place): void{
         limit.placeTimestamp = event.block.timestamp;
     }
 
-    limit.liquidity += event.params.liquidity;
-    limit.initialLiquidity += event.params.liquidity;
+    limit.liquidity = limit.liquidity.plus(event.params.liquidity);
+    limit.initialLiquidity = limit.initialLiquidity.plus(event.params.liquidity);
     limit.killed = false;
     limit.save();
 
@@ -55,14 +55,14 @@ export function FillHandler(event: Fill): void{
 export function KillHandler(event: Kill): void{
     let epoch = Epoch.load(event.params.epoch.toString())
     if( epoch != null){
-        epoch.totalLiquidity -= event.params.liquidity;
+        epoch.totalLiquidity = epoch.totalLiquidity.minus(event.params.liquidity);
         epoch.save();
     }
 
     let limit = LimitOrder.load(event.params.owner.toHexString() + "#" + event.params.epoch.toString())
     if( limit != null){
-        limit.liquidity -= event.params.liquidity;
-        limit.killedLiquidity += event.params.liquidity;
+        limit.liquidity = limit.liquidity.minus(event.params.liquidity);
+        limit.killedLiquidity = limit.killedLiquidity.plus(event.params.liquidity);
         if(limit.killedLiquidity == limit.initialLiquidity){
             limit.killed = true;
             limit.closeTimestamp = event.block.timestamp;
@@ -75,13 +75,13 @@ export function KillHandler(event: Kill): void{
 export function WithdrawHandler(event: Withdraw): void{
     let epoch = Epoch.load(event.params.epoch.toString())
     if( epoch != null){
-        epoch.totalLiquidity -= event.params.liquidity;
+        epoch.totalLiquidity = epoch.totalLiquidity.minus(event.params.liquidity);
         epoch.save();
     }
 
     let limit = LimitOrder.load(event.params.owner.toHexString() + "#" + event.params.epoch.toString())
     if( limit != null){
-        limit.liquidity -= event.params.liquidity;
+        limit.liquidity = limit.liquidity.minus(event.params.liquidity);
         if (limit.liquidity == BigInt.fromI32(0)){
             limit.closeTimestamp = event.block.timestamp;
         }

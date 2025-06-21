@@ -1,14 +1,16 @@
 /* eslint-disable prefer-const */
-import { Bundle, Burn, Factory, Mint, Pool, Swap, Tick, PoolPosition, Plugin, Token, PoolFeeData } from '../types/schema'
+import { Bundle, Burn, BurnFee, Factory, Mint, Pool, Swap, SwapFee, Tick, PoolPosition, Plugin, Token, PoolFeeData } from '../types/schema'
 import { PluginConfig, Pool as PoolABI } from '../types/Factory/Pool'
 import { BigDecimal, BigInt, ethereum, log} from '@graphprotocol/graph-ts'
 
 import {
+  BurnFee as BurnFeeEvent,
   Burn as BurnEvent,
   Collect,
   Initialize,
   Fee as ChangeFee,
   Mint as MintEvent,
+  SwapFee as SwapFeeEvent,
   Swap as SwapEvent,
   CommunityFee,
   TickSpacing,
@@ -159,7 +161,7 @@ export function handleMint(event: MintEvent): void {
   let poolPositionid = pool.id + "#" + event.params.owner.toHexString() + '#' + BigInt.fromI32(event.params.bottomTick).toString() + "#" +  BigInt.fromI32(event.params.topTick).toString()
   let poolPosition = PoolPosition.load(poolPositionid)
   if (poolPosition){
-    poolPosition.liquidity += event.params.liquidityAmount 
+    poolPosition.liquidity = poolPosition.liquidity.plus(event.params.liquidityAmount)
   }
   else{
     poolPosition = new PoolPosition(poolPositionid)
@@ -193,6 +195,12 @@ export function handleMint(event: MintEvent): void {
 
 }
 
+export function handleBurnFee(event: BurnFeeEvent): void {
+  let burnFee = new BurnFee(event.transaction.hash.toHex() + '#' + event.logIndex.toString())
+  burnFee.pluginFee = event.params.pluginFee
+  burnFee.save()
+}
+
 export function handleBurn(event: BurnEvent): void {
   
   let bundle = Bundle.load('1')!
@@ -219,10 +227,12 @@ export function handleBurn(event: BurnEvent): void {
     .plus(amount1.times(token1.derivedMatic.times(bundle.maticPriceUSD)))
 
   if (plugin != null) {
-    let pluginFee = BigInt.fromI32(event.params.pluginFee).toBigDecimal()
-    plugin.collectedFeesToken0 += amount0.times(pluginFee).div(FEE_DENOMINATOR)
-    plugin.collectedFeesToken1 += amount1.times(pluginFee).div(FEE_DENOMINATOR)
-    plugin.collectedFeesUSD += amountUSD.times(pluginFee).div(FEE_DENOMINATOR)
+    let prevLogIndex = event.logIndex.toI32() - 1;
+    let burnFee = BurnFee.load(event.transaction.hash.toHex() + '#' + prevLogIndex.toString())
+    let pluginFee = BigInt.fromI32(burnFee!.pluginFee).toBigDecimal()
+    plugin.collectedFeesToken0 = plugin.collectedFeesToken0.plus(amount0.times(pluginFee).div(FEE_DENOMINATOR))
+    plugin.collectedFeesToken1 = plugin.collectedFeesToken1.plus(amount1.times(pluginFee).div(FEE_DENOMINATOR))
+    plugin.collectedFeesUSD = plugin.collectedFeesUSD.plus(amountUSD.times(pluginFee).div(FEE_DENOMINATOR))
 
     plugin.save()
   }
@@ -298,7 +308,7 @@ export function handleBurn(event: BurnEvent): void {
   let poolPositionid = pool.id + "#" + event.params.owner.toHexString() + '#' + BigInt.fromI32(event.params.bottomTick).toString() + "#" +  BigInt.fromI32(event.params.topTick).toString()
   let poolPosition = PoolPosition.load(poolPositionid)
   if (poolPosition){
-    poolPosition.liquidity -= event.params.liquidityAmount 
+    poolPosition.liquidity = poolPosition.liquidity.minus(event.params.liquidityAmount) 
     poolPosition.save()
   }
 
@@ -317,6 +327,13 @@ export function handleBurn(event: BurnEvent): void {
   pool.save()
   factory.save()
   burn.save()
+}
+
+export function handleSwapFee(event: SwapFeeEvent): void {
+  let swapFee = new SwapFee(event.transaction.hash.toHex() + '#' + event.logIndex.toString())
+  swapFee.overrideFee = event.params.overrideFee
+  swapFee.pluginFee = event.params.pluginFee
+  swapFee.save()
 }
 
 export function handleSwap(event: SwapEvent): void {
@@ -343,12 +360,15 @@ export function handleSwap(event: SwapEvent): void {
   
   }
 
+  let prevLogIndex = event.logIndex.toI32() - 1;
+  let swapFeeEvent = SwapFee.load(event.transaction.hash.toHex() + '#' + prevLogIndex.toString())
+
   let swapFee = pool.fee
-  if(event.params.overrideFee > 0){
-    swapFee = BigInt.fromI32(event.params.overrideFee)
+  if(swapFeeEvent!.overrideFee > 0){
+    swapFee = BigInt.fromI32(swapFeeEvent!.overrideFee)
   }  
 
-  let pluginFee = BigInt.fromI32(event.params.pluginFee)
+  let pluginFee = BigInt.fromI32(swapFeeEvent!.pluginFee)
 
  // need absolute amounts for volume
  let amount0Abs = amount0
@@ -456,12 +476,12 @@ export function handleSwap(event: SwapEvent): void {
 
   if (plugin != null) {
     if(amount0.lt(ZERO_BD)) {
-      plugin.collectedFeesToken1 += amount1.times(pluginFee.toBigDecimal()).div(FEE_DENOMINATOR)
+      plugin.collectedFeesToken1 = plugin.collectedFeesToken1.plus(amount1.times(pluginFee.toBigDecimal()).div(FEE_DENOMINATOR))
     } else {
-      plugin.collectedFeesToken0 += amount0.times(pluginFee.toBigDecimal()).div(FEE_DENOMINATOR)
+      plugin.collectedFeesToken0 = plugin.collectedFeesToken0.plus(amount0.times(pluginFee.toBigDecimal()).div(FEE_DENOMINATOR))
     }
 
-    plugin.collectedFeesUSD += amountTotalUSDTracked.times(pluginFee.toBigDecimal()).div(FEE_DENOMINATOR)
+    plugin.collectedFeesUSD = plugin.collectedFeesUSD.plus(amountTotalUSDTracked.times(pluginFee.toBigDecimal()).div(FEE_DENOMINATOR))
     plugin.save()
   }
 

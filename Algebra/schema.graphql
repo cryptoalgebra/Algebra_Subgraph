@@ -340,6 +340,13 @@ type Mint @entity {
   logIndex: BigInt
 }
 
+type BurnFee @entity {
+  # transaction hash + "#" + index in burnsFee Transaction array
+  id: ID!
+  # plugin fee
+  pluginFee: Int!
+}
+
 type Burn @entity {
   # transaction hash + "#" + index in mints Transaction array
   id: ID!
@@ -371,6 +378,15 @@ type Burn @entity {
   tickUpper: BigInt!
   # position within the transactions
   logIndex: BigInt
+}
+
+type SwapFee @entity {
+  # transaction hash + "#" + index in swapsFee Transaction array
+  id: ID!
+  # override fee
+  overrideFee: Int!
+  # plugin fee
+  pluginFee: Int!
 }
 
 type Swap @entity {
