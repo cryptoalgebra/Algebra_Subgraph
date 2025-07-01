@@ -11,6 +11,24 @@ export class StaticTokenDefinition {
   static getStaticDefinitions(): Array<StaticTokenDefinition> {
     const staticDefinitions: Array<StaticTokenDefinition> = [
       {
+        address: Address.fromString("0x3a98250f98dd388c211206983453837c8365bdc1"),
+        symbol: "shMON",
+        decimals: BigInt.fromI32(18),
+        name: "ShMonad"
+      },
+      {
+        address: Address.fromString("0xb2f82d0f38dc453d596ad40a37799446cc89274a"),
+        symbol: "aprMON",
+        decimals: BigInt.fromI32(18),
+        name: "aPriori Monad LST"
+      },
+      {
+        address: Address.fromString("0xb38bb873cca844b20a9ee448a87af3626a6e1ef5"),
+        symbol: "MIST",
+        decimals: BigInt.fromI32(18),
+        name: "MistToken"
+      },
+      {
         address: Address.fromString("0x0f0bdebf0f83cd1ee3974779bcb7315f9808c714"),
         symbol: "DAK",
         decimals: BigInt.fromI32(18),

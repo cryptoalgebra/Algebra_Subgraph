@@ -12,8 +12,8 @@ const USDC_WMatic_03_POOL = '0x5630e18b629e06d1124e1da0e78f8e56c99f06b7'
 export let WHITELIST_TOKENS: string[] = [
   '0x760afe86e5de5fa0ee542fc7b7b713e1c5425701', // WMATIC
   '0x38a5c36fa8c8c9e4649b51fcd61810b14e7ce047', // USDC
-  '0xf817257fed379853cde0fa4f97ab987181b1e5ea', // USDT 
-  '0x1ea9099e3026e0b3f8dd6fbacaa45f30fce67431'
+  '0xf817257fed379853cde0fa4f97ab987181b1e5ea', // USDC 
+  '0x1ea9099e3026e0b3f8dd6fbacaa45f30fce67431' // ATL
 ]
 
 let MINIMUM_Matic_LOCKED = BigDecimal.fromString('0')
@@ -22,7 +22,7 @@ let Q192 = Math.pow(2, 192)
 
 let STABLE_COINS: string[] = [
   '0x38a5c36fa8c8c9e4649b51fcd61810b14e7ce047', // USDC
-  '0xf817257fed379853cde0fa4f97ab987181b1e5ea' // SUDT
+  '0xf817257fed379853cde0fa4f97ab987181b1e5ea' // USDC
 ]
 
 
