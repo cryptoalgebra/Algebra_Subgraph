@@ -562,29 +562,6 @@ export function handleSwap(event: SwapEvent): void {
     // Current tick is initialized and needs to be updated
     loadTickUpdateFeeVarsAndSave(newTick.toI32(), event)
   }
-
-  let numIters = oldTick
-    .minus(newTick)
-    .abs()
-    .div(TICK_SPACING)
-
-  if (numIters.gt(BigInt.fromI32(100))) {
-    // In case more than 100 ticks need to be updated ignore the update in
-    // order to avoid timeouts. From testing this behavior occurs only upon
-    // pool initialization. This should not be a big issue as the ticks get
-    // updated later. For early users this error also disappears when calling
-    // collect
-  } else if (newTick.gt(oldTick)) {
-    let firstInitialized = oldTick.plus(TICK_SPACING.minus(modulo))
-    for (let i = firstInitialized; i.le(newTick); i = i.plus(TICK_SPACING)) {
-      loadTickUpdateFeeVarsAndSave(i.toI32(), event)
-    }
-  } else if (newTick.lt(oldTick)) {
-    let firstInitialized = oldTick.minus(modulo)
-    for (let i = firstInitialized; i.ge(newTick); i = i.minus(TICK_SPACING)) {
-      loadTickUpdateFeeVarsAndSave(i.toI32(), event)
-    }
-  }
 }
 
 export function handleSetCommunityFee(event: CommunityFee): void {
@@ -671,13 +648,6 @@ export function handleCollect(event: Collect): void {
 
 
 function updateTickFeeVarsAndSave(tick: Tick, event: ethereum.Event): void {
-  let poolAddress = event.address
-  // not all ticks are initialized so obtaining null is expected behavior
-  let poolContract = PoolABI.bind(poolAddress)
-
-  let tickResult = poolContract.ticks(tick.tickIdx.toI32())
-  tick.feeGrowthOutside0X128 = tickResult.value2
-  tick.feeGrowthOutside1X128 = tickResult.value3
   tick.save()
   updateTickDayData(tick, event)
 }

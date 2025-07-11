@@ -12,10 +12,13 @@ const USDC_WMatic_03_POOL = '0xae81fac689a1b4b1e06e7ef4a2ab4cd8ac0a087d'
 export let WHITELIST_TOKENS: string[] = [
   '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270', // WMATIC
   '0x2791bca1f2de4661ed88a30c99a7a9449aa84174', // USDC
-  '0xc2132d05d31c914a87c6611c10748aeb04b58e8f' // USDT 
+  '0xc2132d05d31c914a87c6611c10748aeb04b58e8f', // USDT
+  '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619', // WETH 
+  '0xb5c064f955d8e7f38fe0460c556a72987494ee17', // quick
+  '0x1bfd67037b42cf73acf2047067bd4f2c47d9bfd6' // BTC
 ]
 
-let MINIMUM_Matic_LOCKED = BigDecimal.fromString('15000')
+let MINIMUM_Matic_LOCKED = BigDecimal.fromString('150000')
 
 let Q192 = Math.pow(2, 192)
 

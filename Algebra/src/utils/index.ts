@@ -20,21 +20,30 @@ export function safeDiv(amount0: BigDecimal, amount1: BigDecimal): BigDecimal {
   }
 }
 
-export function bigDecimalExponated(value: BigDecimal, power: BigInt): BigDecimal {
-  if (power.equals(ZERO_BI)) {
+export function fastExponentiation(value: BigDecimal, power: i32): BigDecimal {
+  if (power < 0) {
+    const result = fastExponentiation(value, -power)
+    return safeDiv(ONE_BD, result)
+  }
+
+  if (power == 0) {
     return ONE_BD
   }
-  let negativePower = power.lt(ZERO_BI)
-  let result = ZERO_BD.plus(value)
-  let powerAbs = power.abs()
-  for (let i = ONE_BI; i.lt(powerAbs); i = i.plus(ONE_BI)) {
+
+  if (power == 1) {
+    return value
+  }
+
+  const halfPower = power / 2
+  const halfResult = fastExponentiation(value, halfPower)
+
+  // Use the fact that x ^ (2n) = (x ^ n) * (x ^ n) and we can compute (x ^ n) only once.
+  let result = halfResult.times(halfResult)
+
+  // For odd powers, x ^ (2n + 1) = (x ^ 2n) * x
+  if (power % 2 == 1) {
     result = result.times(value)
   }
-
-  if (negativePower) {
-    result = safeDiv(ONE_BD, result)
-  }
-
   return result
 }
 
