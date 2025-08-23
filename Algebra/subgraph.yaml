@@ -7,9 +7,9 @@ dataSources:
     name: Factory
     network: avalanche-testnet
     source:
-      address: '0xd7cB0E0692f2D55A17bA81c1fE5501D66774fC4A'
+      address: '0x8F32501837F1E354CA84Fa74C194da1411A200a7'
       abi: Factory
-      startBlock: 40201026 
+      startBlock: 40995881
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -40,9 +40,9 @@ dataSources:
     name: NonfungiblePositionManager
     network: avalanche-testnet
     source:
-      address: '0xB4F9b6b019E75CBe51af4425b2Fc12797e2Ee2a1'
+      address: '0xdca7f48C88D6B466CEec70261bc68E64c5b1fDDF'
       abi: NonfungiblePositionManager
-      startBlock: 40201026 
+      startBlock: 40995881
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6

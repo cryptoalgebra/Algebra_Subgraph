@@ -10,6 +10,7 @@ import { Position, PositionSnapshot, Token} from '../types/schema'
 import { ADDRESS_ZERO, factoryContract, ZERO_BD, ZERO_BI, pools_list} from '../utils/constants'
 import { Address, BigInt, ethereum } from '@graphprotocol/graph-ts'
 import { convertTokenToDecimal, loadTransaction } from '../utils'
+import {getOrCreateToken} from "../utils/token";
 
 
 
@@ -117,8 +118,8 @@ export function handleIncreaseLiquidity(event: IncreaseLiquidity): void {
     return
   }
 
-  let token0 = Token.load(position.token0)
-  let token1 = Token.load(position.token1)
+  let token0 = getOrCreateToken(Address.fromString(position.token0))
+  let token1 = getOrCreateToken(Address.fromString(position.token1))
 
 
 
