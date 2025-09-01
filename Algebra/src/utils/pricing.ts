@@ -23,6 +23,7 @@ let MINIMUM_Matic_LOCKED = BigDecimal.fromString('150000')
 let Q192 = Math.pow(2, 192)
 
 let STABLE_COINS: string[] = [
+  '0x3c499c542cef5e3811e1192ce70d8cc03d5c3359',
   '0x2791bca1f2de4661ed88a30c99a7a9449aa84174', // USDC
   '0xc2132d05d31c914a87c6611c10748aeb04b58e8f' // SUDT
 ]
