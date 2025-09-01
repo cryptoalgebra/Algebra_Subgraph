@@ -331,6 +331,10 @@ export function handleSwap(event: SwapEvent): void {
   let token0 = Token.load(pool.token0)!
   let token1 = Token.load(pool.token1)!
 
+  if(token1.id == "0xc2132d05d31c914a87c6611c10748aeb04b58e8f") {
+    token1.symbol = 'USDT0';
+    token1.name = 'USDT0';
+  }
 
   let amount0 = convertTokenToDecimal(event.params.amount0, token0.decimals)
   let amount1 = convertTokenToDecimal(event.params.amount1, token1.decimals)
