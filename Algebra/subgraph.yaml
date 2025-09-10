@@ -6,7 +6,7 @@ features:
   - grafting # feature name
 graft:
   base: QmawGMzoJKV8Zh6TvVSd68TtYbzhJYhfMPgwX56j4YDtFA # Subgraph ID of base Subgraph
-  block: 73550000 # block number
+  block: 73550500 # block number
 dataSources:
   - kind: ethereum/contract
     name: Factory
@@ -14,7 +14,7 @@ dataSources:
     source:
       address: '0x411b0fAcC3489691f28ad58c47006AF5E3Ab3A28'
       abi: Factory
-      startBlock: 31656555 
+      startBlock: 31656560 
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
