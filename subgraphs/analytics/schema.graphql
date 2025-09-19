@@ -724,6 +724,7 @@ type Plugin @entity(immutable: false) {
   collectedFeesToken1: BigDecimal!
   # fees collected by plugin in USD
   collectedFeesUSD: BigDecimal!
+  activeModules: [String!]!
 }
 
 type FeeHourData @entity(immutable: false) {

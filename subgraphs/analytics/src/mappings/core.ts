@@ -14,7 +14,8 @@ import {
   Token, 
   PoolFeeData 
 } from '../types/schema'
-import { PluginConfig, Pool as PoolABI } from '../types/Factory/Pool'
+import { PluginConfig} from '../types/Factory/Pool'
+import { Plugin as PluginABI } from '../types/templates/Pool/Plugin'
 import { BigDecimal, BigInt} from '@graphprotocol/graph-ts'
 import {
   Burn as BurnEvent,
@@ -657,6 +658,16 @@ export function handlePlugin(event: PluginEvent): void {
     plugin.collectedFeesToken0 = ZERO_BD
     plugin.collectedFeesToken1 = ZERO_BD
     plugin.collectedFeesUSD = ZERO_BD
+
+    let contract = PluginABI.bind(event.params.newPluginAddress)
+    let modulesCall = contract.try_getActiveModuleNames()
+    if (!modulesCall.reverted) {
+      let res = modulesCall.value
+      plugin.activeModules = res
+    }
+    else {
+      plugin.activeModules = ["None"]
+    } 
   }
 
   plugin.save()
