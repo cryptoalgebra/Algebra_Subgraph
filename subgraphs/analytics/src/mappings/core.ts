@@ -1,7 +1,7 @@
 /* eslint-disable prefer-const */
 import { Bundle, Burn, Factory, Mint, Pool, Swap, Tick, PoolPosition, Plugin, Token, PoolFeeData } from '../types/schema'
 import { PluginConfig} from '../types/Factory/Pool'
-import { BigDecimal, BigInt} from '@graphprotocol/graph-ts'
+import { log, BigDecimal, BigInt} from '@graphprotocol/graph-ts'
 
 import {
   Burn as BurnEvent,
@@ -15,7 +15,7 @@ import {
   Plugin as PluginEvent
 } from '../types/templates/Pool/Pool'
 import { convertTokenToDecimal, loadTransaction, safeDiv } from '../utils'
-import { ONE_BI, ZERO_BD, FEE_DENOMINATOR} from '../utils/constants'
+import { ONE_BI, ZERO_BD, ZERO_BI, FEE_DENOMINATOR, TREB_ADDRESS, XTREB_ADDRESS } from '../utils/constants'
 import { FACTORY_ADDRESS } from '../utils/chain'
 import { findEthPerToken, getEthPriceInUSD, getTrackedAmountUSD, priceToTokenPrices } from '../utils/pricing'
 import {
@@ -317,6 +317,39 @@ export function handleSwap(event: SwapEvent): void {
 
   let amount0 = convertTokenToDecimal(event.params.amount0, token0.decimals)
   let amount1 = convertTokenToDecimal(event.params.amount1, token1.decimals)
+
+  if(token0.id == TREB_ADDRESS || token1.id == TREB_ADDRESS){
+    let xtreb = Token.load(XTREB_ADDRESS.toHexString())
+    if(xtreb === null){
+      xtreb = new Token(XTREB_ADDRESS.toHexString())
+      xtreb.symbol = "xTREB"
+      xtreb.name = "xTREB"
+      xtreb.totalSupply = BigInt.fromI32(0)
+      let decimals = BigInt.fromI32(18)
+    
+      // bail if we couldn't figure out the decimals
+      if (decimals === null) {
+        log.debug('mybug the decimal on token 0 was null', [])
+        return
+      }
+    
+      xtreb.decimals = decimals
+      xtreb.derivedMatic = ZERO_BD
+      xtreb.volume = ZERO_BD
+      xtreb.volumeUSD = ZERO_BD
+      xtreb.feesUSD = ZERO_BD
+      xtreb.untrackedVolumeUSD = ZERO_BD
+      xtreb.totalValueLocked = ZERO_BD
+      xtreb.totalValueLockedUSD = ZERO_BD
+      xtreb.totalValueLockedUSDUntracked = ZERO_BD
+      xtreb.txCount = ZERO_BI
+      xtreb.poolCount = ZERO_BI
+      xtreb.whitelistPools = []
+      xtreb.save()
+    }
+  }
+
+  updateXTrebPrice()
 
   let swapFee = pool.fee
   if(event.params.overrideFee > 0){
@@ -636,4 +669,13 @@ export function handlePluginConfig(event: PluginConfig): void {
   let pool = Pool.load(event.address.toHexString())!
   pool.pluginConfig = event.params.newPluginConfig
   pool.save()
+}
+
+function updateXTrebPrice(): void {
+  let xtreb = Token.load(XTREB_ADDRESS.toHexString())
+  let treb = Token.load(TREB_ADDRESS)
+  if(xtreb != null && treb != null){
+    xtreb.derivedMatic = treb.derivedMatic
+    xtreb.save()
+  }
 }
