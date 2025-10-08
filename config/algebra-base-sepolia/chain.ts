@@ -2,11 +2,11 @@
 import { BigDecimal} from '@graphprotocol/graph-ts'
 
 // Addresses for analytics subgraph 
-export const FACTORY_ADDRESS = '0x2fB84Ae4b1B6aeEc5627268070cF44C678Cd9728'
-export const NONFUNGIBLE_POSITION_MANAGER_ADDRESS = '0x9026d1c84f5834968FE80368b216D7C34109Cf97'
+export const FACTORY_ADDRESS = '0x285C74f3d01296F96c5d3858ab482f707e8Bfdfc'
+export const NONFUNGIBLE_POSITION_MANAGER_ADDRESS = '0xCcD3A4AB7bD75bab509d25101eDDc37778cA49A4'
 
 export const REFERENCE_TOKEN = '0x4200000000000000000000000000000000000006' // Wrapped Native Token
-export const STABLE_TOKEN_POOL = '0x5500c2FfEBB0B0D03C39F6F39F31000C5ADA3bCA' // USDC/WETH pool
+export const STABLE_TOKEN_POOL = '0x671dDf7E29272c5Bf6996F765fABf58351cfF137' // USDC/WETH pool
 
 // Minimum reference token locked in pool for pricing calculations
 export const MINIMUM_NATIVE_LOCKED = BigDecimal.fromString('0')
@@ -26,8 +26,8 @@ export const STABLE_COINS: string[] = [
 
 // Addresses for farming subgraph
 // Farming contracts
-export const ETERNAL_FARMING_ADDRESS = '0xc709aCDA0dBF1a70189bd850e8E8b2659017Fa62'  
+export const ETERNAL_FARMING_ADDRESS = '0xB50E639E23C954546C75d9C15363FC0375E5E95E'  
 
 // Addresses for limit order subgraph
 // Limit order contract
-export const LIMIT_ORDER_ADDRESS = '0xe578551955EA80F001DD5C1d1db3F4652a049C5D'
+export const LIMIT_ORDER_ADDRESS = '0xdA9c1AF6498583Ae548CAd31c47eFde061569789'
