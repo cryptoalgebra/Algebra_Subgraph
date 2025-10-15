@@ -123,6 +123,11 @@ export function updateFeeHourData(event: ethereum.Event, Fee: BigInt): void{
       FeeHourDataEntity.endFee = Fee
       FeeHourDataEntity.maxFee = Fee 
       FeeHourDataEntity.minFee = Fee 
+    } else {
+      FeeHourDataEntity.startFee = ZERO_BI
+      FeeHourDataEntity.endFee = ZERO_BI
+      FeeHourDataEntity.maxFee = ZERO_BI 
+      FeeHourDataEntity.minFee = ZERO_BI 
     }
 
   }
