@@ -5,8 +5,8 @@ schema:
 features:
   - grafting # feature name
 graft:
-  base: QmYpe7mCzk3TX5r5GV79HEmjRjsMazGgW62Ctb4v55bf9t # Subgraph ID of base Subgraph
-  block: 75924000 # block number
+  base: QmPgJ6Ur4pTskCfjbZKNjwVXqk4KzYrX56a9mb8vkQJk9M # Subgraph ID of base Subgraph
+  block: 77303200 # block number
 dataSources:
   - kind: ethereum/contract
     name: Factory
