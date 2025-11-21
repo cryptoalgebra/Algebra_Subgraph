@@ -96,6 +96,8 @@ type Pool @entity(immutable: false) {
   # fee amount
   fee: BigInt!
   communityFee: BigInt!
+  # community vault address
+  communityVault: Bytes!
   # in range liquidity
   liquidity: BigInt!
   # current price tracker

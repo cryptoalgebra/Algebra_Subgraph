@@ -155,6 +155,7 @@ function createPool(
   pool.liquidity = ZERO_BI
   pool.sqrtPrice = ZERO_BI
   pool.communityFee = factory.defaultCommunityFee
+  pool.communityVault = Address.fromString(ZERO_ADDRESS)
   pool.token0Price = ZERO_BD
   pool.token1Price = ZERO_BD
   pool.observationIndex = ZERO_BI

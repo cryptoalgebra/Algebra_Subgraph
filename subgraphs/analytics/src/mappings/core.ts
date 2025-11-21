@@ -26,6 +26,7 @@ import {
   Mint as MintEvent,
   Swap as SwapEvent,
   CommunityFee,
+  CommunityVault,
   TickSpacing,
   Plugin as PluginEvent
 } from '../types/templates/Pool/Pool'
