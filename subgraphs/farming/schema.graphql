@@ -26,6 +26,16 @@ type Reward @entity(immutable: false){
   rewardAddress: Bytes!
   amount: BigInt!
   owner: Bytes!
+  tokenIds: [BigInt!]
+  tokenAmounts: [BigInt!]
+}
+
+type TokenReward @entity(immutable: false){
+  id: ID!
+  tokenId: BigInt!
+  rewardAddress: Bytes!
+  amount: BigInt!
+  owner: Bytes!
 }
 
 type PositionTransferCache @entity(immutable: false) {

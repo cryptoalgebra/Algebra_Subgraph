@@ -1,4 +1,4 @@
-import { ethereum, crypto, BigInt } from '@graphprotocol/graph-ts';
+import { ethereum, crypto, BigInt, Address } from '@graphprotocol/graph-ts';
 import {
   EternalFarmingCreated,
   FarmEntered,
@@ -10,7 +10,64 @@ import {
   RewardsAdded,
   RewardsCollected
 } from '../types/EternalFarming/EternalFarming';
-import { Deposit, Reward, EternalFarming } from '../types/schema';
+import { Deposit, Reward, EternalFarming, TokenReward } from '../types/schema';
+
+// Helper function to add reward to tracking system
+function addRewardForToken(
+  owner: Address,
+  rewardAddress: Address,
+  tokenId: BigInt,
+  amount: BigInt
+): void {
+  // Update main Reward entity
+  let rewardId = rewardAddress.toHexString() + owner.toHexString();
+  let rewardEntity = Reward.load(rewardId);
+  
+  if (rewardEntity == null) {
+    rewardEntity = new Reward(rewardId);
+    rewardEntity.amount = BigInt.fromString('0');
+    rewardEntity.owner = owner;
+    rewardEntity.rewardAddress = rewardAddress;
+    rewardEntity.tokenIds = [];
+    rewardEntity.tokenAmounts = [];
+  }
+  
+  rewardEntity.amount = rewardEntity.amount.plus(amount);
+  
+  // Initialize arrays if they don't exist (for backward compatibility)
+  let tokenIds = rewardEntity.tokenIds;
+  let tokenAmounts = rewardEntity.tokenAmounts;
+  
+  if (tokenIds == null) {
+    tokenIds = [];
+  }
+  if (tokenAmounts == null) {
+    tokenAmounts = [];
+  }
+  
+  // Add tokenId and amount to arrays
+  tokenIds.push(tokenId);
+  tokenAmounts.push(amount);
+  rewardEntity.tokenIds = tokenIds;
+  rewardEntity.tokenAmounts = tokenAmounts;
+  
+  rewardEntity.save();
+  
+  // Create TokenReward entity for this specific token
+  let tokenRewardId = rewardAddress.toHexString() + owner.toHexString() + tokenId.toString();
+  let tokenRewardEntity = TokenReward.load(tokenRewardId);
+  
+  if (tokenRewardEntity == null) {
+    tokenRewardEntity = new TokenReward(tokenRewardId);
+    tokenRewardEntity.tokenId = tokenId;
+    tokenRewardEntity.rewardAddress = rewardAddress;
+    tokenRewardEntity.owner = owner;
+    tokenRewardEntity.amount = BigInt.fromString('0');
+  }
+  
+  tokenRewardEntity.amount = tokenRewardEntity.amount.plus(amount);
+  tokenRewardEntity.save();
+}
 
 export function handleIncentiveCreated(event: EternalFarmingCreated): void {
   let incentiveIdTuple: Array<ethereum.Value> = [
@@ -61,11 +118,62 @@ export function handleTokenStaked(event: FarmEntered): void {
 export function handleRewardClaimed(event: RewardClaimed): void {
   let id = event.params.rewardAddress.toHexString() + event.params.owner.toHexString();
   let rewardEntity = Reward.load(id);
-  if (rewardEntity != null){
-      rewardEntity.owner = event.params.owner;
-      rewardEntity.rewardAddress = event.params.rewardAddress;
+  
+  if (rewardEntity != null) {
+    let remainingToClaim = event.params.reward;
+    let tokenIds = rewardEntity.tokenIds;
+    let tokenAmounts = rewardEntity.tokenAmounts;
+    
+    // Backward compatibility: if arrays don't exist, just update total amount
+    if (tokenIds == null || tokenAmounts == null || tokenIds.length == 0) {
       rewardEntity.amount = rewardEntity.amount.minus(event.params.reward);
       rewardEntity.save();
+      return;
+    }
+    
+    let newTokenIds: BigInt[] = [];
+    let newTokenAmounts: BigInt[] = [];
+    
+    // Claim rewards in order by tokenID
+    for (let i = 0; i < tokenIds.length; i++) {
+      if (remainingToClaim.equals(BigInt.fromString('0'))) {
+        // No more to claim, keep remaining entries
+        newTokenIds.push(tokenIds[i]);
+        newTokenAmounts.push(tokenAmounts[i]);
+      } else {
+        let tokenRewardId = event.params.rewardAddress.toHexString() + event.params.owner.toHexString() + tokenIds[i].toString();
+        let tokenRewardEntity = TokenReward.load(tokenRewardId);
+        
+        if (tokenRewardEntity != null) {
+          if (tokenAmounts[i].le(remainingToClaim)) {
+            // Claim entire amount for this token
+            remainingToClaim = remainingToClaim.minus(tokenAmounts[i]);
+            // Remove TokenReward entity (fully claimed)
+            tokenRewardEntity.amount = BigInt.fromString('0');
+            tokenRewardEntity.save();
+          } else {
+            // Partially claim from this token
+            let claimedAmount = remainingToClaim;
+            let leftoverAmount = tokenAmounts[i].minus(remainingToClaim);
+            remainingToClaim = BigInt.fromString('0');
+            
+            // Update TokenReward entity with remaining amount
+            tokenRewardEntity.amount = leftoverAmount;
+            tokenRewardEntity.save();
+            
+            // Keep this entry with updated amount
+            newTokenIds.push(tokenIds[i]);
+            newTokenAmounts.push(leftoverAmount);
+          }
+        }
+      }
+    }
+    
+    // Update Reward entity
+    rewardEntity.amount = rewardEntity.amount.minus(event.params.reward);
+    rewardEntity.tokenIds = newTokenIds;
+    rewardEntity.tokenAmounts = newTokenAmounts;
+    rewardEntity.save();
   }
 }
 
@@ -88,33 +196,25 @@ export function handleTokenUnstaked(event: FarmEnded): void {
     entity.save();
   }
 
-  let id = event.params.rewardAddress.toHexString() + event.params.owner.toHexString()
-  let rewardEntity = Reward.load(id)
-
-  if (rewardEntity == null){
-      rewardEntity = new Reward(id)
-      rewardEntity.amount = BigInt.fromString('0')
+  // Add rewards with tokenId tracking for main reward
+  if (event.params.reward.gt(BigInt.fromString('0'))) {
+    addRewardForToken(
+      event.params.owner,
+      event.params.rewardAddress,
+      event.params.tokenId,
+      event.params.reward
+    );
   }
 
-  rewardEntity.owner = event.params.owner
-  rewardEntity.rewardAddress = event.params.rewardAddress
-  rewardEntity.amount = rewardEntity.amount.plus(event.params.reward)
-  rewardEntity.save();  
-
-
-  id =  event.params.bonusRewardToken.toHexString() + event.params.owner.toHexString()
-  rewardEntity = Reward.load(id)
-
-  if (rewardEntity == null){
-    rewardEntity = new Reward(id)
-    rewardEntity.amount = BigInt.fromString('0')
+  // Add rewards with tokenId tracking for bonus reward
+  if (event.params.bonusReward.gt(BigInt.fromString('0'))) {
+    addRewardForToken(
+      event.params.owner,
+      event.params.bonusRewardToken,
+      event.params.tokenId,
+      event.params.bonusReward
+    );
   }
-
-  rewardEntity.owner = event.params.owner
-  rewardEntity.rewardAddress = event.params.bonusRewardToken
-  rewardEntity.amount = rewardEntity.amount.plus(event.params.bonusReward)
-  rewardEntity.save();
-
 }
 
 export function handleDeactivate( event: IncentiveDeactivated): void{
@@ -169,34 +269,25 @@ export function handleCollect( event: RewardsCollected): void{
       eternalFarming.bonusReward -= event.params.bonusRewardAmount
       eternalFarming.save()
     
-
-  let id = eternalFarming.rewardToken.toHexString() + entity.owner.toHexString()
-  let rewardEntity = Reward.load(id)
-
-  if (rewardEntity == null){
-      rewardEntity = new Reward(id)
-      rewardEntity.amount = BigInt.fromString('0')
+      // Add rewards with tokenId tracking
+      if (event.params.rewardAmount.gt(BigInt.fromString('0'))) {
+        addRewardForToken(
+          entity.owner,
+          eternalFarming.rewardToken,
+          event.params.tokenId,
+          event.params.rewardAmount
+        );
+      }
+      
+      if (event.params.bonusRewardAmount.gt(BigInt.fromString('0'))) {
+        addRewardForToken(
+          entity.owner,
+          eternalFarming.bonusRewardToken,
+          event.params.tokenId,
+          event.params.bonusRewardAmount
+        );
+      }
+    }
   }
-
-  rewardEntity.owner = entity.owner
-  rewardEntity.rewardAddress = eternalFarming.rewardToken
-  rewardEntity.amount = rewardEntity.amount.plus(event.params.rewardAmount)
-  rewardEntity.save();  
-
-
-  id =  eternalFarming.bonusRewardToken.toHexString() + entity.owner.toHexString()
-  rewardEntity = Reward.load(id)
-
-  if (rewardEntity == null){
-    rewardEntity = new Reward(id)
-    rewardEntity.amount = BigInt.fromString('0')
-  }
-
-  rewardEntity.owner = entity.owner
-  rewardEntity.rewardAddress = eternalFarming.bonusRewardToken
-  rewardEntity.amount = rewardEntity.amount.plus(event.params.bonusRewardAmount)
-  rewardEntity.save();
-}
-}
 } 
 
