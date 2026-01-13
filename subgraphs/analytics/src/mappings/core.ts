@@ -34,6 +34,7 @@ export function handleInitialize(event: Initialize): void {
 
   pool.sqrtPrice = event.params.price
   pool.tick = BigInt.fromI32(event.params.tick)
+  pool.previousTick = pool.tick
   pool.save()
   // update token prices
   let token0 = Token.load(pool.token0)!
@@ -391,6 +392,7 @@ export function handleSwap(event: SwapEvent): void {
 
   // Update the pool with the new active liquidity, price, and tick.
   pool.liquidity = event.params.liquidity
+  pool.previousTick = pool.tick
   pool.tick = BigInt.fromI32(event.params.tick as i32)
   pool.sqrtPrice = event.params.price
   pool.totalValueLockedToken0 = pool.totalValueLockedToken0.plus(amount0withFee)

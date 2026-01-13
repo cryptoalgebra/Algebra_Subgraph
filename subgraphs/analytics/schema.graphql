@@ -100,6 +100,8 @@ type Pool @entity(immutable: false) {
   token1Price: BigDecimal!
   # current tick
   tick: BigInt!
+  # previous tick (from the last swap/update) used as a sanity check for pricing
+  previousTick: BigInt
   # current observation index
   observationIndex: BigInt!
   # all time token0 swapped

@@ -1,8 +1,8 @@
 /* eslint-disable prefer-const */
 import { Bundle, Pool, Token } from '../types/schema'
-import { BigDecimal, BigInt } from '@graphprotocol/graph-ts'
-import { exponentToBigDecimal, safeDiv } from '../utils/index'
-import { ZERO_BD, ONE_BD, ZERO_BI, Q192 } from './constants'
+import { BigDecimal, BigInt, log } from '@graphprotocol/graph-ts'
+import { absBigInt, exponentToBigDecimal, safeDiv } from '../utils/index'
+import { MAX_TICK_DEVIATION_FOR_PRICING, ONE_BD, Q192, ZERO_BD, ZERO_BI } from './constants'
 import { 
   REFERENCE_TOKEN, 
   STABLE_TOKEN_POOL, 
@@ -10,6 +10,14 @@ import {
   WHITELIST_TOKENS,
   STABLE_COINS
 } from './chain'
+
+function getPoolPreviousTickOrCurrent(pool: Pool): BigInt {
+  const value = pool.previousTick
+  if (value === null) {
+    return pool.tick
+  }
+  return value
+}
 
 export function priceToTokenPrices(price: BigInt, token0: Token, token1: Token): BigDecimal[] {
   let num = price.times(price).toBigDecimal()
@@ -56,6 +64,14 @@ export function findEthPerToken(token: Token): BigDecimal {
     let poolAddress = whiteList[i]
     let pool = Pool.load(poolAddress)!
     if (pool.liquidity.gt(ZERO_BI)) {
+
+      // Ignore pools with suspiciously large tick deviation since the previous swap/update.
+      const previousTick = getPoolPreviousTickOrCurrent(pool)
+      let tickDeviation = absBigInt(pool.tick.minus(previousTick))
+      if (tickDeviation.gt(MAX_TICK_DEVIATION_FOR_PRICING)) {
+        log.warning('ignore pool {} , tick deviation {}', [pool.id, tickDeviation.toString()])
+        continue
+      }
 
       if (pool.token0 == token.id) {
         // whitelist token is token1

@@ -20,6 +20,13 @@ export function safeDiv(amount0: BigDecimal, amount1: BigDecimal): BigDecimal {
   }
 }
 
+export function absBigInt(value: BigInt): BigInt {
+  if (value.lt(ZERO_BI)) {
+    return value.times(BigInt.fromI32(-1))
+  }
+  return value
+}
+
 export function fastExponentiation(value: BigDecimal, power: i32): BigDecimal {
   if (power < 0) {
     const result = fastExponentiation(value, -power)
