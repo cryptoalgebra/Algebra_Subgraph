@@ -9,19 +9,21 @@ export const REFERENCE_TOKEN = '0x4200000000000000000000000000000000000006' // W
 export const STABLE_TOKEN_POOL = '0xabff72aee1ba72fc459acd5222dd84a3182411bb' // USDC/WETH pool
 
 // Minimum reference token locked in pool for pricing calculations
-export const MINIMUM_NATIVE_LOCKED = BigDecimal.fromString('0')
+export const MINIMUM_NATIVE_LOCKED = BigDecimal.fromString('0.0001')
 
 // Token lists for tracking volume and liquidity
 export const WHITELIST_TOKENS: string[] = [
-  '0x4200000000000000000000000000000000000006',
-  '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913', 
-  '0x5aefba317baba46eaf98fd6f381d07673bca6467',
-  '0x49A390A3DFD2D01389F799965F3AF5961F87D228' 
+  '0x4200000000000000000000000000000000000006', // WETH
+  '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913', // USDC
+  '0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2', // USDT
+  '0x7BfA7C4f149E7415b73bdeDfe609237e29CBF34A', // sparkUSDC
+  '0xa0E430870c4604CcfC7B38Ca7845B1FF653D0ff1'  // mwETH
 ]
 
 // Stable coins for USD pricing (tokens with stable $1 value)
 export const STABLE_COINS: string[] = [
-  '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913'
+  '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913', // USDC
+  '0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2'  // USDT
 ]
 
 // Addresses for farming subgraph
