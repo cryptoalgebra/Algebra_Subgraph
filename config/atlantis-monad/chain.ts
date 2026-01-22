@@ -19,6 +19,7 @@ export const WHITELIST_TOKENS: string[] = [
   '0x00000000eFE302BEAA2b3e6e1b18d08D69a9012a', // AUSD
   '0xe7cd86e13AC4309349F30B3435a9d337750fC82D', // USDT0
   '0x01bFF41798a0BcF287b996046Ca68b395DbC1071', // XAUt0
+  '0xAD96C3dffCD6374294e2573A7fBBA96097CC8d7c', // DUST
 ]
 
 // Stable coins for USD pricing (tokens with stable $1 value)
