@@ -15,13 +15,14 @@ export const MINIMUM_NATIVE_LOCKED = BigDecimal.fromString('0.0001')
 export const WHITELIST_TOKENS: string[] = [
   '0x3100000000000000000000000000000000000006', // WCBTC
   '0xE045e6c36cF77FAA2CfB54466D71A3aEF7bbE839', // USDC.e
-  '0x9f3096Bac87e7F03DC09b0B416eB0DF837304dc4' // USDT.e
+  '0x9f3096Bac87e7F03DC09b0B416eB0DF837304dc4', // USDT.e
+  '0xDF240DC08B0FdaD1d93b74d5048871232f6BEA3d' 
 ]
 
 // Stable coins for USD pricing (tokens with stable $1 value)
 export const STABLE_COINS: string[] = [
   '0xE045e6c36cF77FAA2CfB54466D71A3aEF7bbE839', // USDC.e
-  '0x9f3096Bac87e7F03DC09b0B416eB0DF837304dc4' // USDT.e
+  '0x9f3096Bac87e7F03DC09b0B416eB0DF837304dc4'  // USDT.e
 ]
 
 // Addresses for farming subgraph
