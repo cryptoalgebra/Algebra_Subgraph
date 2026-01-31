@@ -18,7 +18,8 @@ export const WHITELIST_TOKENS: string[] = [
   "0xcbb7c0000ab88b473b1f5afd9ef808440eed33bf", // cbBTC
   "0x00000e7efa313f4e11bfff432471ed9423ac6b30", // HYDX
   "0x3595ca37596D5895B70EFAB592ac315D5B9809B2", // AZUSD
-  "0xe5020a6d073a794b6e7f05678707de47986fb0b6"  // frxUSD
+  "0xe5020a6d073a794b6e7f05678707de47986fb0b6", // frxUSD
+  "0x55380fe7a1910dff29a47b622057ab4139da42c5"  // fxUSD
 
 ]
 
@@ -26,7 +27,8 @@ export const WHITELIST_TOKENS: string[] = [
 export const STABLE_COINS: string[] = [
   '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913', // USDC
   "0x3595ca37596D5895B70EFAB592ac315D5B9809B2", // AZUSD
-  "0xe5020a6d073a794b6e7f05678707de47986fb0b6"  // frxUSD
+  "0xe5020a6d073a794b6e7f05678707de47986fb0b6", // frxUSD
+  "0x55380fe7a1910dff29a47b622057ab4139da42c5"  // fxUSD
 ]
 
 // Addresses for farming subgraph
