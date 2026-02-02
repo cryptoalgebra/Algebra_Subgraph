@@ -78,6 +78,7 @@ function createPool(
     token0 = new Token(token0Address)
     token0.symbol = fetchTokenSymbol(Address.fromString(token0Address))
     token0.name = fetchTokenName(Address.fromString(token0Address))
+    token0.totalSupplyUpdatedAtTimestamp = timestamp
     token0.totalSupply = fetchTokenTotalSupply(Address.fromString(token0Address))
     let decimals = fetchTokenDecimals(Address.fromString(token0Address))
 
@@ -104,6 +105,7 @@ function createPool(
     token1 = new Token(token1Address)
     token1.symbol = fetchTokenSymbol(Address.fromString(token1Address))
     token1.name = fetchTokenName(Address.fromString(token1Address))
+    token1.totalSupplyUpdatedAtTimestamp = timestamp
     token1.totalSupply = fetchTokenTotalSupply(Address.fromString(token1Address))
     let decimals = fetchTokenDecimals(Address.fromString(token1Address))
     // bail if we couldn't figure out the decimals

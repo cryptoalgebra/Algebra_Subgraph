@@ -624,6 +624,8 @@ type TokenDayData @entity(immutable: false) {
   date: Int!
   # pointer to token
   token: Token!
+  # last time totalSupply was updated
+  totalSupplyUpdatedAtTimestamp: BigInt!
   # volume in token units
   volume: BigDecimal!
   # volume in derived USD

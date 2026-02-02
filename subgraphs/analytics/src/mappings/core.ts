@@ -1,8 +1,7 @@
 /* eslint-disable prefer-const */
 import { Bundle, Burn, Factory, Mint, Pool, Swap, Tick, PoolPosition, Plugin, Token, PoolFeeData } from '../types/schema'
 import { PluginConfig} from '../types/Factory/Pool'
-import { BigDecimal, BigInt} from '@graphprotocol/graph-ts'
-
+import { BigDecimal, BigInt, Address } from '@graphprotocol/graph-ts'
 import {
   Burn as BurnEvent,
   Collect,
@@ -15,7 +14,8 @@ import {
   Plugin as PluginEvent
 } from '../types/templates/Pool/Pool'
 import { convertTokenToDecimal, loadTransaction, safeDiv } from '../utils'
-import { ONE_BI, ZERO_BD, FEE_DENOMINATOR} from '../utils/constants'
+import { ONE_BI, ZERO_BD, FEE_DENOMINATOR, ONE_DAY_SECONDS} from '../utils/constants'
+import { fetchTokenTotalSupply } from '../utils/token'
 import { FACTORY_ADDRESS } from '../utils/chain'
 import { findEthPerToken, getEthPriceInUSD, getTrackedAmountUSD, priceToTokenPrices } from '../utils/pricing'
 import {
@@ -317,6 +317,9 @@ export function handleSwap(event: SwapEvent): void {
 
   let amount0 = convertTokenToDecimal(event.params.amount0, token0.decimals)
   let amount1 = convertTokenToDecimal(event.params.amount1, token1.decimals)
+
+  refreshTokenTotalSupplyIfNeeded(token0 as Token, event.block.timestamp)
+  refreshTokenTotalSupplyIfNeeded(token1 as Token, event.block.timestamp)
 
   let swapFee = pool.fee
   if(event.params.overrideFee > 0){
@@ -636,4 +639,11 @@ export function handlePluginConfig(event: PluginConfig): void {
   let pool = Pool.load(event.address.toHexString())!
   pool.pluginConfig = event.params.newPluginConfig
   pool.save()
+}
+
+function refreshTokenTotalSupplyIfNeeded(token: Token, blockTimestamp: BigInt): void {
+  if (blockTimestamp.minus(token.totalSupplyUpdatedAtTimestamp).ge(ONE_DAY_SECONDS)) {
+    token.totalSupply = fetchTokenTotalSupply(Address.fromString(token.id))
+    token.totalSupplyUpdatedAtTimestamp = blockTimestamp
+  }
 }
