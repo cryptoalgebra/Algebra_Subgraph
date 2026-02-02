@@ -57,6 +57,8 @@ type Token @entity(immutable: false) {
   feesUSD: BigDecimal!
   # transactions across all pools that include this token
   txCount: BigInt!
+  # last time totalSupply was updated
+  totalSupplyUpdatedAtTimestamp: BigInt!
   # number of pools containing this token
   poolCount: BigInt!
   # liquidity across all pools in token units
@@ -624,8 +626,6 @@ type TokenDayData @entity(immutable: false) {
   date: Int!
   # pointer to token
   token: Token!
-  # last time totalSupply was updated
-  totalSupplyUpdatedAtTimestamp: BigInt!
   # volume in token units
   volume: BigDecimal!
   # volume in derived USD
