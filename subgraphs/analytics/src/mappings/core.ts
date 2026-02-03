@@ -275,13 +275,19 @@ export function handleBurn(event: BurnEvent): void {
   // tick entities
   let lowerTickId = poolAddress + '#' + BigInt.fromI32(event.params.bottomTick).toString()
   let upperTickId = poolAddress + '#' + BigInt.fromI32(event.params.topTick).toString()
-  let lowerTick = Tick.load(lowerTickId)!
-  let upperTick = Tick.load(upperTickId)!
+  let lowerTick = Tick.load(lowerTickId)
+  let upperTick = Tick.load(upperTickId)
   let amount = event.params.liquidityAmount
-  lowerTick.liquidityGross = lowerTick.liquidityGross.minus(amount)
-  lowerTick.liquidityNet = lowerTick.liquidityNet.minus(amount)
-  upperTick.liquidityGross = upperTick.liquidityGross.minus(amount)
-  upperTick.liquidityNet = upperTick.liquidityNet.plus(amount)
+  if (lowerTick != null) {
+    lowerTick.liquidityGross = lowerTick.liquidityGross.minus(amount)
+    lowerTick.liquidityNet = lowerTick.liquidityNet.minus(amount)
+    lowerTick.save()
+  }
+  if (upperTick != null) {
+    upperTick.liquidityGross = upperTick.liquidityGross.minus(amount)
+    upperTick.liquidityNet = upperTick.liquidityNet.plus(amount)
+    upperTick.save()
+  }
 
   let poolPositionid = pool.id + "#" + event.params.owner.toHexString() + '#' + BigInt.fromI32(event.params.bottomTick).toString() + "#" +  BigInt.fromI32(event.params.topTick).toString()
   let poolPosition = PoolPosition.load(poolPositionid)
@@ -303,8 +309,6 @@ export function handleBurn(event: BurnEvent): void {
   pool.save()
   factory.save()
   burn.save()
-  lowerTick.save()
-  upperTick.save()
 }
 
 export function handleSwap(event: SwapEvent): void {
@@ -642,7 +646,12 @@ export function handlePluginConfig(event: PluginConfig): void {
 }
 
 function refreshTokenTotalSupplyIfNeeded(token: Token, blockTimestamp: BigInt): void {
-  if (blockTimestamp.minus(token.totalSupplyUpdatedAtTimestamp).ge(ONE_DAY_SECONDS)) {
+  // handle null value for graft case
+  if (token.totalSupplyUpdatedAtTimestamp === null){
+    token.totalSupplyUpdatedAtTimestamp = blockTimestamp;
+  }
+
+  if (blockTimestamp.minus(token.totalSupplyUpdatedAtTimestamp!).ge(ONE_DAY_SECONDS)) {
     token.totalSupply = fetchTokenTotalSupply(Address.fromString(token.id))
     token.totalSupplyUpdatedAtTimestamp = blockTimestamp
   }

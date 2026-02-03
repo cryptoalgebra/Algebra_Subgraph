@@ -58,7 +58,7 @@ type Token @entity(immutable: false) {
   # transactions across all pools that include this token
   txCount: BigInt!
   # last time totalSupply was updated
-  totalSupplyUpdatedAtTimestamp: BigInt!
+  totalSupplyUpdatedAtTimestamp: BigInt
   # number of pools containing this token
   poolCount: BigInt!
   # liquidity across all pools in token units
