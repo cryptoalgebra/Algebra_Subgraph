@@ -82,28 +82,28 @@ try {
 
 // Function to normalize addresses to lowercase in chain.ts content
 function normalizeAddresses(chainContent: string): string {
-  // Normalize single address constants
+  // Normalize single address constants (supports ', ", ` quotes)
   chainContent = chainContent.replace(
-    /(export const \w*ADDRESS\w* = ')([^']+)(')/g,
-    (match, prefix, address, suffix) => prefix + address.toLowerCase() + suffix
+    /(export const \w*ADDRESS\w* = (['"`]))([^'"`]+)\2/g,
+    (match, prefix, quote, address) => prefix + address.toLowerCase() + quote
   );
   
-  // Normalize REFERENCE_TOKEN
+  // Normalize REFERENCE_TOKEN (supports ', ", ` quotes)
   chainContent = chainContent.replace(
-    /(export const REFERENCE_TOKEN = ')([^']+)(')/g,
-    (match, prefix, address, suffix) => prefix + address.toLowerCase() + suffix
+    /(export const REFERENCE_TOKEN = (['"`]))([^'"`]+)\2/g,
+    (match, prefix, quote, address) => prefix + address.toLowerCase() + quote
   );
   
-  // Normalize STABLE_TOKEN_POOL
+  // Normalize STABLE_TOKEN_POOL (supports ', ", ` quotes)
   chainContent = chainContent.replace(
-    /(export const STABLE_TOKEN_POOL = ')([^']+)(')/g,
-    (match, prefix, address, suffix) => prefix + address.toLowerCase() + suffix
+    /(export const STABLE_TOKEN_POOL = (['"`]))([^'"`]+)\2/g,
+    (match, prefix, quote, address) => prefix + address.toLowerCase() + quote
   );
   
-  // Normalize arrays of addresses (WHITELIST_TOKENS, STABLE_COINS, etc.)
+  // Normalize arrays of addresses (WHITELIST_TOKENS, STABLE_COINS, etc.) - supports ', ", ` quotes
   chainContent = chainContent.replace(
-    /('0x[a-fA-F0-9]+')/g,
-    (match, address) => address.toLowerCase()
+    /(['"`])(0x[a-fA-F0-9]+)\1/g,
+    (match, quote, address) => quote + address.toLowerCase() + quote
   );
   
   return chainContent;
