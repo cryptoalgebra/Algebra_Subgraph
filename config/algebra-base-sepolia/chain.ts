@@ -28,7 +28,7 @@ export const ETERNAL_FARMING_ADDRESS = '0xB50E639E23C954546C75d9C15363FC0375E5E9
 
 // Addresses for limit order subgraph
 // Limit order contract
-export const LIMIT_ORDER_ADDRESS = '0x05F9E353559da6f2Bfe9A0980D5C3e84eA5d4238'
+export const LIMIT_ORDER_ADDRESS = '0xdA9c1AF6498583Ae548CAd31c47eFde061569789'
 
 // Addresses for ALM subgraph
 // ALM Vault Factory contract
