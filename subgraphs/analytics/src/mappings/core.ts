@@ -311,8 +311,6 @@ export function handleBurn(event: BurnEvent): void {
   pool.save()
   factory.save()
   burn.save()
-  lowerTick.save()
-  upperTick.save()
 }
 
 export function handleSwap(event: SwapEvent): void {
