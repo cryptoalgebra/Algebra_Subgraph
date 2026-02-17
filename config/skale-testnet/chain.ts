@@ -5,7 +5,7 @@ import { BigDecimal} from '@graphprotocol/graph-ts'
 export const FACTORY_ADDRESS = '0x99E317c0099F0fB8C5913db976d00fddeDB69583'
 export const NONFUNGIBLE_POSITION_MANAGER_ADDRESS = '0x50FCbF85d23aF7C91f94842FeCd83d16665d27bA'
 
-export const REFERENCE_TOKEN = '0xF94056BD7f6965Db3757E1B145f200b7346B4Fc0' // Wrapped Native Token
+export const REFERENCE_TOKEN = '0xd2aaa00700000000000000000000000000000000' // Wrapped Native Token
 export const STABLE_TOKEN_POOL = '0x6869452bc3e8a2514488c1905cbe22f7a6f7c4a5' // USDT/WETH pool
 
 // Minimum reference token locked in pool for pricing calculations
