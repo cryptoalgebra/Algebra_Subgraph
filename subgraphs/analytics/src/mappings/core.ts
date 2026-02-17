@@ -185,14 +185,6 @@ export function handleMint(event: MintEvent): void {
     poolPosition.owner = event.params.owner
   }
 
-  updateAlgebraDayData(event)
-  updatePoolDayData(event)
-  updatePoolHourData(event)
-  updateTokenDayData(token0 as Token, event)
-  updateTokenDayData(token1 as Token, event)
-  updateTokenHourData(token0 as Token, event)
-  updateTokenHourData(token1 as Token, event)
-
   token0.save()
   token1.save()
   pool.save()
@@ -201,6 +193,14 @@ export function handleMint(event: MintEvent): void {
   mint.save()
   lowerTick.save()
   upperTick.save()
+
+  updateAlgebraDayData(event)
+  updatePoolDayData(event)
+  updatePoolHourData(event)
+  updateTokenDayData(token0 as Token, event)
+  updateTokenDayData(token1 as Token, event)
+  updateTokenHourData(token0 as Token, event)
+  updateTokenHourData(token1 as Token, event)
 
 }
 
@@ -316,6 +316,12 @@ export function handleBurn(event: BurnEvent): void {
     poolPosition.save()
   }
 
+  token0.save()
+  token1.save()
+  pool.save()
+  factory.save()
+  burn.save()
+
   updateAlgebraDayData(event)
   updatePoolDayData(event)
   updatePoolHourData(event)
@@ -324,11 +330,6 @@ export function handleBurn(event: BurnEvent): void {
   updateTokenHourData(token0 as Token, event)
   updateTokenHourData(token1 as Token, event)
 
-  token0.save()
-  token1.save()
-  pool.save()
-  factory.save()
-  burn.save()
 }
 
 export function handleSwap(event: SwapEvent): void {
