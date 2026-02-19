@@ -19,6 +19,12 @@ type Factory @entity(immutable: false) {
   totalValueLockedUSD: BigDecimal!
   # default community fee percentage for pools
   defaultCommunityFee: BigInt!
+  # total community fees collected in USD
+  totalCommunityFeesUSD: BigDecimal!
+  # total community fees collected in Matic
+  totalCommunityFeesMatic: BigDecimal!
+  # total Algebra protocol fees in USD (share of community fees)
+  totalAlgebraFeesUSD: BigDecimal!
   # TVL derived in Matic
   totalValueLockedMatic: BigDecimal!
   # TVL derived in USD untracked
@@ -132,6 +138,14 @@ type Pool @entity(immutable: false) {
   collectedFeesToken1: BigDecimal!
   # all time fees collected derived USD
   collectedFeesUSD: BigDecimal!
+  # all time community fees collected in token0
+  communityFeesToken0: BigDecimal!
+  # all time community fees collected in token1
+  communityFeesToken1: BigDecimal!
+  # all time community fees collected in USD
+  communityFeesUSD: BigDecimal!
+  # all time Algebra protocol fees in USD (share of community fees)
+  algebraFeesUSD: BigDecimal!
   # last mint index for tracking mint operations
   lastMintIndex: BigInt! 
   # total token 0 across all ticks
@@ -735,6 +749,44 @@ type Plugin @entity(immutable: false) {
   # fees collected by plugin in USD
   collectedFeesUSD: BigDecimal!
   activeModules: [String!]!
+}
+
+type AlgebraCommunityVault @entity(immutable: false) {
+  # vault address
+  id: ID!
+  # algebra fee percentage (0-1000, denominator 1000)
+  algebraFee: BigInt!
+  # community fee receiver address
+  communityFeeReceiver: Bytes!
+  # algebra fee receiver address
+  algebraFeeReceiver: Bytes!
+  # pools that use this vault
+  pools: [Pool!]!
+  # total community fees withdrawn in USD
+  totalWithdrawnUSD: BigDecimal!
+  # total Algebra protocol fees withdrawn in USD
+  totalAlgebraWithdrawnUSD: BigDecimal!
+}
+
+type VaultWithdrawal @entity(immutable: true) {
+  # transaction hash + log index
+  id: ID!
+  # vault the withdrawal is from
+  vault: AlgebraCommunityVault!
+  # token withdrawn
+  token: Token!
+  # recipient
+  to: Bytes!
+  # amount withdrawn
+  amount: BigDecimal!
+  # amount in USD
+  amountUSD: BigDecimal!
+  # whether this is an Algebra protocol fee withdrawal
+  isAlgebra: Boolean!
+  # timestamp
+  timestamp: BigInt!
+  # block number
+  blockNumber: BigInt!
 }
 
 type FeeHourData @entity(immutable: false) {

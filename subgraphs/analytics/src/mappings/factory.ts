@@ -50,6 +50,9 @@ function createPool(
     factory.totalFeesUSD = ZERO_BD
     factory.totalFeesMatic = ZERO_BD
     factory.defaultCommunityFee = ZERO_BI
+    factory.totalCommunityFeesUSD = ZERO_BD
+    factory.totalCommunityFeesMatic = ZERO_BD
+    factory.totalAlgebraFeesUSD = ZERO_BD
     factory.totalValueLockedMatic = ZERO_BD
     factory.totalValueLockedUSD = ZERO_BD
     factory.totalValueLockedUSDUntracked = ZERO_BD
@@ -185,6 +188,11 @@ function createPool(
   pool.collectedFeesToken1 = ZERO_BD
   pool.collectedFeesUSD = ZERO_BD
 
+  pool.communityFeesToken0 = ZERO_BD
+  pool.communityFeesToken1 = ZERO_BD
+  pool.communityFeesUSD = ZERO_BD
+  pool.algebraFeesUSD = ZERO_BD
+
   pool.save()  // create the tracked contract based on the template
   PoolTemplate.create(Address.fromString(poolAddress))
   token0.save()
@@ -203,6 +211,9 @@ export function handleNewCommunityFee(event: DefaultCommunityFee): void{
     factory.untrackedVolumeUSD = ZERO_BD
     factory.totalFeesUSD = ZERO_BD
     factory.totalFeesMatic = ZERO_BD
+    factory.totalCommunityFeesUSD = ZERO_BD
+    factory.totalCommunityFeesMatic = ZERO_BD
+    factory.totalAlgebraFeesUSD = ZERO_BD
     factory.totalValueLockedMatic = ZERO_BD
     factory.totalValueLockedUSD = ZERO_BD
     factory.totalValueLockedUSDUntracked = ZERO_BD
