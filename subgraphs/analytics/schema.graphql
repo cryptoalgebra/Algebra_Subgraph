@@ -414,6 +414,12 @@ type Swap @entity(immutable: true) {
   tick: BigInt!
   reserves0: BigDecimal!
   reserves1: BigDecimal!
+  # override fee at the time of swap (0 if not overridden)
+  overrideFee: BigInt!
+  # plugin fee at the time of swap
+  pluginFee: BigInt!
+  # swap fee used for this swap (base or override)
+  fee: BigInt!
   # index within the txn
   logIndex: BigInt
 }
@@ -749,5 +755,11 @@ type FeeHourData @entity(immutable: false) {
   # fee at the start of the hour
   startFee: BigInt!
   # fee at the end of the hour
-  endFee: BigInt! 
+  endFee: BigInt!
+  # whether an override fee was active during the hour
+  hasOverrideFee: Boolean!
+  # last override fee value during the hour (0 if none)
+  overrideFee: BigInt!
+  # last plugin fee value during the hour
+  pluginFee: BigInt! 
 }
