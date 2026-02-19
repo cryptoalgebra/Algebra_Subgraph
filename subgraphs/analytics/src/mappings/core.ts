@@ -478,6 +478,9 @@ export function handleSwap(event: SwapEvent): void {
   swap.price = event.params.price
   swap.reserves0 = pool.totalValueLockedToken0
   swap.reserves1 = pool.totalValueLockedToken1
+  swap.overrideFee = swapFeeCache.overrideFee
+  swap.pluginFee = pluginFee
+  swap.fee = swapFee
   swap.logIndex = event.logIndex
 
   // interval data
@@ -617,7 +620,7 @@ export function handleChangeFee(event: ChangeFee): void {
   else{
     fee.fee = BigInt.fromI32(event.params.fee)  
   }
-  updateFeeHourData(event, BigInt.fromI32(event.params.fee))
+  updateFeeHourData(event, BigInt.fromI32(event.params.fee), ZERO_BI, ZERO_BI)
   fee.save()
 }
 

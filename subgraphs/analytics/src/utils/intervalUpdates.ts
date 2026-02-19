@@ -115,7 +115,7 @@ export function updatePoolDayData(event: ethereum.Event): PoolDayData {
   return poolDayData as PoolDayData
 }
 
-export function updateFeeHourData(event: ethereum.Event, Fee: BigInt): void{
+export function updateFeeHourData(event: ethereum.Event, Fee: BigInt, overrideFee: BigInt, pluginFee: BigInt): void{
   let timestamp = event.block.timestamp.toI32()
   let hourIndex = timestamp / 3600 
   let hourStartUnix = hourIndex * 3600
@@ -131,6 +131,13 @@ export function updateFeeHourData(event: ethereum.Event, Fee: BigInt): void{
     if(FeeHourDataEntity.maxFee < Fee) FeeHourDataEntity.maxFee = Fee
     if(FeeHourDataEntity.minFee > Fee) FeeHourDataEntity.minFee = Fee  
     FeeHourDataEntity.endFee = Fee
+    if (overrideFee > ZERO_BI) {
+      FeeHourDataEntity.hasOverrideFee = true
+      FeeHourDataEntity.overrideFee = overrideFee
+    }
+    if (pluginFee > ZERO_BI) {
+      FeeHourDataEntity.pluginFee = pluginFee
+    }
   }
   else{
     FeeHourDataEntity = new FeeHourData(hourFeeID)
@@ -138,6 +145,9 @@ export function updateFeeHourData(event: ethereum.Event, Fee: BigInt): void{
     FeeHourDataEntity.fee = Fee
     FeeHourDataEntity.changesCount = ONE_BI
     FeeHourDataEntity.pool = event.address.toHexString()
+    FeeHourDataEntity.hasOverrideFee = overrideFee > ZERO_BI
+    FeeHourDataEntity.overrideFee = overrideFee
+    FeeHourDataEntity.pluginFee = pluginFee
     if(Fee != ZERO_BI){
       FeeHourDataEntity.startFee = Fee
       FeeHourDataEntity.endFee = Fee
