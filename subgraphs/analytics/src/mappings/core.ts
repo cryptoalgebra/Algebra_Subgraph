@@ -1,8 +1,23 @@
 /* eslint-disable prefer-const */
-import { Bundle, Burn, Factory, Mint, Pool, Swap, Tick, PoolPosition, Plugin, Token, PoolFeeData } from '../types/schema'
+import {
+  Bundle, 
+  Burn,
+  BurnFeeCache, 
+  Factory,
+  Mint, 
+  Pool,
+  SwapFeeCache, 
+  Swap, 
+  Tick, 
+  PoolPosition, 
+  Plugin, 
+  Token, 
+  PoolFeeData,
+  AlgebraCommunityVault 
+} from '../types/schema'
 import { PluginConfig} from '../types/Factory/Pool'
-import { BigDecimal, BigInt} from '@graphprotocol/graph-ts'
-
+import { Plugin as PluginABI } from '../types/templates/Pool/Plugin'
+import { BigDecimal, BigInt, Address} from '@graphprotocol/graph-ts'
 import {
   Burn as BurnEvent,
   Collect,
@@ -15,7 +30,7 @@ import {
   Plugin as PluginEvent
 } from '../types/templates/Pool/Pool'
 import { convertTokenToDecimal, loadTransaction, safeDiv } from '../utils'
-import { ONE_BI, ZERO_BD, FEE_DENOMINATOR} from '../utils/constants'
+import { ONE_BI, ZERO_BD, ZERO_BI, FEE_DENOMINATOR, ZERO_ADDRESS} from '../utils/constants'
 import { FACTORY_ADDRESS } from '../utils/chain'
 import { findEthPerToken, getEthPriceInUSD, getTrackedAmountUSD, priceToTokenPrices } from '../utils/pricing'
 import {
@@ -28,6 +43,10 @@ import {
   updateFeeHourData
 } from '../utils/intervalUpdates'
 import { createTick } from '../utils/tick'
+import { CommunityVault as CommunityVaultTemplate } from '../types/templates'
+import { AlgebraCommunityVault as AlgebraCommunityVaultContract } from '../types/templates/CommunityVault/AlgebraCommunityVault'
+
+const COMMUNITY_FEE_DENOMINATOR = BigDecimal.fromString('1000')
 
 export function handleInitialize(event: Initialize): void {
   let pool = Pool.load(event.address.toHexString())!
@@ -333,27 +352,34 @@ export function handleSwap(event: SwapEvent): void {
 
  // need absolute amounts for volume
  let amount0Abs = amount0
- let amount0withFee = amount0
+ let amount0Net = amount0
+ let communityFeeToken0 = ZERO_BD
+ let communityFeeToken1 = ZERO_BD
  if (amount0.lt(ZERO_BD)) {
    amount0Abs = amount0.times(BigDecimal.fromString('-1'))
  }
  else { 
-   let communityFeeAmount = amount0.times(BigDecimal.fromString((swapFee.times(pool.communityFee).toString())).div(BigDecimal.fromString('1000000000')))
-   communityFeeAmount = communityFeeAmount.times(BigDecimal.fromString("1")) 
-   amount0withFee = amount0.times(FEE_DENOMINATOR.minus((swapFee.plus(pluginFee)).toBigDecimal())).div(FEE_DENOMINATOR)
+   // amount0 is the input token amount (includes fee)
+   // Community fee = amount * swapFee * communityFee / (FEE_DENOMINATOR * 1000)
+   communityFeeToken0 = amount0.times(swapFee.toBigDecimal()).times(pool.communityFee.toBigDecimal()).div(FEE_DENOMINATOR).div(COMMUNITY_FEE_DENOMINATOR)
+   let pluginFeeAmount = amount0.times(pluginFee.toBigDecimal()).div(FEE_DENOMINATOR)
+   // Only subtract fees that actually leave the pool (community fee + plugin fee)
+   // LP fees stay in the pool as part of TVL
+   amount0Net = amount0.minus(communityFeeToken0).minus(pluginFeeAmount)
    amount0Abs = amount0
  } 
 
  let amount1Abs = amount1
- let amount1withFee = amount1
+ let amount1Net = amount1
  if (amount1.lt(ZERO_BD)) {
    amount1Abs = amount1.times(BigDecimal.fromString('-1'))
  }
  else{
-   let communityFeeAmount = amount1.times(BigDecimal.fromString((swapFee.times(pool.communityFee).toString())).div(BigDecimal.fromString('1000000000')))
-   communityFeeAmount = communityFeeAmount.times(BigDecimal.fromString("1"))  
+   // amount1 is the input token amount (includes fee) 
+   communityFeeToken1 = amount1.times(swapFee.toBigDecimal()).times(pool.communityFee.toBigDecimal()).div(FEE_DENOMINATOR).div(COMMUNITY_FEE_DENOMINATOR)
+   let pluginFeeAmount = amount1.times(pluginFee.toBigDecimal()).div(FEE_DENOMINATOR)
    amount1Abs = amount1
-   amount1withFee = amount1.times(FEE_DENOMINATOR.minus((swapFee.plus(pluginFee)).toBigDecimal())).div(FEE_DENOMINATOR)
+   amount1Net = amount1.minus(communityFeeToken1).minus(pluginFeeAmount)
  }
 
   let amount0Matic = amount0Abs.times(token0.derivedMatic)
@@ -374,6 +400,20 @@ export function handleSwap(event: SwapEvent): void {
   let feesUSD = amountTotalUSDTracked.times(swapFee.toBigDecimal()).div(FEE_DENOMINATOR)
   let untrackedFees = amountTotalUSDUntracked.times(swapFee.toBigDecimal()).div(FEE_DENOMINATOR)
 
+  // Community fee calculations
+  let communityFeesUSD = feesUSD.times(pool.communityFee.toBigDecimal()).div(COMMUNITY_FEE_DENOMINATOR)
+  let communityFeesMatic = feesMatic.times(pool.communityFee.toBigDecimal()).div(COMMUNITY_FEE_DENOMINATOR)
+
+  // Algebra protocol fee = communityFee * algebraFee / 1000
+  let algebraFeesUSD = ZERO_BD
+  let vaultAddress = pool.communityVault.toHexString()
+  if (vaultAddress != ZERO_ADDRESS) {
+    let vault = AlgebraCommunityVault.load(vaultAddress)
+    if (vault !== null && vault.algebraFee.gt(ZERO_BI)) {
+      algebraFeesUSD = communityFeesUSD.times(vault.algebraFee.toBigDecimal()).div(COMMUNITY_FEE_DENOMINATOR)
+    }
+  }
+
   // global updates
   factory.txCount = factory.txCount.plus(ONE_BI)
   factory.totalVolumeMatic = factory.totalVolumeMatic.plus(amountTotalMaticTracked)
@@ -381,6 +421,9 @@ export function handleSwap(event: SwapEvent): void {
   factory.untrackedVolumeUSD = factory.untrackedVolumeUSD.plus(amountTotalUSDUntracked)
   factory.totalFeesMatic = factory.totalFeesMatic.plus(feesMatic)
   factory.totalFeesUSD = factory.totalFeesUSD.plus(feesUSD)
+  factory.totalCommunityFeesUSD = factory.totalCommunityFeesUSD.plus(communityFeesUSD)
+  factory.totalCommunityFeesMatic = factory.totalCommunityFeesMatic.plus(communityFeesMatic)
+  factory.totalAlgebraFeesUSD = factory.totalAlgebraFeesUSD.plus(algebraFeesUSD)
 
   // reset aggregate tvl before individual pool tvl updates
   let currentPoolTvlMatic = pool.totalValueLockedMatic
@@ -393,18 +436,22 @@ export function handleSwap(event: SwapEvent): void {
   pool.untrackedVolumeUSD = pool.untrackedVolumeUSD.plus(amountTotalUSDUntracked)
   pool.feesUSD = pool.feesUSD.plus(feesUSD)
   pool.untrackedFeesUSD = pool.untrackedFeesUSD.plus(untrackedFees)
+  pool.communityFeesToken0 = pool.communityFeesToken0.plus(communityFeeToken0)
+  pool.communityFeesToken1 = pool.communityFeesToken1.plus(communityFeeToken1)
+  pool.communityFeesUSD = pool.communityFeesUSD.plus(communityFeesUSD)
+  pool.algebraFeesUSD = pool.algebraFeesUSD.plus(algebraFeesUSD)
   pool.txCount = pool.txCount.plus(ONE_BI)
 
   // Update the pool with the new active liquidity, price, and tick.
   pool.liquidity = event.params.liquidity
   pool.tick = BigInt.fromI32(event.params.tick as i32)
   pool.sqrtPrice = event.params.price
-  pool.totalValueLockedToken0 = pool.totalValueLockedToken0.plus(amount0withFee)
-  pool.totalValueLockedToken1 = pool.totalValueLockedToken1.plus(amount1withFee)
+  pool.totalValueLockedToken0 = pool.totalValueLockedToken0.plus(amount0Net)
+  pool.totalValueLockedToken1 = pool.totalValueLockedToken1.plus(amount1Net)
 
   // update token0 data
   token0.volume = token0.volume.plus(amount0Abs)
-  token0.totalValueLocked = token0.totalValueLocked.plus(amount0withFee)
+  token0.totalValueLocked = token0.totalValueLocked.plus(amount0Net)
   token0.volumeUSD = token0.volumeUSD.plus(amountTotalUSDTracked)
   token0.untrackedVolumeUSD = token0.untrackedVolumeUSD.plus(amountTotalUSDUntracked)
   token0.feesUSD = token0.feesUSD.plus(feesUSD)
@@ -412,7 +459,7 @@ export function handleSwap(event: SwapEvent): void {
 
   // update token1 data
   token1.volume = token1.volume.plus(amount1Abs)
-  token1.totalValueLocked = token1.totalValueLocked.plus(amount1withFee)
+  token1.totalValueLocked = token1.totalValueLocked.plus(amount1Net)
   token1.volumeUSD = token1.volumeUSD.plus(amountTotalUSDTracked)
   token1.untrackedVolumeUSD = token1.untrackedVolumeUSD.plus(amountTotalUSDUntracked)
   token1.feesUSD = token1.feesUSD.plus(feesUSD)
@@ -566,6 +613,49 @@ export function handleSetCommunityFee(event: CommunityFee): void {
     pool.save() 
   }
 
+}
+
+export function handleSetCommunityVault(event: CommunityVault): void {
+  let pool = Pool.load(event.address.toHexString())
+  if (pool){
+    pool.communityVault = event.params.newCommunityVault
+    pool.save()
+
+    let vaultAddress = event.params.newCommunityVault.toHexString()
+    if (vaultAddress != ZERO_ADDRESS) {
+      let vault = AlgebraCommunityVault.load(vaultAddress)
+      if (vault === null) {
+        vault = new AlgebraCommunityVault(vaultAddress)
+        vault.communityFeeReceiver = Address.fromHexString(ZERO_ADDRESS)
+        vault.algebraFeeReceiver = Address.fromHexString(ZERO_ADDRESS)
+        vault.totalWithdrawnUSD = ZERO_BD
+        vault.totalAlgebraWithdrawnUSD = ZERO_BD
+        vault.pools = [pool.id]
+
+        // Read algebraFee from the contract
+        let vaultContract = AlgebraCommunityVaultContract.bind(event.params.newCommunityVault)
+        let algebraFeeResult = vaultContract.try_algebraFee()
+        if (!algebraFeeResult.reverted) {
+          vault.algebraFee = BigInt.fromI32(algebraFeeResult.value)
+        } else {
+          vault.algebraFee = ZERO_BI
+        }
+
+        vault.save()
+
+        // Start indexing vault events
+        CommunityVaultTemplate.create(event.params.newCommunityVault)
+      } else {
+        // Add pool to existing vault's pools list
+        let pools = vault.pools
+        if (!pools.includes(pool.id)) {
+          pools.push(pool.id)
+          vault.pools = pools
+          vault.save()
+        }
+      }
+    }
+  }
 }
 
 export function handleCollect(event: Collect): void {
