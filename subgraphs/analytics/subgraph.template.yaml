@@ -120,3 +120,33 @@ templates:
           handler: handlePlugin
         - event: PluginConfig(uint8)
           handler: handlePluginConfig
+  - kind: ethereum/contract
+    name: CommunityVault
+    network: {{NETWORK}}
+    source:
+      abi: AlgebraCommunityVault
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      file: ./src/mappings/vault.ts
+      entities:
+        - AlgebraCommunityVault
+        - VaultWithdrawal
+        - Token
+      abis:
+        - name: AlgebraCommunityVault
+          file: ../../abis/AlgebraCommunityVault.json
+        - name: ERC20
+          file: ../../abis/ERC20.json
+      eventHandlers:
+        - event: TokensWithdrawal(indexed address,indexed address,uint256)
+          handler: handleTokensWithdrawal
+        - event: AlgebraTokensWithdrawal(indexed address,indexed address,uint256)
+          handler: handleAlgebraTokensWithdrawal
+        - event: AlgebraFee(uint16)
+          handler: handleAlgebraFee
+        - event: CommunityFeeReceiver(address)
+          handler: handleCommunityFeeReceiver
+        - event: AlgebraFeeReceiver(address)
+          handler: handleAlgebraFeeReceiver
