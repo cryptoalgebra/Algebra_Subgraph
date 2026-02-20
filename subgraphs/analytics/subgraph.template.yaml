@@ -93,6 +93,8 @@ templates:
           file: ../../abis/ERC20.json
         - name: Plugin
           file: ../../abis/plugin.json
+        - name: AlgebraCommunityVault
+          file: ../../abis/AlgebraCommunityVault.json
       eventHandlers:
         - event: Initialize(uint160,int24)
           handler: handleInitialize
