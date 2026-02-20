@@ -2,11 +2,9 @@
 import {
   Bundle, 
   Burn,
-  BurnFeeCache, 
   Factory,
   Mint, 
   Pool,
-  SwapFeeCache, 
   Swap, 
   Tick, 
   PoolPosition, 
@@ -526,7 +524,6 @@ export function handleSwap(event: SwapEvent): void {
   swap.price = event.params.price
   swap.reserves0 = pool.totalValueLockedToken0
   swap.reserves1 = pool.totalValueLockedToken1
-  swap.overrideFee = swapFeeCache.overrideFee
   swap.pluginFee = pluginFee
   swap.fee = swapFee
   swap.logIndex = event.logIndex
