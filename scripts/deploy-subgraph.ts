@@ -10,7 +10,7 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = join(__filename, '..');
 
-const AVAILABLE_SUBGRAPHS = ['analytics', 'farming', 'blocks', 'limits', 'alm'];
+const AVAILABLE_SUBGRAPHS = ['analytics', 'farming', 'blocks', 'limits', 'alm', 'erc20-deployer'];
 
 type DeploymentTarget = 'studio' | 'custom';
 

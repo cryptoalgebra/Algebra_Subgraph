@@ -1,0 +1,27 @@
+specVersion: 0.0.5
+description: Algebra ERC20 Deployer subgraph for {{NETWORK_NAME}}
+repository: https://github.com/cryptoalgebra
+schema:
+  file: ./schema.graphql
+
+dataSources:
+  - kind: ethereum
+    name: ERC20Factory
+    network: {{NETWORK}}
+    source:
+      address: "{{ERC20_FACTORY_ADDRESS}}"
+      abi: ERC20Factory
+      startBlock: {{START_BLOCK}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Token
+      abis:
+        - name: ERC20Factory
+          file: ../../abis/ERC20Factory.json
+      eventHandlers:
+        - event: TokenCreated(indexed address,indexed address,string,string,uint8,string,string,string,string,string,string,string,uint256)
+          handler: handleTokenCreated
+      file: ./src/mappings/factory.ts

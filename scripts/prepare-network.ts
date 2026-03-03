@@ -127,6 +127,7 @@ function extractConfigFromChainFile(chainFilePath: string): {
   eternalFarmingAddress?: string;
   limitOrderAddress?: string;
   almVaultFactoryAddress?: string;
+  erc20FactoryAddress?: string;
 } {
   try {
     const chainContent = fs.readFileSync(chainFilePath, 'utf8');
@@ -151,6 +152,10 @@ function extractConfigFromChainFile(chainFilePath: string): {
     const almVaultFactoryMatch = chainContent.match(/export const ALM_VAULT_FACTORY_ADDRESS = '([^']+)'/);
     const almVaultFactoryAddress = almVaultFactoryMatch ? almVaultFactoryMatch[1] : undefined;
     
+    // Extract ERC20 factory address (optional)
+    const erc20FactoryMatch = chainContent.match(/export const ERC20_FACTORY_ADDRESS = '([^']+)'/);
+    const erc20FactoryAddress = erc20FactoryMatch ? erc20FactoryMatch[1] : undefined;
+    
     if (!factoryAddress || !nonfungiblePositionManagerAddress) {
       throw new Error('Could not extract required addresses from chain.ts');
     }
@@ -160,7 +165,8 @@ function extractConfigFromChainFile(chainFilePath: string): {
       nonfungiblePositionManagerAddress,
       eternalFarmingAddress,
       limitOrderAddress,
-      almVaultFactoryAddress
+      almVaultFactoryAddress,
+      erc20FactoryAddress
     };
   } catch (error) {
     throw new Error(`Failed to parse chain.ts: ${(error as Error).message}`);
@@ -232,6 +238,11 @@ function processSubgraphTemplate(
       subgraphContent = subgraphContent.replace(/{{ALM_VAULT_FACTORY_ADDRESS}}/g, addresses.almVaultFactoryAddress);
     }
     
+    // Replace ERC20 factory placeholders
+    if (addresses.erc20FactoryAddress) {
+      subgraphContent = subgraphContent.replace(/{{ERC20_FACTORY_ADDRESS}}/g, addresses.erc20FactoryAddress);
+    }
+    
     fs.writeFileSync(outputPath, subgraphContent);
     console.log(`✅ Generated ${subgraphName}/subgraph.yaml from template`);
     if (needsChainFile) {
@@ -253,7 +264,7 @@ try {
   }
   
   // Process each subgraph
-  const subgraphs = ['analytics', 'farming', 'blocks', 'limits', 'alm'];
+  const subgraphs = ['analytics', 'farming', 'blocks', 'limits', 'alm', 'erc20-deployer'];
   let processedCount = 0;
   
   for (const subgraphName of subgraphs) {

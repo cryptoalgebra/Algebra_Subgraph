@@ -1,0 +1,15 @@
+type Token @entity(immutable: true) {
+  id: Bytes!
+  owner: Bytes!
+  symbol: String!
+  name: String!
+  decimals: Int!
+  description: String!
+  logo: String!
+  banner: String
+  website: String
+  x: String
+  telegram: String
+  discord: String
+  totalSupply: BigInt!
+}

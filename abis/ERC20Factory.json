@@ -1,0 +1,41 @@
+[
+  {
+    "anonymous": false,
+    "inputs": [
+      {"indexed": true, "internalType": "address", "name": "token", "type": "address"},
+      {"indexed": true, "internalType": "address", "name": "owner", "type": "address"},
+      {"indexed": false, "internalType": "string", "name": "name", "type": "string"},
+      {"indexed": false, "internalType": "string", "name": "symbol", "type": "string"},
+      {"indexed": false, "internalType": "uint8", "name": "decimals", "type": "uint8"},
+      {"indexed": false, "internalType": "string", "name": "description", "type": "string"},
+      {"indexed": false, "internalType": "string", "name": "logo", "type": "string"},
+      {"indexed": false, "internalType": "string", "name": "banner", "type": "string"},
+      {"indexed": false, "internalType": "string", "name": "website", "type": "string"},
+      {"indexed": false, "internalType": "string", "name": "x", "type": "string"},
+      {"indexed": false, "internalType": "string", "name": "telegram", "type": "string"},
+      {"indexed": false, "internalType": "string", "name": "discord", "type": "string"},
+      {"indexed": false, "internalType": "uint256", "name": "totalSupply", "type": "uint256"}
+    ],
+    "name": "TokenCreated",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      {"internalType": "string", "name": "name_", "type": "string"},
+      {"internalType": "string", "name": "symbol_", "type": "string"},
+      {"internalType": "uint8", "name": "decimals_", "type": "uint8"},
+      {"internalType": "string", "name": "description_", "type": "string"},
+      {"internalType": "string", "name": "logo_", "type": "string"},
+      {"internalType": "string", "name": "banner_", "type": "string"},
+      {"internalType": "string", "name": "website_", "type": "string"},
+      {"internalType": "string", "name": "x_", "type": "string"},
+      {"internalType": "string", "name": "telegram_", "type": "string"},
+      {"internalType": "string", "name": "discord_", "type": "string"},
+      {"internalType": "uint256", "name": "totalSupply_", "type": "uint256"}
+    ],
+    "name": "createToken",
+    "outputs": [{"internalType": "address", "name": "token", "type": "address"}],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]
