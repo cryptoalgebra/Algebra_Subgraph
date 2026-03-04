@@ -92,7 +92,6 @@ export function updatePoolDayData(event: ethereum.Event): PoolDayData {
     poolDayData.open = pool.token0Price
     poolDayData.high = pool.token0Price
     poolDayData.low = pool.token0Price
-    poolDayData.close = pool.token0Price
   }
 
   if (pool.token0Price.gt(poolDayData.high)) {
@@ -107,6 +106,7 @@ export function updatePoolDayData(event: ethereum.Event): PoolDayData {
 
   poolDayData.token0Price = pool.token0Price
   poolDayData.token1Price = pool.token1Price
+  poolDayData.close = pool.token0Price
   poolDayData.tick = pool.tick
   poolDayData.tvlUSD = pool.totalValueLockedUSD
   poolDayData.txCount = poolDayData.txCount.plus(ONE_BI)
@@ -189,7 +189,6 @@ export function updatePoolHourData(event: ethereum.Event): PoolHourData {
     poolHourData.open = pool.token0Price
     poolHourData.high = pool.token0Price
     poolHourData.low = pool.token0Price
-    poolHourData.close = pool.token0Price
   }
 
   if (pool.token0Price.gt(poolHourData.high)) {
@@ -236,7 +235,6 @@ export function updateTokenDayData(token: Token, event: ethereum.Event): TokenDa
     tokenDayData.open = tokenPrice
     tokenDayData.high = tokenPrice
     tokenDayData.low = tokenPrice
-    tokenDayData.close = tokenPrice
   }
 
   if (tokenPrice.gt(tokenDayData.high)) {
