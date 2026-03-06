@@ -3,38 +3,33 @@ import { BigDecimal} from '@graphprotocol/graph-ts'
 
 // Addresses for analytics subgraph 
 export const FACTORY_ADDRESS = '0x10253594A832f967994b44f33411940533302ACb'
-export const NONFUNGIBLE_POSITION_MANAGER_ADDRESS = '0x69D57B9D705eaD73a5d2f2476C30c55bD755cc2F'
+export const NONFUNGIBLE_POSITION_MANAGER_ADDRESS = '0xD637cbc214Bc3dD354aBb309f4fE717ffdD0B28C'
 
-export const REFERENCE_TOKEN = '0x3bC8f037691Ce1d28c0bB224BD33563b49F99dE8' // Wrapped Native Token
-export const STABLE_TOKEN_POOL = '0xBeD0EAd547720BC2d3dBB9FA43Ef5010d165560c' // USDC/WETH pool
+export const REFERENCE_TOKEN = '0xcc788DC0486CD2BaacFf287eea1902cc09FbA570' // Wrapped Native Token
+export const STABLE_TOKEN_POOL = '0xfB971C3200c3DB4Ef23F991D2d1F0D329A1Bf036' // USDC/WETH pool
 
 // Minimum reference token locked in pool for pricing calculations
-export const MINIMUM_NATIVE_LOCKED = BigDecimal.fromString('0')
+export const MINIMUM_NATIVE_LOCKED = BigDecimal.fromString('10')
 
 // Token lists for tracking volume and liquidity
 export const WHITELIST_TOKENS: string[] = [
-  '0x3bC8f037691Ce1d28c0bB224BD33563b49F99dE8',
-  '0x0fF5393387ad2f9f691FD6Fd28e07E3969e27e63', 
-  '0x5aefba317baba46eaf98fd6f381d07673bca6467',
-  '0x49A390A3DFD2D01389F799965F3AF5961F87D228',
-  '0xd98F5A16DE519866980f2e3389967Ea01Dc3822d',
-  '0x2d16C0dc617dCF743f55A3bB42fDE4A0E640A5b5',
-  '0x2746B1a7B780f128F0db99d9fc60C2DB3E4a7bd5' 
+  '0xcc788DC0486CD2BaacFf287eea1902cc09FbA570', // WKITE
+  '0x7aB6f3ed87C42eF0aDb67Ed95090f8bF5240149e', // USDC
+
 ]
 
 // Stable coins for USD pricing (tokens with stable $1 value)
 export const STABLE_COINS: string[] = [
-  '0x0fF5393387ad2f9f691FD6Fd28e07E3969e27e63',
-  '0xd98F5A16DE519866980f2e3389967Ea01Dc3822d',
-  '0x2d16C0dc617dCF743f55A3bB42fDE4A0E640A5b5' 
+  '0x7aB6f3ed87C42eF0aDb67Ed95090f8bF5240149e', // USDC
+
 ]
 
 // Addresses for farming subgraph
 // Farming contracts
-export const ETERNAL_FARMING_ADDRESS = '0x50FCbF85d23aF7C91f94842FeCd83d16665d27bA'  
+export const ETERNAL_FARMING_ADDRESS = '0x69D57B9D705eaD73a5d2f2476C30c55bD755cc2F'  
 
 // Addresses for limit order subgraph
 // Limit order contract
-export const LIMIT_ORDER_ADDRESS = '0x7a92fCFB8ddDa89ad75ce1D3677CC3e254486493'
+export const LIMIT_ORDER_ADDRESS = '0x28DeD2af752655Df5Ee92450DC259F92a5ABe449'
 
-export const ALM_VAULT_FACTORY_ADDRESS = '0x7064C7Bb85979f008212877c4CE41285ddf5374C'
+export const ALM_VAULT_FACTORY_ADDRESS = '0x5AeFBA317BAba46EAF98Fd6f381d07673bcA6467'
