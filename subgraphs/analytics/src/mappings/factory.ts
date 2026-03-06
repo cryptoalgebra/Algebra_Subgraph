@@ -1,5 +1,5 @@
 /* eslint-disable prefer-const */
-import { FACTORY_ADDRESS, WHITELIST_TOKENS} from '../utils/chain'
+import { FACTORY_ADDRESS, WHITELIST_TOKENS, BLACKLISTED_POOLS} from '../utils/chain'
 import { ZERO_BI, ONE_BI, ZERO_BD, ZERO_ADDRESS} from '../utils/constants'
 import { BurnFeeCache, Factory, SwapFeeCache, PositionTransferCache } from '../types/schema'
 import { Pool as PoolEvent } from '../types/Factory/Factory'
@@ -39,6 +39,12 @@ function createPool(
   timestamp: BigInt, 
   blockNumber: BigInt
 ): void {
+  // skip blacklisted pools
+  if (BLACKLISTED_POOLS.includes(poolAddress)) {
+    log.info('Skipping blacklisted pool: {}', [poolAddress])
+    return
+  }
+
   // load factory
   let factory = Factory.load(FACTORY_ADDRESS)
   if (factory == null) {

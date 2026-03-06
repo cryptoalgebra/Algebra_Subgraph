@@ -35,3 +35,6 @@ export const ETERNAL_FARMING_ADDRESS = '0x49BE8AA6c684b15e0C5450e8Fa0b16Bec14355
 export const LIMIT_ORDER_ADDRESS = '0x34D6F4f7D27B94C157aE3DB2D17C1beCB1bBF89C'
 
 export const ALM_VAULT_FACTORY_ADDRESS = '0x1B3B62B519a60E8927d4FfbB54681871e1Bb6F11'
+
+// Blacklisted pools that should be excluded from indexing
+export const BLACKLISTED_POOLS: string[] = []

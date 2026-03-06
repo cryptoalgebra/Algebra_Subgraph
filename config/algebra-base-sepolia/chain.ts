@@ -35,3 +35,6 @@ export const LIMIT_ORDER_ADDRESS = '0xdA9c1AF6498583Ae548CAd31c47eFde061569789'
 export const ALM_VAULT_FACTORY_ADDRESS = '0xAb87BB2cd5a370b685313daf699FA168EE74099D'
 
 export const ERC20_FACTORY_ADDRESS = '0xAb87BB2cd5a370b685313daf699FA168EE74099D'
+
+// Blacklisted pools that should be excluded from indexing
+export const BLACKLISTED_POOLS: string[] = []
