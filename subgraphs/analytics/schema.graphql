@@ -166,6 +166,8 @@ type Pool @entity(immutable: false) {
   liquidityProviderCount: BigInt! # used to detect new exchanges
   # hourly snapshots of pool data
   poolHourData: [PoolHourData!]! @derivedFrom(field: "pool")
+  # minute snapshots of pool data
+  poolMinuteData: [PoolMinuteData!]! @derivedFrom(field: "pool")
   # daily snapshots of pool data
   poolDayData: [PoolDayData!]! @derivedFrom(field: "pool")
   # derived fields
@@ -639,6 +641,48 @@ type PoolHourData @entity(immutable: false) {
   # fees in USD
   feesUSD: BigDecimal!
   # number of transactions during period
+  untrackedVolumeUSD: BigDecimal!
+  # number of transactions during period
+  txCount: BigInt!
+  # opening price of token0
+  open: BigDecimal!
+  # high price of token0
+  high: BigDecimal!
+  # low price of token0
+  low: BigDecimal!
+  # close price of token0
+  close: BigDecimal!
+}
+
+# minute stats tracker for pool
+type PoolMinuteData @entity(immutable: false) {
+  # format: <pool address>-<timestamp>
+  id: ID!
+  # unix timestamp for start of minute
+  periodStartUnix: Int!
+  # pointer to pool
+  pool: Pool!
+  # in range liquidity at end of period
+  liquidity: BigInt!
+  # current price tracker at end of period
+  sqrtPrice: BigInt!
+  # price of token0 - derived from sqrtPrice
+  token0Price: BigDecimal!
+  # price of token1 - derived from sqrtPrice
+  token1Price: BigDecimal!
+  # current tick at end of period
+  tick: BigInt
+  # tvl derived in USD at end of period
+  tvlUSD: BigDecimal!
+  # volume in token0
+  volumeToken0: BigDecimal!
+  # volume in token1
+  volumeToken1: BigDecimal!
+  # volume in USD
+  volumeUSD: BigDecimal!
+  # fees in USD
+  feesUSD: BigDecimal!
+  # untracked volume in USD
   untrackedVolumeUSD: BigDecimal!
   # number of transactions during period
   txCount: BigInt!
