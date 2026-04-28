@@ -35,4 +35,4 @@ export const ETERNAL_FARMING_ADDRESS = '0x211BD8917d433B7cC1F4497AbA906554Ab6ee4
 
 // Addresses for limit order subgraph
 // Limit order contract
-export const LIMIT_ORDER_ADDRESS = '0x822ddb9EECc3794790B8316585FebA5b8F7C7507' // fake
+export const LIMIT_ORDER_ADDRESS = '0x1afd3e533278f627891c3D21997514e82B327fEC'
