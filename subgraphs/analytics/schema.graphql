@@ -91,7 +91,9 @@ type Pool @entity(immutable: false) {
   # token1
   token1: Token!
   deployer: Bytes!
-  plugin: Bytes!
+  # plugin of pool
+  plugin: Plugin
+  # plugin config
   pluginConfig: Int!
   # fee amount
   fee: BigInt!

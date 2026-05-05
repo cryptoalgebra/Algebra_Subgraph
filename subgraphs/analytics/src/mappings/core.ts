@@ -47,6 +47,11 @@ import { AlgebraCommunityVault as AlgebraCommunityVaultContract } from '../types
 
 const COMMUNITY_FEE_DENOMINATOR = BigDecimal.fromString('1000')
 
+function loadPoolPlugin(pool: Pool): Plugin | null {
+  let pluginId = pool.plugin
+  return pluginId === null ? null : Plugin.load(pluginId)
+}
+
 export function handleInitialize(event: Initialize): void {
   let pool = Pool.load(event.address.toHexString())!
 
@@ -209,7 +214,7 @@ export function handleBurn(event: BurnEvent): void {
   let bundle = Bundle.load('1')!
   let poolAddress = event.address.toHexString()
   let pool = Pool.load(poolAddress)!
-  let plugin = Plugin.load(pool.plugin.toHexString())
+  let plugin = loadPoolPlugin(pool)
   let factory = Factory.load(FACTORY_ADDRESS)!
 
   let token0 = Token.load(pool.token0)!
@@ -469,7 +474,7 @@ export function handleSwap(event: SwapEvent): void {
   pool.token0Price = prices[0]
   pool.token1Price = prices[1]
 
-  let plugin = Plugin.load(pool.plugin.toHexString())
+  let plugin = loadPoolPlugin(pool)
 
   if (plugin != null) {
     if(amount0.lt(ZERO_BD)) {
@@ -715,12 +720,17 @@ export function handleChangeFee(event: ChangeFee): void {
 
 export function handlePlugin(event: PluginEvent): void {
   let pool = Pool.load(event.address.toHexString())!
-  pool.plugin = event.params.newPluginAddress
-  pool.save()
 
-  let plugin = Plugin.load(event.params.newPluginAddress.toHexString())
+  let pluginAddress = event.params.newPluginAddress.toHexString()
+  if (pluginAddress == ZERO_ADDRESS) {
+    pool.plugin = null
+    pool.save()
+    return
+  }
+
+  let plugin = Plugin.load(pluginAddress)
   if (plugin === null) {
-    plugin = new Plugin(event.params.newPluginAddress.toHexString())
+    plugin = new Plugin(pluginAddress)
     plugin.pool = event.address.toHexString()
     plugin.collectedFeesToken0 = ZERO_BD
     plugin.collectedFeesToken1 = ZERO_BD
@@ -728,6 +738,8 @@ export function handlePlugin(event: PluginEvent): void {
   }
 
   plugin.save()
+  pool.plugin = plugin.id
+  pool.save()
 }
 
 export function handlePluginConfig(event: PluginConfig): void {
