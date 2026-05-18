@@ -150,7 +150,6 @@ function createPool(
   }
 
   pool.deployer = Address.fromString(deployer)
-  pool.plugin = Address.fromString(ZERO_ADDRESS)
   pool.token0 = token0.id
   pool.token1 = token1.id
   pool.fee = BigInt.fromI32(100)

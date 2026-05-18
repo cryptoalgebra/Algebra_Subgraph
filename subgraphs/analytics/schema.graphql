@@ -92,8 +92,8 @@ type Pool @entity(immutable: false) {
   token1: Token!
   # plugin deploer, zero address for base pools
   deployer: Bytes!
-  # plugin address of pool
-  plugin: Bytes!
+  # plugin of pool
+  plugin: Plugin
   # plugin config
   pluginConfig: Int!
   # fee amount
