@@ -2,14 +2,14 @@
 import { BigDecimal} from '@graphprotocol/graph-ts'
 
 // Addresses for analytics subgraph 
-export const FACTORY_ADDRESS = '0x10253594A832f967994b44f33411940533302ACb'
-export const NONFUNGIBLE_POSITION_MANAGER_ADDRESS = '0xD637cbc214Bc3dD354aBb309f4fE717ffdD0B28C'
+export const FACTORY_ADDRESS = '0x3f912b39A89708Db8E10205421d3726e2DF4984D'
+export const NONFUNGIBLE_POSITION_MANAGER_ADDRESS = '0x2650e9EFe6D841622aA627cb9e493a8B8b2f9D7A'
 
 export const REFERENCE_TOKEN = '0x07e17E17e17E17e17e17e17E17E17E17E17e17EA' // RLS
-export const STABLE_TOKEN_POOL = '0x9aF549F76Db545b77FEB12E477fe9313a6D28dDe' // USDr/RLS pool
+export const STABLE_TOKEN_POOL = '0x07BEBED47383E1BF3eC4f75EaB2c65a0efF00Fa1' // USDr/RLS pool
 
 // Minimum reference token locked in pool for pricing calculations
-export const MINIMUM_NATIVE_LOCKED = BigDecimal.fromString('2500') // equals $20, as RLS price is 0.008 at the time.
+export const MINIMUM_NATIVE_LOCKED = BigDecimal.fromString('2500') // equals $9, as RLS price is 0.0036 at the time.
 
 // Token lists for tracking volume and liquidity
 export const WHITELIST_TOKENS: string[] = [
@@ -24,7 +24,7 @@ export const STABLE_COINS: string[] = [
 
 // Addresses for farming subgraph
 // Farming contracts
-export const ETERNAL_FARMING_ADDRESS = '0x69D57B9D705eaD73a5d2f2476C30c55bD755cc2F'  
+export const ETERNAL_FARMING_ADDRESS = '0x8FFf6402215870Cbb8CB216C7A587Cb17D524B81'  
 
 // Addresses for limit order subgraph
 // Limit order contract
