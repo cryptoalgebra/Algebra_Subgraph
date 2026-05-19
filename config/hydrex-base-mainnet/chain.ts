@@ -13,22 +13,24 @@ export const MINIMUM_NATIVE_LOCKED = BigDecimal.fromString('0.01')
 
 // Token lists for tracking volume and liquidity
 export const WHITELIST_TOKENS: string[] = [
-  "0x4200000000000000000000000000000000000006", // WETH
-  "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913", // USDC
-  "0xcbb7c0000ab88b473b1f5afd9ef808440eed33bf", // cbBTC
-  "0x00000e7efa313f4e11bfff432471ed9423ac6b30", // HYDX
-  "0x3595ca37596D5895B70EFAB592ac315D5B9809B2", // AZUSD
-  "0xe5020a6d073a794b6e7f05678707de47986fb0b6", // frxUSD
-  "0x55380fe7a1910dff29a47b622057ab4139da42c5"  // fxUSD
+  '0x4200000000000000000000000000000000000006', // WETH
+  '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913', // USDC
+  '0xcbb7c0000ab88b473b1f5afd9ef808440eed33bf', // cbBTC
+  '0x00000e7efa313f4e11bfff432471ed9423ac6b30', // HYDX
+  '0x3595ca37596D5895B70EFAB592ac315D5B9809B2', // AZUSD
+  '0xe5020a6d073a794b6e7f05678707de47986fb0b6', // frxUSD
+  '0x55380fe7a1910dff29a47b622057ab4139da42c5', // fxUSD
+  '0xfa68ac5ca298ab4b96bce6542ec74bb9516b0397'  // mUSD
 
 ]
 
 // Stable coins for USD pricing (tokens with stable $1 value)
 export const STABLE_COINS: string[] = [
   '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913', // USDC
-  "0x3595ca37596D5895B70EFAB592ac315D5B9809B2", // AZUSD
-  "0xe5020a6d073a794b6e7f05678707de47986fb0b6", // frxUSD
-  "0x55380fe7a1910dff29a47b622057ab4139da42c5"  // fxUSD
+  '0x3595ca37596D5895B70EFAB592ac315D5B9809B2', // AZUSD
+  '0xe5020a6d073a794b6e7f05678707de47986fb0b6', // frxUSD
+  '0x55380fe7a1910dff29a47b622057ab4139da42c5', // fxUSD
+  '0xfa68ac5ca298ab4b96bce6542ec74bb9516b0397'  // mUSD
 ]
 
 // Addresses for farming subgraph

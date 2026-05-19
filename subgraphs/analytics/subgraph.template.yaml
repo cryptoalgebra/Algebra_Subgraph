@@ -5,8 +5,8 @@ schema:
 features:
   - grafting 
 graft:
-  base: QmZx2eFSqv1Wv5mYTrE3orff2JXwj9YwtWcLMH47yEJ4kv 
-  block: 41576700 
+  base: QmXyC1DWz2Up2WMQzrtjh4TcAqnEHvXtm65j3UnGGKrdJ8 
+  block: 45356180
 dataSources:
   - kind: ethereum/contract
     name: Factory
