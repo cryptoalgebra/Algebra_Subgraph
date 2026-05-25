@@ -14,7 +14,9 @@ export const MINIMUM_NATIVE_LOCKED = BigDecimal.fromString('0')
 // Token lists for tracking volume and liquidity
 export const WHITELIST_TOKENS: string[] = [
   '0x4200000000000000000000000000000000000006', // WETH
-  '0xABAC6F23FDF1313FC2E9C9244F666157CCD32990'  // USDC
+  '0xABAC6F23FDF1313FC2E9C9244F666157CCD32990', // USDC
+  '0x6045450424c527bee1a2638d822d11bbca4f2a46', // AVUSDC
+  '0xf115d73823b3268aaaa58691a3778c08dee77a91'  // AVETH
 ]
 
 // Stable coins for USD pricing (tokens with stable $1 value)
