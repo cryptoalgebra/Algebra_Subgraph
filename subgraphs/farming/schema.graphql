@@ -34,3 +34,24 @@ type PositionTransferCache @entity(immutable: false) {
   # new owner after transfer
   owner: Bytes!
 }
+
+type FarmingBuffer @entity(immutable: false) {
+  # pool address, or the zero address for the global default buffer
+  id: ID!
+  pool: Bytes!
+  buffer: BigInt!
+}
+
+type RewardsForfeitedEvent @entity(immutable: false) {
+  # transaction hash + tokenId + incentiveId. Lets the FarmEnded handler (which
+  # fires right after, in the exitFarming forfeiture path) detect that this
+  # farm's accrued reward for this tx was diverted to the protocol bucket
+  # instead of paid to the owner, so it doesn't double-count or misattribute it.
+  id: ID!
+  tokenId: BigInt!
+  incentiveId: Bytes!
+  owner: Bytes!
+  reward: BigInt!
+  bonusReward: BigInt!
+  timestamp: BigInt!
+}

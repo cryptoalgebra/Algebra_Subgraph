@@ -54,11 +54,13 @@ dataSources:
       - EternalFarming
       - Incentive
       - Deposit
+      - FarmingBuffer
+      - RewardsForfeitedEvent
     abis:
       - name: EternalFarming
         file: ../../abis/EternalFarming.json
       - name: ERC20SymbolBytes
-        file: ../../abis/ERC20SymbolBytes.json  
+        file: ../../abis/ERC20SymbolBytes.json
       - name: ERC20NameBytes
         file: ../../abis/ERC20NameBytes.json
       - name: ERC20
@@ -82,3 +84,9 @@ dataSources:
         handler: handleCollect
       - event: RewardAmountsDecreased(uint256,uint256,bytes32)
         handler: handleRewardDecreased
+      - event: PoolFarmingBuffer(indexed address,uint64)
+        handler: handleFarmingBuffer
+      - event: RewardsForfeited(indexed uint256,indexed bytes32,indexed address,uint256,uint256)
+        handler: handleForfeited
+      - event: ForfeitedRewardsWithdrawn(indexed address,indexed address,uint256)
+        handler: handleForfeitedWithdrawn
