@@ -21,24 +21,37 @@ export function handlePoolCreated(event: PoolEvent): void {
 }
 
 export function handleCustomPoolCreated(event: CustomPool): void {
-  let pool = event.params.pool.toHexString()
-  let token0 = event.params.token0.toHexString()
-  let token1 = event.params.token1.toHexString()
+  let poolAddress = event.params.pool.toHexString()
   let deployer = event.params.deployer.toHexString()
-  let timestamp = event.block.timestamp
-  let blockNumber = event.block.number
 
-  createPool(pool, token0, token1, deployer, timestamp, blockNumber)
+  // `Pool` always fires before `CustomPool` in the same tx, so the entity
+  // should already exist here - patch the deployer onto it instead of
+  // creating a second entity.
+  let pool = Pool.load(poolAddress)
+  if (pool == null) {
+    let token0 = event.params.token0.toHexString()
+    let token1 = event.params.token1.toHexString()
+    createPool(poolAddress, token0, token1, deployer, event.block.timestamp, event.block.number)
+    return
+  }
+
+  pool.deployer = Address.fromString(deployer)
+  pool.save()
 }
 
 function createPool(
-  poolAddress: string, 
-  token0Address: string, 
-  token1Address: string, 
-  deployer: string, 
-  timestamp: BigInt, 
+  poolAddress: string,
+  token0Address: string,
+  token1Address: string,
+  deployer: string,
+  timestamp: BigInt,
   blockNumber: BigInt
 ): void {
+  // guard against handling the same pool twice (e.g. Pool + CustomPool both firing for it)
+  if (Pool.load(poolAddress) != null) {
+    return
+  }
+
   // load factory
   let factory = Factory.load(FACTORY_ADDRESS)
   if (factory == null) {
