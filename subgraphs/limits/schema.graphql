@@ -4,6 +4,19 @@ type Epoch @entity(immutable: false){
   filled: Boolean!
   totalLiquidity: BigInt!
   fillTimestamp: BigInt!
+  actions: [EpochAction!]! @derivedFrom(field: "epoch")
+}
+
+type EpochAction @entity(immutable: true){
+  id: ID!
+  epoch: Epoch!
+  type: String! # Fill
+  pool: Bytes!
+  tickLower: BigInt!
+  zeroToOne: Boolean!
+  totalLiquidity: BigInt! # Epoch.totalLiquidity snapshot at the time of this action
+  timestamp: BigInt!
+  transactionHash: Bytes!
 }
 
 type LimitOrder @entity(immutable: false){
@@ -20,4 +33,20 @@ type LimitOrder @entity(immutable: false){
   tickLower: BigInt!
   tickUpper: BigInt!
   zeroToOne: Boolean!
+  actions: [LimitOrderAction!]! @derivedFrom(field: "limitOrder")
+}
+
+type LimitOrderAction @entity(immutable: true){
+  id: ID!
+  limitOrder: LimitOrder!
+  type: String! # Place | Kill | Withdraw
+  owner: Bytes!
+  pool: Bytes!
+  epoch: Epoch!
+  liquidity: BigInt! # liquidity delta involved in this action
+  initialLiquidity: BigInt! # LimitOrder.initialLiquidity snapshot right after this action
+  killedLiquidity: BigInt! # LimitOrder.killedLiquidity snapshot right after this action
+  remainingLiquidity: BigInt! # LimitOrder.liquidity snapshot right after this action
+  timestamp: BigInt!
+  transactionHash: Bytes!
 }
