@@ -1,5 +1,5 @@
 /* eslint-disable prefer-const */
-import { Bundle, Pool, Token } from '../types/schema'
+import { Bundle, Pool, Token, WhitelistToken } from '../types/schema'
 import { BigDecimal, BigInt } from '@graphprotocol/graph-ts'
 import { exponentToBigDecimal, safeDiv } from '../utils/index'
 import { ZERO_BD, ONE_BD, ZERO_BI, Q192 } from './constants'
@@ -10,6 +10,15 @@ import {
   WHITELIST_TOKENS,
   STABLE_COINS
 } from './chain'
+
+// On-chain registry status wins; falls back to the static init list from chain.ts
+export function isWhitelisted(tokenId: string): boolean {
+  let entry = WhitelistToken.load(tokenId)
+  if (entry !== null) {
+    return entry.isActive
+  }
+  return WHITELIST_TOKENS.includes(tokenId)
+}
 
 export function priceToTokenPrices(price: BigInt, token0: Token, token1: Token): BigDecimal[] {
   let num = price.times(price).toBigDecimal()
@@ -100,18 +109,21 @@ export function getTrackedAmountUSD(
   let price0USD = token0.derivedMatic.times(bundle.maticPriceUSD)
   let price1USD = token1.derivedMatic.times(bundle.maticPriceUSD)
 
+  let whitelisted0 = isWhitelisted(token0.id)
+  let whitelisted1 = isWhitelisted(token1.id)
+
   // both are whitelist tokens, return sum of both amounts
-  if (WHITELIST_TOKENS.includes(token0.id) && WHITELIST_TOKENS.includes(token1.id)) {
+  if (whitelisted0 && whitelisted1) {
     return tokenAmount0.times(price0USD).plus(tokenAmount1.times(price1USD))
   }
 
   // take double value of the whitelisted token amount
-  if (WHITELIST_TOKENS.includes(token0.id) && !WHITELIST_TOKENS.includes(token1.id)) {
+  if (whitelisted0 && !whitelisted1) {
     return tokenAmount0.times(price0USD).times(BigDecimal.fromString('2'))
   }
 
   // take double value of the whitelisted token amount
-  if (!WHITELIST_TOKENS.includes(token0.id) && WHITELIST_TOKENS.includes(token1.id)) {
+  if (!whitelisted0 && whitelisted1) {
     return tokenAmount1.times(price1USD).times(BigDecimal.fromString('2'))
   }
 

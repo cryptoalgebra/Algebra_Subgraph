@@ -126,6 +126,7 @@ function extractConfigFromChainFile(chainFilePath: string): {
   nonfungiblePositionManagerAddress: string;
   eternalFarmingAddress?: string;
   limitOrderAddress?: string;
+  tokenWhitelistRegistryAddress?: string;
 } {
   try {
     const chainContent = fs.readFileSync(chainFilePath, 'utf8');
@@ -146,6 +147,10 @@ function extractConfigFromChainFile(chainFilePath: string): {
     const limitOrderMatch = chainContent.match(/export const LIMIT_ORDER_ADDRESS = '([^']+)'/);
     const limitOrderAddress = limitOrderMatch ? limitOrderMatch[1] : undefined;
     
+    // Extract token whitelist registry address (optional)
+    const tokenWhitelistRegistryMatch = chainContent.match(/^export const TOKEN_WHITELIST_REGISTRY_ADDRESS = '([^']+)'/m);
+    const tokenWhitelistRegistryAddress = tokenWhitelistRegistryMatch ? tokenWhitelistRegistryMatch[1] : undefined;
+
     if (!factoryAddress || !nonfungiblePositionManagerAddress) {
       throw new Error('Could not extract required addresses from chain.ts');
     }
@@ -154,7 +159,8 @@ function extractConfigFromChainFile(chainFilePath: string): {
       factoryAddress, 
       nonfungiblePositionManagerAddress,
       eternalFarmingAddress,
-      limitOrderAddress
+      limitOrderAddress,
+      tokenWhitelistRegistryAddress
     };
   } catch (error) {
     throw new Error(`Failed to parse chain.ts: ${(error as Error).message}`);
@@ -221,6 +227,16 @@ function processSubgraphTemplate(
       subgraphContent = subgraphContent.replace(/{{LIMIT_ORDER_ADDRESS}}/g, addresses.limitOrderAddress);
     }
     
+    // Token whitelist registry data source is optional: keep the section if the address is set, drop it otherwise
+    const registrySection = /^# {{#TOKEN_WHITELIST_REGISTRY}}.*\r?\n([\s\S]*?)^# {{\/TOKEN_WHITELIST_REGISTRY}}.*\r?\n/gm;
+    subgraphContent = subgraphContent.replace(
+      registrySection,
+      (_match: string, body: string) => addresses.tokenWhitelistRegistryAddress ? body : ''
+    );
+    if (addresses.tokenWhitelistRegistryAddress) {
+      subgraphContent = subgraphContent.replace(/{{TOKEN_WHITELIST_REGISTRY_ADDRESS}}/g, addresses.tokenWhitelistRegistryAddress);
+    }
+
     fs.writeFileSync(outputPath, subgraphContent);
     console.log(`✅ Generated ${subgraphName}/subgraph.yaml from template`);
     if (needsChainFile) {

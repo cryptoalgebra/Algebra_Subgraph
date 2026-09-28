@@ -1,5 +1,5 @@
 /* eslint-disable prefer-const */
-import { FACTORY_ADDRESS, WHITELIST_TOKENS} from '../utils/chain'
+import { FACTORY_ADDRESS } from '../utils/chain'
 import { ZERO_BI, ONE_BI, ZERO_BD, ZERO_ADDRESS} from '../utils/constants'
 import { Factory, PositionTransferCache } from '../types/schema'
 import { Pool as PoolEvent } from '../types/Factory/Factory'
@@ -7,6 +7,7 @@ import { DefaultCommunityFee, CustomPool } from '../types/Factory/Factory'
 import { Pool, Token, Bundle } from '../types/schema'
 import { Pool as PoolTemplate} from '../types/templates'
 import { fetchTokenSymbol, fetchTokenName, fetchTokenTotalSupply, fetchTokenDecimals } from '../utils/token'
+import { isWhitelisted } from '../utils/pricing'
 import { log, BigInt, Address } from '@graphprotocol/graph-ts'
 
 export function handlePoolCreated(event: PoolEvent): void {
@@ -128,12 +129,12 @@ function createPool(
   }
 
   // update white listed pools
-  if (WHITELIST_TOKENS.includes(token0.id)) {
+  if (isWhitelisted(token0.id)) {
     let newPools = token1.whitelistPools
     newPools.push(pool.id)
     token1.whitelistPools = newPools
   }
-  if (WHITELIST_TOKENS.includes(token1.id)) {
+  if (isWhitelisted(token1.id)) {
     let newPools = token0.whitelistPools
     newPools.push(pool.id)
     token0.whitelistPools = newPools
