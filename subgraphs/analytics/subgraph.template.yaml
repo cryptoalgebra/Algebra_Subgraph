@@ -70,6 +70,32 @@ dataSources:
           handler: handleIncreaseLiquidity
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer
+# {{#TOKEN_WHITELIST_REGISTRY}} - kept only if TOKEN_WHITELIST_REGISTRY_ADDRESS is set in chain.ts
+  - kind: ethereum/contract
+    name: TokenWhitelistRegistry
+    network: {{NETWORK}}
+    source:
+      address: '{{TOKEN_WHITELIST_REGISTRY_ADDRESS}}'
+      abi: TokenWhitelistRegistry
+      startBlock: {{START_BLOCK}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      file: ./src/mappings/whitelist.ts
+      entities:
+        - WhitelistToken
+        - Pool
+        - Token
+      abis:
+        - name: TokenWhitelistRegistry
+          file: ../../abis/TokenWhitelistRegistry.json
+      eventHandlers:
+        - event: TokenAdded(indexed address)
+          handler: handleTokenAdded
+        - event: TokenRemoved(indexed address)
+          handler: handleTokenRemoved
+# {{/TOKEN_WHITELIST_REGISTRY}}
 templates:
   - kind: ethereum/contract
     name: Pool

@@ -17,6 +17,11 @@ export const WHITELIST_TOKENS: string[] = [
   '0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168'  // USDG
 ]
 
+// Optional TokenWhitelistRegistry (contracts/TokenWhitelistRegistry.sol): adds/revokes
+// whitelist tokens on top of WHITELIST_TOKENS without redeploying the subgraph.
+// Uncomment once deployed; without it the registry data source is left out.
+// export const TOKEN_WHITELIST_REGISTRY_ADDRESS = '0x...'
+
 // Stable coins for USD pricing (tokens with stable $1 value)
 export const STABLE_COINS: string[] = [
   '0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168'  // USDG

@@ -77,6 +77,20 @@ type Token @entity(immutable: false) {
   whitelistPools: [Pool!]!
   # derived fields
   tokenDayData: [TokenDayData!]! @derivedFrom(field: "token")
+  # all pools with this token, used to rebuild whitelistPools when its whitelist status changes
+  poolsAsToken0: [Pool!]! @derivedFrom(field: "token0")
+  poolsAsToken1: [Pool!]! @derivedFrom(field: "token1")
+}
+
+# on-chain override of the WHITELIST_TOKENS init list from chain.ts,
+# driven by TokenWhitelistRegistry events; takes precedence when present
+type WhitelistToken @entity(immutable: false) {
+  # token address
+  id: ID!
+  isActive: Boolean!
+  updatedAtBlockNumber: BigInt!
+  updatedAtTimestamp: BigInt!
+  updatedAtTransaction: Bytes!
 }
 
 type Pool @entity(immutable: false) {
