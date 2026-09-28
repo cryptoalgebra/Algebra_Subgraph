@@ -27,7 +27,7 @@ export const WHITELIST_TOKENS: string[] = [
 // Optional TokenWhitelistRegistry: adds/revokes whitelist tokens on top of
 // WHITELIST_TOKENS without redeploying the subgraph.
 // Uncomment once deployed; without it the registry data source is left out.
-// export const TOKEN_WHITELIST_REGISTRY_ADDRESS = '0x...'
+export const TOKEN_WHITELIST_REGISTRY_ADDRESS = '0xD335a075a0de32d239DF0228b78F3ACBB320b97d'
 
 // Stable coins for USD pricing (tokens with stable $1 value)
 export const STABLE_COINS: string[] = [
