@@ -2,7 +2,6 @@
 import {
   Bundle, 
   Burn,
-  BurnFeeCache, 
   Factory,
   Mint, 
   Pool,
@@ -29,11 +28,12 @@ import {
   CommunityVault,
   TickSpacing,
   Plugin as PluginEvent,
-  BurnFee,
-  SwapFee
+  SwapFee,
+  FeeMode,
+  CommunityFeeTransfer
 } from '../types/templates/Pool/Pool'
 import { convertTokenToDecimal, loadTransaction, safeDiv } from '../utils'
-import { ONE_BI, ZERO_BD, ZERO_BI, FEE_DENOMINATOR, ZERO_ADDRESS} from '../utils/constants'
+import { ONE_BI, ZERO_BD, ZERO_BI, FEE_DENOMINATOR, ZERO_ADDRESS, DYNAMIC_FEE_FLAG} from '../utils/constants'
 import { FACTORY_ADDRESS } from '../utils/chain'
 import { findEthPerToken, getEthPriceInUSD, getTrackedAmountUSD, priceToTokenPrices } from '../utils/pricing'
 import {
@@ -218,8 +218,6 @@ export function handleBurn(event: BurnEvent): void {
   let bundle = Bundle.load('1')!
   let poolAddress = event.address.toHexString()
   let pool = Pool.load(poolAddress)!
-  let burnFeeCache = BurnFeeCache.load('1')!
-  let plugin = loadPoolPlugin(pool)
   let factory = Factory.load(FACTORY_ADDRESS)!
 
   let token0 = Token.load(pool.token0)!
@@ -231,15 +229,6 @@ export function handleBurn(event: BurnEvent): void {
   let amountUSD = amount0
     .times(token0.derivedMatic.times(bundle.maticPriceUSD))
     .plus(amount1.times(token1.derivedMatic.times(bundle.maticPriceUSD)))
-
-  if (plugin != null) {
-    let pluginFee = burnFeeCache.pluginFee.toBigDecimal()
-    plugin.collectedFeesToken0 += amount0.times(pluginFee).div(FEE_DENOMINATOR)
-    plugin.collectedFeesToken1 += amount1.times(pluginFee).div(FEE_DENOMINATOR)
-    plugin.collectedFeesUSD += amountUSD.times(pluginFee).div(FEE_DENOMINATOR)
-
-    plugin.save()
-  }
 
   // reset tvl aggregates until new amounts calculated
   factory.totalValueLockedMatic = factory.totalValueLockedMatic.minus(pool.totalValueLockedMatic)
@@ -354,45 +343,48 @@ export function handleSwap(event: SwapEvent): void {
   let amount0 = convertTokenToDecimal(event.params.amount0, token0.decimals)
   let amount1 = convertTokenToDecimal(event.params.amount1, token1.decimals)
 
-  let swapFee = pool.fee
-  if(swapFeeCache.overrideFee > ZERO_BI){
-    swapFee = swapFeeCache.overrideFee
-    pool.overrideFee = swapFeeCache.overrideFee
-  }  
+  // SwapFee is emitted right before Swap, its fee is the applied one (0 is a valid dynamic fee)
+  let swapFee = swapFeeCache.fee
+  pool.overrideFee = swapFee
 
-  let pluginFee = swapFeeCache.pluginFee
+  // the input token is the one with the positive amount
+  let zeroToOne = amount0.gt(ZERO_BD) || amount1.lt(ZERO_BD)
+  let tokenIn = zeroToOne ? token0 : token1
+  let tokenOut = zeroToOne ? token1 : token0
+  let pluginAmountIn = convertTokenToDecimal(swapFeeCache.pluginAmountIn, tokenIn.decimals)
+  let pluginAmountOut = convertTokenToDecimal(swapFeeCache.pluginAmountOut, tokenOut.decimals)
 
- // need absolute amounts for volume
- let amount0Abs = amount0
- let amount0Net = amount0
- let communityFeeToken0 = ZERO_BD
- let communityFeeToken1 = ZERO_BD
- if (amount0.lt(ZERO_BD)) {
-   amount0Abs = amount0.times(BigDecimal.fromString('-1'))
- }
- else { 
-   // amount0 is the input token amount (includes fee)
-   // Community fee = amount * swapFee * communityFee / (FEE_DENOMINATOR * 1000)
-   communityFeeToken0 = amount0.times(swapFee.toBigDecimal()).times(pool.communityFee.toBigDecimal()).div(FEE_DENOMINATOR).div(COMMUNITY_FEE_DENOMINATOR)
-   let pluginFeeAmount = amount0.times(pluginFee.toBigDecimal()).div(FEE_DENOMINATOR)
-   // Only subtract fees that actually leave the pool (community fee + plugin fee)
-   // LP fees stay in the pool as part of TVL
-   amount0Net = amount0.minus(communityFeeToken0).minus(pluginFeeAmount)
-   amount0Abs = amount0
- } 
+  // Swap amounts are the user amounts: the input includes pluginAmountIn, the output excludes pluginAmountOut.
+  // The plugin amounts are transferred to the plugin, only the curve amounts go through the pool liquidity
+  let curveIn = (zeroToOne ? amount0 : amount1).minus(pluginAmountIn)
+  let curveOut = (zeroToOne ? amount1 : amount0).neg().plus(pluginAmountOut)
 
- let amount1Abs = amount1
- let amount1Net = amount1
- if (amount1.lt(ZERO_BD)) {
-   amount1Abs = amount1.times(BigDecimal.fromString('-1'))
- }
- else{
-   // amount1 is the input token amount (includes fee) 
-   communityFeeToken1 = amount1.times(swapFee.toBigDecimal()).times(pool.communityFee.toBigDecimal()).div(FEE_DENOMINATOR).div(COMMUNITY_FEE_DENOMINATOR)
-   let pluginFeeAmount = amount1.times(pluginFee.toBigDecimal()).div(FEE_DENOMINATOR)
-   amount1Abs = amount1
-   amount1Net = amount1.minus(communityFeeToken1).minus(pluginFeeAmount)
- }
+  // need absolute amounts for volume
+  let amount0Abs = zeroToOne ? curveIn : curveOut
+  let amount1Abs = zeroToOne ? curveOut : curveIn
+
+  // the fee token depends on the pool fee mode: 0 - input token, 1 - token0, 2 - token1
+  let feeInToken0 = pool.feeMode == 0 ? zeroToOne : pool.feeMode == 1
+  let feeOnInput = feeInToken0 == zeroToOne
+  // on the input the fee is a share of the curve input,
+  // on the output it is deducted from the gross output and curveOut is net of it
+  let feeRatio = feeOnInput
+    ? swapFee.toBigDecimal().div(FEE_DENOMINATOR)
+    : safeDiv(swapFee.toBigDecimal(), FEE_DENOMINATOR.minus(swapFee.toBigDecimal()))
+  let feeAmount = (feeOnInput ? curveIn : curveOut).times(feeRatio)
+  let communityFeeAmount = feeAmount.times(pool.communityFee.toBigDecimal()).div(COMMUNITY_FEE_DENOMINATOR)
+
+  let feeToken0 = feeInToken0 ? feeAmount : ZERO_BD
+  let feeToken1 = feeInToken0 ? ZERO_BD : feeAmount
+  let communityFeeToken0 = feeInToken0 ? communityFeeAmount : ZERO_BD
+  let communityFeeToken1 = feeInToken0 ? ZERO_BD : communityFeeAmount
+
+  // LP fees stay in the pool as part of TVL, the community fee is pending in the pool
+  // until claimed but is not LP funds, so it is subtracted at swap time
+  let amountInNet = curveIn.minus(feeOnInput ? communityFeeAmount : ZERO_BD)
+  let amountOutNet = curveOut.plus(feeOnInput ? ZERO_BD : communityFeeAmount).neg()
+  let amount0Net = zeroToOne ? amountInNet : amountOutNet
+  let amount1Net = zeroToOne ? amountOutNet : amountInNet
 
   let amount0Matic = amount0Abs.times(token0.derivedMatic)
   let amount1Matic = amount1Abs.times(token1.derivedMatic)
@@ -408,9 +400,13 @@ export function handleSwap(event: SwapEvent): void {
   let amountTotalMaticTracked = safeDiv(amountTotalUSDTracked, bundle.maticPriceUSD)
   let amountTotalUSDUntracked = amount0USD.plus(amount1USD).div(BigDecimal.fromString('2'))
 
-  let feesMatic = amountTotalMaticTracked.times(swapFee.toBigDecimal()).div(FEE_DENOMINATOR)
-  let feesUSD = amountTotalUSDTracked.times(swapFee.toBigDecimal()).div(FEE_DENOMINATOR)
-  let untrackedFees = amountTotalUSDUntracked.times(swapFee.toBigDecimal()).div(FEE_DENOMINATOR)
+  // tracked fees keep the whitelist logic of the tracked volume, untracked fees use the fee token price
+  let feesMatic = amountTotalMaticTracked.times(feeRatio)
+  let feesUSD = amountTotalUSDTracked.times(feeRatio)
+  let untrackedFees = feeToken0
+    .times(token0.derivedMatic)
+    .plus(feeToken1.times(token1.derivedMatic))
+    .times(bundle.maticPriceUSD)
 
   // Community fee calculations
   let communityFeesUSD = feesUSD.times(pool.communityFee.toBigDecimal()).div(COMMUNITY_FEE_DENOMINATOR)
@@ -485,13 +481,18 @@ export function handleSwap(event: SwapEvent): void {
   let plugin = loadPoolPlugin(pool)
 
   if (plugin != null) {
-    if(amount0.lt(ZERO_BD)) {
-      plugin.collectedFeesToken1 += amount1.times(pluginFee.toBigDecimal()).div(FEE_DENOMINATOR)
+    if (zeroToOne) {
+      plugin.collectedFeesToken0 += pluginAmountIn
+      plugin.collectedFeesToken1 += pluginAmountOut
     } else {
-      plugin.collectedFeesToken0 += amount0.times(pluginFee.toBigDecimal()).div(FEE_DENOMINATOR)
+      plugin.collectedFeesToken1 += pluginAmountIn
+      plugin.collectedFeesToken0 += pluginAmountOut
     }
 
-    plugin.collectedFeesUSD += amountTotalUSDTracked.times(pluginFee.toBigDecimal()).div(FEE_DENOMINATOR)
+    plugin.collectedFeesUSD += pluginAmountIn
+      .times(tokenIn.derivedMatic)
+      .plus(pluginAmountOut.times(tokenOut.derivedMatic))
+      .times(bundle.maticPriceUSD)
     plugin.save()
   }
 
@@ -537,8 +538,8 @@ export function handleSwap(event: SwapEvent): void {
   swap.price = event.params.price
   swap.reserves0 = pool.totalValueLockedToken0
   swap.reserves1 = pool.totalValueLockedToken1
-  swap.overrideFee = swapFeeCache.overrideFee
-  swap.pluginFee = pluginFee
+  swap.pluginAmountIn = pluginAmountIn
+  swap.pluginAmountOut = pluginAmountOut
   swap.fee = swapFee
   swap.logIndex = event.logIndex
 
@@ -552,15 +553,10 @@ export function handleSwap(event: SwapEvent): void {
   let token0HourData = updateTokenHourData(token0 as Token, event)
   let token1HourData = updateTokenHourData(token1 as Token, event)
 
-  if(amount0.lt(ZERO_BD)){
-    pool.feesToken1 = pool.feesToken1.plus(amount1.times(swapFee.toBigDecimal()).div(FEE_DENOMINATOR))
-    poolDayData.feesToken1 = poolDayData.feesToken1.plus(amount1.times(swapFee.toBigDecimal()).div(FEE_DENOMINATOR))
-  }
-
-  if(amount1.lt(ZERO_BD) ){
-    pool.feesToken0 = pool.feesToken0.plus(amount0.times(swapFee.toBigDecimal()).div(FEE_DENOMINATOR))
-    poolDayData.feesToken0 = poolDayData.feesToken0.plus(amount0.times(swapFee.toBigDecimal()).div(FEE_DENOMINATOR))
-  }
+  pool.feesToken0 = pool.feesToken0.plus(feeToken0)
+  pool.feesToken1 = pool.feesToken1.plus(feeToken1)
+  poolDayData.feesToken0 = poolDayData.feesToken0.plus(feeToken0)
+  poolDayData.feesToken1 = poolDayData.feesToken1.plus(feeToken1)
 
   // update volume metrics
   algebraDayData.volumeMatic = algebraDayData.volumeMatic.plus(amountTotalMaticTracked)
@@ -642,6 +638,7 @@ export function handleSetCommunityVault(event: CommunityVault): void {
         vault.algebraFeeReceiver = Address.fromHexString(ZERO_ADDRESS)
         vault.totalWithdrawnUSD = ZERO_BD
         vault.totalAlgebraWithdrawnUSD = ZERO_BD
+        vault.totalClaimedUSD = ZERO_BD
         vault.pools = [pool.id]
 
         // Read algebraFee from the contract
@@ -722,26 +719,53 @@ export function handleChangeFee(event: ChangeFee): void {
   else{
     fee.fee = BigInt.fromI32(event.params.fee)  
   }
-  updateFeeHourData(event, BigInt.fromI32(event.params.fee), ZERO_BI, ZERO_BI)
+  updateFeeHourData(event, BigInt.fromI32(event.params.fee), false)
   fee.save()
-}
-
-export function handleBurnFee(event: BurnFee): void {
-  let burnFeeCache = BurnFeeCache.load('1')!
-  burnFeeCache.pluginFee = BigInt.fromI32(event.params.pluginFee)
-  burnFeeCache.save()
 }
 
 export function handleSwapFee(event: SwapFee): void {
   let swapFeeCache = SwapFeeCache.load('1')!
-  swapFeeCache.overrideFee = BigInt.fromI32(event.params.overrideFee)
-  swapFeeCache.pluginFee = BigInt.fromI32(event.params.pluginFee)
+  swapFeeCache.fee = BigInt.fromI32(event.params.fee)
+  swapFeeCache.pluginAmountIn = event.params.pluginAmountIn
+  swapFeeCache.pluginAmountOut = event.params.pluginAmountOut
   swapFeeCache.save()
 
-  if (event.params.overrideFee > 0) {
-    updateFeeHourData(event, BigInt.fromI32(event.params.overrideFee), BigInt.fromI32(event.params.overrideFee), BigInt.fromI32(event.params.pluginFee))
-  } else if (event.params.pluginFee > 0) {
-    updateFeeHourData(event, ZERO_BI, ZERO_BI, BigInt.fromI32(event.params.pluginFee))
+  // with the dynamic fee every swap fee is set by the plugin, including 0
+  let pool = Pool.load(event.address.toHexString())!
+  if ((pool.pluginConfig & DYNAMIC_FEE_FLAG) != 0) {
+    updateFeeHourData(event, BigInt.fromI32(event.params.fee), true)
+  }
+}
+
+export function handleFeeMode(event: FeeMode): void {
+  let pool = Pool.load(event.address.toHexString())!
+  pool.feeMode = event.params.feeModeNew
+  pool.save()
+}
+
+// the community fee is accumulated in the pool and transferred to the vault on claim
+export function handleCommunityFeeTransfer(event: CommunityFeeTransfer): void {
+  let bundle = Bundle.load('1')!
+  let pool = Pool.load(event.address.toHexString())!
+  let token0 = Token.load(pool.token0)!
+  let token1 = Token.load(pool.token1)!
+
+  let amount0 = convertTokenToDecimal(event.params.communityFeeAmount0, token0.decimals)
+  let amount1 = convertTokenToDecimal(event.params.communityFeeAmount1, token1.decimals)
+  let amountUSD = amount0
+    .times(token0.derivedMatic)
+    .plus(amount1.times(token1.derivedMatic))
+    .times(bundle.maticPriceUSD)
+
+  pool.communityFeesClaimedToken0 = pool.communityFeesClaimedToken0.plus(amount0)
+  pool.communityFeesClaimedToken1 = pool.communityFeesClaimedToken1.plus(amount1)
+  pool.communityFeesClaimedUSD = pool.communityFeesClaimedUSD.plus(amountUSD)
+  pool.save()
+
+  let vault = AlgebraCommunityVault.load(event.params.communityVault.toHexString())
+  if (vault !== null) {
+    vault.totalClaimedUSD = vault.totalClaimedUSD.plus(amountUSD)
+    vault.save()
   }
 }
 

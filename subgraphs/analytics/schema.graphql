@@ -98,8 +98,10 @@ type Pool @entity(immutable: false) {
   pluginConfig: Int!
   # fee amount
   fee: BigInt!
-  # last override fee
+  # fee applied to the last swap (base or dynamic, 0 is a valid value)
   overrideFee: BigInt!
+  # fee token: 0 - input token of each swap, 1 - always token0, 2 - always token1
+  feeMode: Int!
   # community fee percentage
   communityFee: BigInt!
   # community vault address
@@ -146,6 +148,12 @@ type Pool @entity(immutable: false) {
   communityFeesUSD: BigDecimal!
   # all time Algebra protocol fees in USD (share of community fees)
   algebraFeesUSD: BigDecimal!
+  # all time community fees claimed by the vault in token0 (pending = communityFeesToken0 - claimed)
+  communityFeesClaimedToken0: BigDecimal!
+  # all time community fees claimed by the vault in token1 (pending = communityFeesToken1 - claimed)
+  communityFeesClaimedToken1: BigDecimal!
+  # all time community fees claimed by the vault in USD at the claim time
+  communityFeesClaimedUSD: BigDecimal!
   # last mint index for tracking mint operations
   lastMintIndex: BigInt! 
   # total token 0 across all ticks
@@ -428,11 +436,11 @@ type Swap @entity(immutable: true) {
   tick: BigInt!
   reserves0: BigDecimal!
   reserves1: BigDecimal!
-  # override fee at the time of swap (0 if not overridden)
-  overrideFee: BigInt!
-  # plugin fee at the time of swap
-  pluginFee: BigInt!
-  # swap fee used for this swap (base or override)
+  # amount of the input token taken by the plugin
+  pluginAmountIn: BigDecimal!
+  # amount of the output token taken by the plugin
+  pluginAmountOut: BigDecimal!
+  # swap fee applied to this swap (base or dynamic)
   fee: BigInt!
   # index within the txn
   logIndex: BigInt
@@ -590,17 +598,12 @@ type PoolFeeData @entity(immutable: false){
 type SwapFeeCache @entity(immutable: false) {
   # unique identifier for swap fee cache
   id: ID!
-  # override fee for the swap
-  overrideFee: BigInt!
-  # plugin fee for the swap
-  pluginFee: BigInt!
-}
-
-type BurnFeeCache @entity(immutable: false) {
-  # unique identifier for burn fee cache
-  id: ID!
-  # plugin fee for the burn operation
-  pluginFee: BigInt!
+  # fee applied to the swap
+  fee: BigInt!
+  # raw amount of the input token taken by the plugin
+  pluginAmountIn: BigInt!
+  # raw amount of the output token taken by the plugin
+  pluginAmountOut: BigInt!
 }
 
 type PositionTransferCache @entity(immutable: false) {
@@ -766,6 +769,8 @@ type AlgebraCommunityVault @entity(immutable: false) {
   totalWithdrawnUSD: BigDecimal!
   # total Algebra protocol fees withdrawn in USD
   totalAlgebraWithdrawnUSD: BigDecimal!
+  # total community fees claimed from the pools in USD at the claim time
+  totalClaimedUSD: BigDecimal!
 }
 
 type VaultWithdrawal @entity(immutable: true) {
@@ -808,10 +813,8 @@ type FeeHourData @entity(immutable: false) {
   startFee: BigInt!
   # fee at the end of the hour
   endFee: BigInt!
-  # whether an override fee was active during the hour
+  # whether the dynamic fee was active during the hour
   hasOverrideFee: Boolean!
-  # last override fee value during the hour (0 if none)
+  # last dynamic fee value during the hour (0 if the dynamic fee was not active)
   overrideFee: BigInt!
-  # last plugin fee value during the hour
-  pluginFee: BigInt! 
 }

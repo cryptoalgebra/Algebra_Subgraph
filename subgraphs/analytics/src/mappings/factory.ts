@@ -1,7 +1,7 @@
 /* eslint-disable prefer-const */
 import { FACTORY_ADDRESS, WHITELIST_TOKENS} from '../utils/chain'
 import { ZERO_BI, ONE_BI, ZERO_BD, ZERO_ADDRESS} from '../utils/constants'
-import { BurnFeeCache, Factory, SwapFeeCache, PositionTransferCache } from '../types/schema'
+import { Factory, SwapFeeCache, PositionTransferCache } from '../types/schema'
 import { Pool as PoolEvent } from '../types/Factory/Factory'
 import { DefaultCommunityFee, CustomPool } from '../types/Factory/Factory'
 import { Pool, Token, Bundle } from '../types/schema'
@@ -73,13 +73,10 @@ function createPool(
     factory.txCount = ZERO_BI
     factory.owner = ZERO_ADDRESS
 
-    let burnFee = new BurnFeeCache('1')
-    burnFee.pluginFee = ZERO_BI
-    burnFee.save()
-
     let swapFee = new SwapFeeCache('1')
-    swapFee.pluginFee = ZERO_BI
-    swapFee.overrideFee = ZERO_BI
+    swapFee.fee = ZERO_BI
+    swapFee.pluginAmountIn = ZERO_BI
+    swapFee.pluginAmountOut = ZERO_BI
     swapFee.save()
 
     let transferCache = new PositionTransferCache('1')
@@ -167,6 +164,8 @@ function createPool(
   pool.token1 = token1.id
   pool.fee = BigInt.fromI32(100)
   pool.overrideFee = BigInt.fromI32(0)
+  // the pool does not emit FeeMode on creation, the default mode is 0
+  pool.feeMode = 0
   pool.pluginConfig = 0
   pool.createdAtTimestamp = timestamp
   pool.createdAtBlockNumber = blockNumber
@@ -204,6 +203,9 @@ function createPool(
   pool.communityFeesToken1 = ZERO_BD
   pool.communityFeesUSD = ZERO_BD
   pool.algebraFeesUSD = ZERO_BD
+  pool.communityFeesClaimedToken0 = ZERO_BD
+  pool.communityFeesClaimedToken1 = ZERO_BD
+  pool.communityFeesClaimedUSD = ZERO_BD
 
   pool.save()  // create the tracked contract based on the template
   PoolTemplate.create(Address.fromString(poolAddress))
@@ -238,13 +240,10 @@ export function handleNewCommunityFee(event: DefaultCommunityFee): void{
     bundle.maticPriceUSD = ZERO_BD
     bundle.save()
 
-    let burnFee = new BurnFeeCache('1')
-    burnFee.pluginFee = ZERO_BI
-    burnFee.save()
-
     let swapFee = new SwapFeeCache('1')
-    swapFee.pluginFee = ZERO_BI
-    swapFee.overrideFee = ZERO_BI
+    swapFee.fee = ZERO_BI
+    swapFee.pluginAmountIn = ZERO_BI
+    swapFee.pluginAmountOut = ZERO_BI
     swapFee.save()
 
     let transferCache = new PositionTransferCache('1')

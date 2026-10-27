@@ -84,6 +84,7 @@ export function handleAlgebraFee(event: AlgebraFee): void {
     vault.algebraFeeReceiver = Address.fromHexString(ZERO_ADDRESS)
     vault.totalWithdrawnUSD = ZERO_BD
     vault.totalAlgebraWithdrawnUSD = ZERO_BD
+    vault.totalClaimedUSD = ZERO_BD
     vault.pools = []
   }
   vault.algebraFee = BigInt.fromI32(event.params.newAlgebraFee)
@@ -99,6 +100,7 @@ export function handleCommunityFeeReceiver(event: CommunityFeeReceiver): void {
     vault.algebraFeeReceiver = Address.fromHexString(ZERO_ADDRESS)
     vault.totalWithdrawnUSD = ZERO_BD
     vault.totalAlgebraWithdrawnUSD = ZERO_BD
+    vault.totalClaimedUSD = ZERO_BD
     vault.pools = []
   }
   vault.communityFeeReceiver = event.params.newCommunityFeeReceiver
@@ -114,6 +116,7 @@ export function handleAlgebraFeeReceiver(event: AlgebraFeeReceiver): void {
     vault.communityFeeReceiver = Address.fromHexString(ZERO_ADDRESS)
     vault.totalWithdrawnUSD = ZERO_BD
     vault.totalAlgebraWithdrawnUSD = ZERO_BD
+    vault.totalClaimedUSD = ZERO_BD
     vault.pools = []
   }
   vault.algebraFeeReceiver = event.params.newAlgebraFeeReceiver
