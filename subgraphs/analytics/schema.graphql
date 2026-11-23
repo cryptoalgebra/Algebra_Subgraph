@@ -276,12 +276,28 @@ type Position @entity(immutable: false) {
   collectedFeesToken0: BigDecimal!
   # all time collected fees in token1
   collectedFeesToken1: BigDecimal!
+  # timestamp of the block in which the position was created
+  createdAtTimestamp: BigInt!
+  # timestamp of the last transition of liquidity to zero, cleared on a new deposit
+  liquidityClosedAtTimestamp: BigInt
+  # USD value of all deposits, priced at the time of each deposit
+  depositedUSD: BigDecimal!
+  # USD value of all collected tokens (principal + fees), priced at the time of each collect
+  collectedUSD: BigDecimal!
+  # USD value of collected fees, priced at the time of each collect
+  collectedFeesUSD: BigDecimal!
+  # token0 principal removed from liquidity but not collected yet
+  uncollectedPrincipalToken0: BigDecimal!
+  # token1 principal removed from liquidity but not collected yet
+  uncollectedPrincipalToken1: BigDecimal!
+  # false if the position history was not indexed from its mint or a token had no USD price at an event
+  usdHistoryComplete: Boolean!
   # tx in which the position was initialized
   transaction: Transaction!
 }
 
 type PositionSnapshot @entity(immutable: true){
-  # <NFT token id>#<block number>
+  # <NFT token id>#<block number>#<log index>
   id: ID!
   # owner of the NFT
   owner: Bytes!
@@ -611,6 +627,10 @@ type PositionTransferCache @entity(immutable: false) {
   id: ID!
   # new owner after transfer
   owner: Bytes!
+  # token id of the last NFT mint (transfer from the zero address)
+  mintTokenId: BigInt
+  # tx of the last NFT mint
+  mintTransaction: Bytes
 }
 
 # hourly stats tracker for pool
